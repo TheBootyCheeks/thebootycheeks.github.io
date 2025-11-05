@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Chewbooty Guild Roster V2</title>
+  <meta charset="UTF-8">
+  <title>Chewbooty Guild Roster</title>
+  <!-- DataTables CSS -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 </head>
 <body>
   <h1>Chewbooty Guild Roster</h1>
 
-  <table id="roster" class="display">
+  <!-- Table placeholder -->
+  <table id="roster" class="display" style="width:100%">
     <thead>
       <tr>
         <th>Player Name</th>
@@ -16,18 +19,33 @@
       </tr>
     </thead>
     <tbody>
-      <tr><td>s0da p0pinski</td><td>13,654,676</td><td>3,429</td></tr>
-      <tr><td>ItzBerndern</td><td>13,498,828</td><td>3,459</td></tr>
-      <tr><td>Bobandy</td><td>13,316,734</td><td>3,461</td></tr>
-      <!-- continue with the rest of your roster -->
+      <!-- Rows will be filled automatically from chewbooty.csv -->
     </tbody>
   </table>
 
+  <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <!-- DataTables JS -->
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <!-- PapaParse for CSV parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
   <script>
     $(document).ready(function() {
-      $('#roster').DataTable();
+      Papa.parse("chewbooty.csv", {
+        download: true,
+        header: true,
+        complete: function(results) {
+          $('#roster').DataTable({
+            data: results.data,
+            columns: [
+              { data: "Player Name" },
+              { data: "GP" },
+              { data: "Player Skill Rating" }
+            ]
+          });
+        }
+      });
     });
   </script>
 </body>
