@@ -57,16 +57,18 @@
             info: false,
             columns: [
               { data: "Player Name", title: "Player Name" },
-              { data: "GP (Current)", title: "Current GP" },
-              { data: "Δ GP", title: "Change in GP",
+              { data: "Previous GP", title: "Previous GP" },
+              { data: "Current GP", title: "Current GP" },
+              { data: "Net Change (GP)", title: "Net Change (GP)",
                 render: function(data) {
                   if (!data) return "";
                   const num = parseInt(data.replace(/,/g, ""));
                   return `<span class="${num >= 0 ? 'positive' : 'negative'}">${data}</span>`;
                 }
               },
-              { data: "Skill (Current)", title: "Current Skill Rating" },
-              { data: "Δ Skill", title: "Change in Skill Rating",
+              { data: "Previous Skill Rating", title: "Previous Skill Rating" },
+              { data: "New Skill Rating", title: "New Skill Rating" },
+              { data: "Net Change (Skill)", title: "Net Change (Skill)",
                 render: function(data) {
                   if (!data) return "";
                   const num = parseInt(data.replace(/,/g, ""));
