@@ -5,9 +5,31 @@
   <title>Chewbooty Guild Roster</title>
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
   <style>
-    body { font-family: Arial, sans-serif; margin: 2rem; }
-    h1 { margin-bottom: 1rem; }
-    table.dataTable { width: 100% !important; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background: #fafafa;
+    }
+    h1 {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    table.dataTable {
+      width: 100% !important;
+      border-collapse: collapse;
+    }
+    th {
+      background: #f0f0f0;
+      font-weight: bold;
+    }
+    td.positive {
+      color: green;
+      font-weight: bold;
+    }
+    td.negative {
+      color: red;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -21,20 +43,36 @@
 
   <script>
     $(document).ready(function() {
-      Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vSm-wks9fKAgA2bucSnb-3WzUrSDpe--CYXR6KlAjAQ1Keti4BWL-PlXje9UwLjZh00eOFw3ZV64tae/pub?output=csv", {
+      // Replace with your published Google Sheet CSV link
+      const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSm-wks9fKAgA2bucSnb-3WzUrSDpe--CYXR6KlAjAQ1Keti4BWL-PlXje9UwLjZh00eOFw3ZV64tae/pub?output=csv";
+
+      Papa.parse(sheetUrl, {
         download: true,
         header: true,
         complete: function(results) {
           $('#roster').DataTable({
             data: results.data,
-            paging: false,       // no pagination
-            scrollY: false,      // no scrollbars
-            searching: false,    // optional: disable search
-            info: false,         // hide "Showing X of Y entries"
+            paging: false,
+            searching: false,
+            info: false,
             columns: [
               { data: "Player Name", title: "Player Name" },
-              { data: "GP", title: "GP" },
-              { data: "Player Skill Rating", title: "Player Skill Rating" }
+              { data: "GP (Current)", title: "Current GP" },
+              { data: "Δ GP", title: "Change in GP",
+                render: function(data) {
+                  if (!data) return "";
+                  const num = parseInt(data.replace(/,/g, ""));
+                  return `<span class="${num >= 0 ? 'positive' : 'negative'}">${data}</span>`;
+                }
+              },
+              { data: "Skill (Current)", title: "Current Skill Rating" },
+              { data: "Δ Skill", title: "Change in Skill Rating",
+                render: function(data) {
+                  if (!data) return "";
+                  const num = parseInt(data.replace(/,/g, ""));
+                  return `<span class="${num >= 0 ? 'positive' : 'negative'}">${data}</span>`;
+                }
+              }
             ]
           });
         }
