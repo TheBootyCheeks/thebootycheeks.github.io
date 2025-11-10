@@ -3,86 +3,134 @@
 <head>
   <meta charset="UTF-8">
   <title>Chewbooty Guild Roster</title>
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 2rem;
-      background: #fafafa;
+      background: #1c1c1c;
+      color: #f0f0f0;
+      margin: 20px;
     }
     h1 {
-      margin-bottom: 1rem;
+      text-align: center;
+      color: #ffd700;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #2a2a2a;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 6px 8px;
       text-align: center;
     }
-    table.dataTable {
-      width: 100% !important;
-      border-collapse: collapse;
-    }
     th {
-      background: #f0f0f0;
-      font-weight: bold;
+      background: #333;
+      color: #ffd700;
+      position: sticky;
+      top: 0;
     }
-    span.positive {
-      color: green;
-      font-weight: bold;
+    tr:nth-child(even) {
+      background: #242424;
     }
-    span.negative {
-      color: red;
-      font-weight: bold;
+    tr:hover {
+      background: #3a3a3a;
+    }
+    .small {
+      font-size: 0.85em;
+      color: #bbb;
     }
   </style>
 </head>
 <body>
   <h1>Chewbooty Guild Roster</h1>
-  <table id="roster" class="display"></table>
-
-  <!-- jQuery + DataTables + PapaParse -->
-  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <input type="file" id="fileInput" accept=".csv" />
+  <table id="guildTable">
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th>Discord</th>
+        <th>Character GP</th>
+        <th>Ship GP</th>
+        <th>Total GP</th>
+        <th>League</th>
+        <th>Skill Rating</th>
+        <th>G13</th>
+        <th>Relics</th>
+        <th>Zetas</th>
+        <th>Omicrons</th>
+        <th>Speed ≥20</th>
+        <th>Speed ≥25</th>
+        <th>Ultimate GL</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
   <script>
-    $(document).ready(function() {
-      // Replace with your published Google Sheet CSV link
-      const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSm-wks9fKAgA2bucSnb-3WzUrSDpe--CYXR6KlAjAQ1Keti4BWL-PlXje9UwLjZh00eOFw3ZV64tae/pub?output=csv";
+    document.getElementById('fileInput').addEventListener('change', handleFile);
 
-      Papa.parse(sheetUrl, {
-        download: true,
-        header: true,
-        complete: function(results) {
-          $('#roster').DataTable({
-            data: results.data,
-            paging: false,
-            searching: false,
-            info: false,
-            columns: [
-              { data: "Player Name", title: "Player Name" },
-              { data: "Previous GP", title: "Previous GP" },
-              { data: "Current GP", title: "Current GP" },
-              { data: "Net Change (GP)", title: "Net Change (GP)" },
-              { data: "Mod", title: "Mod",
-                render: function(data) {
-                  if (!data) return "";
-                  const num = parseInt(data.replace(/,/g, ""));
-                  if (isNaN(num)) return data;
-                  return `<span class="${num >= 0 ? 'positive' : 'negative'}">${data}</span>`;
-                }
-              },
-              { data: "Previous Skill Rating", title: "Previous Skill Rating" },
-              { data: "New Skill Rating", title: "New Skill Rating" },
-              { data: "Net Change (Skill)", title: "Net Change (Skill)",
-                render: function(data) {
-                  if (!data) return "";
-                  const num = parseInt(data.replace(/,/g, ""));
-                  if (isNaN(num)) return data;
-                  return `<span class="${num >= 0 ? 'positive' : 'negative'}">${data}</span>`;
-                }
-              }
-            ]
-          });
-        }
+    function handleFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const text = e.target.result;
+        renderTable(text);
+      };
+      reader.readAsText(file);
+    }
+
+    function renderTable(csvText) {
+      const rows = csvText.trim().split(/\r?\n/).map(r => r.split(','));
+      const header = rows[0];
+      const data = rows.slice(1);
+
+      // Map relevant columns
+      const colMap = {
+        Name: header.indexOf("Name"),
+        DiscordTag: header.indexOf("DiscordTag"),
+        CharGP: header.indexOf("CharacterGP"),
+        ShipGP: header.indexOf("ShipGP"),
+        League: header.indexOf("LeagueId"),
+        Skill: header.indexOf("SkillRating"),
+        G13: header.indexOf("G13Count"),
+        Zetas: header.indexOf("ZetaCount"),
+        Omis: header.indexOf("OmiCount"),
+        Speed20: header.indexOf("Speed20"),
+        Speed25: header.indexOf("Speed25"),
+        UltGL: header.indexOf("UltimateGLCount")
+      };
+
+      const tbody = document.querySelector("#guildTable tbody");
+      tbody.innerHTML = "";
+
+      data.forEach(row => {
+        const totalGP = (+row[colMap.CharGP] || 0) + (+row[colMap.ShipGP] || 0);
+        const relics = row.slice(header.indexOf("Relic1Count"), header.indexOf("Relic9Count")+1)
+                          .reduce((sum, v) => sum + (+v || 0), 0);
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row[colMap.Name]}</td>
+          <td class="small">${row[colMap.DiscordTag]}</td>
+          <td>${Number(row[colMap.CharGP]).toLocaleString()}</td>
+          <td>${Number(row[colMap.ShipGP]).toLocaleString()}</td>
+          <td>${totalGP.toLocaleString()}</td>
+          <td>${row[colMap.League]}</td>
+          <td>${row[colMap.Skill]}</td>
+          <td>${row[colMap.G13]}</td>
+          <td>${relics}</td>
+          <td>${row[colMap.Zetas]}</td>
+          <td>${row[colMap.Omis]}</td>
+          <td>${row[colMap.Speed20]}</td>
+          <td>${row[colMap.Speed25]}</td>
+          <td>${row[colMap.UltGL]}</td>
+        `;
+        tbody.appendChild(tr);
       });
-    });
+    }
   </script>
 </body>
 </html>
