@@ -11,8 +11,9 @@
     th { background:#333; color:#ffd700; cursor:pointer; position:sticky; top:0; }
     tr:nth-child(even) { background:#242424; }
     tr:hover { background:#3a3a3a; }
-    .pos { color:#00ff00; font-weight:bold; }
-    .neg { color:#ff4444; font-weight:bold; }
+    .pos { color:#00ff00; font-weight:bold; }   /* green for positive */
+    .neg { color:#ff4444; font-weight:bold; }   /* red for negative */
+    .zero { color:#bbb; font-weight:bold; }     /* gray for zero */
     a { color:#66ccff; text-decoration:none; }
     a:hover { text-decoration:underline; }
   </style>
@@ -51,7 +52,7 @@ Promise.all(FILES.map(f => fetch(f).then(r=>r.text())))
   });
 
 function parseCSV(csvText) {
-  const rows = csvText.trim().split(/\r?\n/).map(r => r.split(','));
+  const rows = csvText.trim().split(/\r?\n/).map(r => r.split(',').map(c => c.replace(/^"|"$/g,'').trim()));
   return {header: rows[0], data: rows.slice(1)};
 }
 
@@ -84,13 +85,15 @@ function renderComparison(oldText,newText) {
     const relics = row.slice(colMap.RelicStart,colMap.RelicEnd+1)
                       .reduce((sum,v)=>sum+(+v||0),0);
 
-    // find matching player in old file
-    const oldRow = old.data.find(r => r[old.header.indexOf("Name")] === row[colMap.Name]);
-    let netChange = "";
+    // find matching player in old file by AllyCode
+    const newCode = (row[colMap.AllyCode]||"").trim();
+    const oldRow = old.data.find(r => (r[old.header.indexOf("AllyCode")]||"").trim() === newCode);
+
+    let netChange = `<span class="zero">0</span>`;
     if (oldRow) {
       const oldGP = (+oldRow[old.header.indexOf("CharacterGP")]||0) + (+oldRow[old.header.indexOf("ShipGP")]||0);
       const diff = totalGP - oldGP;
-      netChange = `<span class="${diff>=0?'pos':'neg'}">${diff>=0?'+':''}${diff.toLocaleString()}</span>`;
+      netChange = `<span class="${diff>0?'pos':diff<0?'neg':'zero'}">${diff>0?'+':''}${diff.toLocaleString()}</span>`;
     }
 
     const allyCode = row[colMap.AllyCode];
