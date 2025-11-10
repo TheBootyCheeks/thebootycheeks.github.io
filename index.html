@@ -36,7 +36,11 @@
         <th data-col="Speed20">Speed ≥20</th>
         <th data-col="Speed25">Speed ≥25</th>
         <th data-col="UltimateGLCount">Ultimate GL</th>
+        <th data-col="TotalScore">Total Score</th>
+        <th data-col="GearScore">Gear Score</th>
+        <th data-col="ModScore">Mod Score</th>
         <th>Net Change (GP)</th>
+        <th>Net Change (Total Score)</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -73,7 +77,10 @@ function renderComparison(oldText,newText) {
     Speed25: newer.header.indexOf("Speed25"),
     UltGL: newer.header.indexOf("UltimateGLCount"),
     RelicStart: newer.header.indexOf("Relic1Count"),
-    RelicEnd: newer.header.indexOf("Relic9Count")
+    RelicEnd: newer.header.indexOf("Relic9Count"),
+    TotalScore: newer.header.indexOf("TotalScore"),
+    GearScore: newer.header.indexOf("GearScore"),
+    ModScore: newer.header.indexOf("ModScore")
   };
 
   const tbody = document.querySelector("#guildTable tbody");
@@ -86,11 +93,18 @@ function renderComparison(oldText,newText) {
 
     // find matching player in old file
     const oldRow = old.data.find(r => r[old.header.indexOf("Name")] === row[colMap.Name]);
-    let netChange = "";
+
+    let netChangeGP = "";
+    let netChangeScore = "";
     if (oldRow) {
       const oldGP = (+oldRow[old.header.indexOf("CharacterGP")]||0) + (+oldRow[old.header.indexOf("ShipGP")]||0);
-      const diff = totalGP - oldGP;
-      netChange = `<span class="${diff>=0?'pos':'neg'}">${diff>=0?'+':''}${diff.toLocaleString()}</span>`;
+      const diffGP = totalGP - oldGP;
+      netChangeGP = `<span class="${diffGP>=0?'pos':'neg'}">${diffGP>=0?'+':''}${diffGP.toLocaleString()}</span>`;
+
+      const oldScore = +oldRow[old.header.indexOf("TotalScore")]||0;
+      const newScore = +row[colMap.TotalScore]||0;
+      const diffScore = newScore - oldScore;
+      netChangeScore = `<span class="${diffScore>=0?'pos':'neg'}">${diffScore>=0?'+':''}${diffScore.toFixed(2)}</span>`;
     }
 
     const allyCode = row[colMap.AllyCode];
@@ -112,7 +126,11 @@ function renderComparison(oldText,newText) {
       <td>${row[colMap.Speed20]}</td>
       <td>${row[colMap.Speed25]}</td>
       <td>${row[colMap.UltGL]}</td>
-      <td>${netChange}</td>
+      <td>${row[colMap.TotalScore]}</td>
+      <td>${row[colMap.GearScore]}</td>
+      <td>${row[colMap.ModScore]}</td>
+      <td>${netChangeGP}</td>
+      <td>${netChangeScore}</td>
     `;
     tbody.appendChild(tr);
   });
