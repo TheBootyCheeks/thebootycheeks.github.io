@@ -11,11 +11,9 @@
     th { background:#333; color:#ffd700; cursor:pointer; position:sticky; top:0; }
     tr:nth-child(even) { background:#242424; }
     tr:hover { background:#3a3a3a; }
-    .pos { color:#00ff00; font-weight:bold; }   /* green for positive */
-    .neg { color:#ff4444; font-weight:bold; }   /* red for negative */
-    .zero { color:#bbb; font-weight:bold; }     /* gray for zero */
     a { color:#66ccff; text-decoration:none; }
     a:hover { text-decoration:underline; }
+    .oldVal { color:#bbb; font-size:0.9em; }
   </style>
 </head>
 <body>
@@ -25,21 +23,19 @@
       <tr>
         <th data-col="Name">Player</th>
         <th data-col="AllyCode">SWGOH.gg</th>
-        <th data-col="CharacterGP">Character GP</th>
-        <th data-col="ShipGP">Ship GP</th>
-        <th data-col="TotalGP">Total GP</th>
+        <th data-col="CharacterGP">Character GP (old)</th>
+        <th data-col="ShipGP">Ship GP (old)</th>
+        <th data-col="TotalGP">Total GP (old)</th>
         <th data-col="LeagueId">League</th>
         <th data-col="SkillRating">Skill Rating</th>
-        <th data-col="ModScore">Mod Score</th>
-        <th data-col="GearScore">Gear Score</th>
-        <th data-col="TotalScore">Total Score</th>
+        <th data-col="ModScore">Mod Score (old)</th>
+        <th data-col="GearScore">Gear Score (old)</th>
+        <th data-col="TotalScore">Total Score (old)</th>
         <th data-col="ZetaCount">Zetas</th>
         <th data-col="OmiCount">Omicrons</th>
         <th data-col="Speed20">Speed ≥20</th>
         <th data-col="Speed25">Speed ≥25</th>
         <th data-col="UltimateGLCount">Ultimate GL</th>
-        <th>Net Change (GP)</th>
-        <th>Net Change (Total Score)</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -59,12 +55,6 @@ function parseCSV(csvText) {
   );
   const header = rows[0].map(h => h.replace(/^"|"$/g,'').trim().replace(/^\uFEFF/, ''));
   return {header, data: rows.slice(1)};
-}
-
-function formatDiff(diff,isScore=false) {
-  const cls = diff>0?'pos':diff<0?'neg':'zero';
-  const val = isScore?diff.toFixed(2):diff.toLocaleString();
-  return `<span class="${cls}">${diff>0?'+':''}${val}</span>`;
 }
 
 function renderComparison(oldText,newText) {
@@ -94,22 +84,17 @@ function renderComparison(oldText,newText) {
   newer.data.forEach(row => {
     const totalGP = (+row[colMap.CharGP]||0) + (+row[colMap.ShipGP]||0);
 
-    // match by AllyCode (baseline = ChewbootyOld.csv)
+    // match by AllyCode
     const newCode = (row[colMap.AllyCode]||"").replace(/^"|"$/g,'').trim();
     const oldRow = old.data.find(r => (r[old.header.indexOf("AllyCode")]||"").replace(/^"|"$/g,'').trim() === newCode);
 
-    let netChangeGP = `<span class="zero">0</span>`;
-    let netChangeScore = `<span class="zero">0</span>`;
-    if (oldRow) {
-      const oldGP = (+oldRow[old.header.indexOf("CharacterGP")]||0) + (+oldRow[old.header.indexOf("ShipGP")]||0);
-      const diffGP = totalGP - oldGP;
-      netChangeGP = formatDiff(diffGP);
-
-      const oldScore = (+oldRow[old.header.indexOf("TotalScore")]||0);
-      const newScore = (+row[colMap.TotalScore]||0);
-      const diffScore = newScore - oldScore;
-      netChangeScore = formatDiff(diffScore,true);
-    }
+    // fallback old values
+    const oldCharGP = oldRow ? (+oldRow[old.header.indexOf("CharacterGP")]||0) : 0;
+    const oldShipGP = oldRow ? (+oldRow[old.header.indexOf("ShipGP")]||0) : 0;
+    const oldTotalGP = oldCharGP + oldShipGP;
+    const oldModScore = oldRow ? (+oldRow[old.header.indexOf("ModScore")]||0) : 0;
+    const oldGearScore = oldRow ? (+oldRow[old.header.indexOf("GearScore")]||0) : 0;
+    const oldTotalScore = oldRow ? (+oldRow[old.header.indexOf("TotalScore")]||0) : 0;
 
     const allyCode = row[colMap.AllyCode];
     const swgohLink = allyCode ? `<a href="https://swgoh.gg/p/${allyCode}/" target="_blank">${allyCode}</a>` : "";
@@ -118,21 +103,19 @@ function renderComparison(oldText,newText) {
     tr.innerHTML = `
       <td>${row[colMap.Name]}</td>
       <td>${swgohLink}</td>
-      <td>${Number(row[colMap.CharGP]).toLocaleString()}</td>
-      <td>${Number(row[colMap.ShipGP]).toLocaleString()}</td>
-      <td>${totalGP.toLocaleString()}</td>
+      <td>${Number(row[colMap.CharGP]).toLocaleString()} <span class="oldVal">(${oldCharGP.toLocaleString()})</span></td>
+      <td>${Number(row[colMap.ShipGP]).toLocaleString()} <span class="oldVal">(${oldShipGP.toLocaleString()})</span></td>
+      <td>${totalGP.toLocaleString()} <span class="oldVal">(${oldTotalGP.toLocaleString()})</span></td>
       <td>${row[colMap.League]}</td>
       <td>${row[colMap.Skill]}</td>
-      <td>${row[colMap.ModScore]}</td>
-      <td>${row[colMap.GearScore]}</td>
-      <td>${row[colMap.TotalScore]}</td>
+      <td>${row[colMap.ModScore]} <span class="oldVal">(${oldModScore})</span></td>
+      <td>${row[colMap.GearScore]} <span class="oldVal">(${oldGearScore})</span></td>
+      <td>${row[colMap.TotalScore]} <span class="oldVal">(${oldTotalScore})</span></td>
       <td>${row[colMap.Zetas]}</td>
       <td>${row[colMap.Omis]}</td>
       <td>${row[colMap.Speed20]}</td>
       <td>${row[colMap.Speed25]}</td>
       <td>${row[colMap.UltGL]}</td>
-      <td>${netChangeGP}</td>
-      <td>${netChangeScore}</td>
     `;
     tbody.appendChild(tr);
   });
