@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Whalebooty Roster</title>
+  <title>WhaleBooty Roster</title>
   <style>
     body { font-family: Arial, sans-serif; background:#1c1c1c; color:#f0f0f0; margin:20px; }
     h1 { text-align:center; color:#ffd700; }
@@ -25,7 +25,7 @@
   </style>
 </head>
 <body>
-  <h1>Whalebooty Guild Roster</h1>
+  <h1>WhaleBooty Guild Roster</h1>
 
   <table id="guildTable">
     <thead>
@@ -52,7 +52,7 @@
 <script>
 /*
   Behavior:
-  - Loads WhalebootyOld.csv (baseline) and Whalebooty.csv (current).
+  - Loads WhaleBootyOld.csv (baseline) and WhaleBooty.csv (current).
   - Player name is the clickable SWGOH.gg link (uses AllyCode when present).
   - Each numeric column displays: Current (Old) ± Difference.
   - Mod/Gear/Total scores are shown rounded to two decimals.
@@ -60,7 +60,7 @@
   - Sorting: click headers (where data-col exists) for descending sort by current value.
 */
 
-const FILES = ["WhalebootyOld.csv","Whalebooty.csv"]; // baseline, current
+const FILES = ["WhaleBootyOld.csv","WhaleBooty.csv"]; // baseline, current
 
 Promise.all(FILES.map(f => fetch(f).then(r => {
   if (!r.ok) throw new Error(`Failed to fetch ${f}: ${r.status}`);
