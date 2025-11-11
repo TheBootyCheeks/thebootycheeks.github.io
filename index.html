@@ -3,28 +3,29 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Galactic Explorer — Bootycheeks</title>
-  <meta name="description" content="Bootycheeks projects: Chewbooty, Whalebooty, Dolphinbooty" />
+  <title>Alliance Hub — Bootycheeks Alliance</title>
+  <meta name="description" content="Bootycheeks Alliance hub: Chewbooty, Whalebooty, Dolphinbooty — unified resources, rosters, and mission tools." />
   <style>
-    /* Reset + base */
     :root{
-      --bg-0:#06101a;
-      --bg-1:#092235;
-      --glass: rgba(255,255,255,0.04);
+      --bg-0:#041021;
+      --bg-1:#06263a;
+      --card:#0b2030;
+      --glass: rgba(255,255,255,0.03);
       --muted:#9fb4c9;
       --accent:#39d0ff;
       --accent-2:#7fffd4;
-      --card:#0b2030;
+      --accent-3:#ffd166;
       --radius:14px;
-      --maxWidth:1100px;
+      --maxWidth:1200px;
+      --gap:20px;
       font-family: Inter, ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
     *{box-sizing:border-box}
     html,body{height:100%;margin:0}
     body{
       background:
-        radial-gradient(800px 300px at 10% 10%, rgba(57,208,255,0.03), transparent 10%),
-        radial-gradient(700px 250px at 90% 90%, rgba(127,255,212,0.02), transparent 10%),
+        radial-gradient(900px 320px at 12% 12%, rgba(57,208,255,0.03), transparent 10%),
+        radial-gradient(700px 260px at 88% 88%, rgba(255,209,102,0.02), transparent 10%),
         linear-gradient(180deg,var(--bg-0),var(--bg-1));
       color:#eaf6ff;
       -webkit-font-smoothing:antialiased;
@@ -35,7 +36,7 @@
       padding:36px;
     }
 
-    /* Layout */
+    /* Top-level layout */
     .container{
       width:100%;
       max-width:var(--maxWidth);
@@ -45,43 +46,37 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.014), rgba(255,255,255,0.01));
       border-radius:18px;
       padding:28px;
-      box-shadow: 0 10px 40px rgba(2,6,23,0.6);
+      box-shadow: 0 14px 50px rgba(2,6,23,0.6);
       border:1px solid rgba(255,255,255,0.03);
     }
 
-    /* Left column: hero + cards */
-    .hero{
-      padding:6px 12px;
-    }
-    .brand{
+    /* Alliance header */
+    .alliance-header{
       display:flex;
-      gap:12px;
+      gap:18px;
       align-items:center;
-      margin-bottom:8px;
+      margin-bottom:6px;
     }
-    .logo{
-      width:56px;height:56px;border-radius:10px;
+    .alliance-emblem{
+      width:84px;height:84px;border-radius:14px;
       background: linear-gradient(135deg,var(--accent),var(--accent-2));
       display:flex;align-items:center;justify-content:center;
-      color:#06121a;font-weight:800;font-size:20px;box-shadow:0 6px 18px rgba(2,6,23,0.6);
+      color:#021214;font-weight:900;font-size:28px;box-shadow:0 8px 22px rgba(2,6,23,0.6);
+      flex-shrink:0;
     }
-    .site-meta{color:var(--muted);font-size:13px}
+    .alliance-meta{display:flex;flex-direction:column;gap:6px}
+    .alliance-name{font-size:20px;font-weight:800;margin:0;color:#f8feff}
+    .alliance-tag{font-size:13px;color:var(--muted)}
 
-    h1{
-      margin:4px 0 10px 0;
-      font-size:28px;
-      line-height:1.02;
-      letter-spacing:-0.2px;
-      color:#f8feff;
-    }
-    p.lead{margin:0 0 20px 0;color:var(--muted);font-size:15px;max-width:60ch}
+    h1{margin:6px 0 8px 0;font-size:26px;color:#f8feff}
+    p.lead{margin:0 0 14px 0;color:var(--muted);font-size:15px;max-width:62ch}
 
-    /* Cards grid */
+    /* Member cards grid */
     .cards{
       display:grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap:14px;
-      margin-top:14px;
+      margin-top:8px;
     }
     .card{
       display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;
@@ -94,8 +89,23 @@
     .thumb{width:64px;height:64px;border-radius:10px;background:var(--glass);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid rgba(255,255,255,0.03)}
     .thumb img{width:100%;height:100%;object-fit:cover;display:block}
     .meta{display:flex;flex-direction:column}
-    .meta .title{font-weight:700;color:#f4fbff;font-size:15px}
+    .meta .title{font-weight:800;color:#f4fbff;font-size:15px}
     .meta .desc{font-size:13px;color:var(--muted);margin-top:4px}
+    .badge{margin-left:auto;font-size:12px;color:#021214;background:var(--accent-3);padding:6px 8px;border-radius:10px;font-weight:700}
+
+    /* Alliance stats bar */
+    .stats{
+      display:flex;gap:12px;margin-top:16px;align-items:stretch;
+      flex-wrap:wrap;
+    }
+    .stat{
+      flex:1 1 160px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.008));
+      padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);
+      display:flex;flex-direction:column;gap:6px;align-items:flex-start;
+    }
+    .stat .num{font-weight:800;font-size:20px;color:#f8feff}
+    .stat .label{font-size:13px;color:var(--muted)}
 
     /* Right column: preview + actions */
     .side{padding:6px 10px;display:flex;flex-direction:column;gap:14px;align-items:stretch}
@@ -113,8 +123,26 @@
     .btn.secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.03);box-shadow:none}
     .btn:active{transform:translateY(1px)}
 
-    /* Small helper */
-    .muted{color:var(--muted);font-size:13px}
+    /* Alliance roster list */
+    .roster{
+      margin-top:12px;
+      display:grid;
+      gap:8px;
+      max-height:220px;
+      overflow:auto;
+      padding-right:6px;
+    }
+    .member{
+      display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.008));
+      border:1px solid rgba(255,255,255,0.02);
+      font-size:13px;color:var(--muted);
+    }
+    .member .dot{width:10px;height:10px;border-radius:50%}
+    .dot.online{background:#36d399}
+    .dot.idle{background:#ffd166}
+    .dot.offline{background:#9fb4c9}
+
     footer{grid-column:1/-1;margin-top:6px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;font-size:13px}
 
     /* Responsive */
@@ -127,27 +155,29 @@
 </head>
 <body>
   <main class="container" role="main" aria-labelledby="main-title">
-    <section class="hero" aria-labelledby="main-title">
-      <div class="brand" aria-hidden="true">
-        <div class="logo" aria-hidden="true">B</div>
-        <div>
-          <div class="site-meta">projects.thebootycheeks</div>
+
+    <section aria-labelledby="main-title">
+      <div class="alliance-header">
+        <div class="alliance-emblem" aria-hidden="true">A</div>
+        <div class="alliance-meta">
+          <div class="alliance-name">Bootycheeks Alliance</div>
+          <div class="alliance-tag">An alliance of independent guilds: Chewbooty, Whalebooty, Dolphinbooty</div>
         </div>
       </div>
 
-      <h1 id="main-title">Galactic Explorer — Bootycheeks</h1>
-      <p class="lead">A clean, modern hub for your guild projects: rosters, mission tools, and resources. Click a card to open a project in a new tab.</p>
+      <h1 id="main-title">Alliance Hub</h1>
+      <p class="lead">Shared resources, coordinated ops, and unified rosters for the Bootycheeks Alliance. Each guild retains identity and leadership while contributing to alliance-wide missions and events.</p>
 
-      <nav class="cards" aria-label="project links">
+      <nav class="cards" aria-label="member guilds">
         <a class="card" href="https://thebootycheeks.github.io/cb/" target="_blank" rel="noopener noreferrer">
           <div class="thumb" aria-hidden="true">
-            <!-- Replace with your own curated thumbnail -->
             <img src="https://i.imgur.com/W1kflhn.gif" alt="Chewbooty thumbnail">
           </div>
           <div class="meta">
             <div class="title">Chewbooty</div>
-            <div class="desc">Rosters, dashboards, and team tools.</div>
+            <div class="desc">Roster & tools — tactical operations and member tracking.</div>
           </div>
+          <div class="badge" aria-hidden="true">Lead</div>
         </a>
 
         <a class="card" href="https://thebootycheeks.github.io/wb/" target="_blank" rel="noopener noreferrer">
@@ -156,8 +186,9 @@
           </div>
           <div class="meta">
             <div class="title">Whalebooty</div>
-            <div class="desc">Project pages and utilities.</div>
+            <div class="desc">Project pages & utilities — logistics and mission planning.</div>
           </div>
+          <div class="badge" aria-hidden="true">Support</div>
         </a>
 
         <a class="card" href="https://thebootycheeks.github.io/db/" target="_blank" rel="noopener noreferrer">
@@ -166,42 +197,94 @@
           </div>
           <div class="meta">
             <div class="title">Dolphinbooty</div>
-            <div class="desc">Status, tools, and resources.</div>
+            <div class="desc">Status & resources — recruitment and events coordination.</div>
           </div>
+          <div class="badge" aria-hidden="true">Ops</div>
         </a>
       </nav>
+
+      <div class="stats" aria-label="alliance statistics">
+        <div class="stat">
+          <div class="num" id="total-members">1,248</div>
+          <div class="label">Total Members</div>
+        </div>
+        <div class="stat">
+          <div class="num" id="active-online">124</div>
+          <div class="label">Online Now</div>
+        </div>
+        <div class="stat">
+          <div class="num" id="active-ops">7</div>
+          <div class="label">Active Ops</div>
+        </div>
+        <div class="stat">
+          <div class="num" id="guild-count">3</div>
+          <div class="label">Member Guilds</div>
+        </div>
+      </div>
     </section>
 
-    <aside class="side" aria-label="preview and quick actions">
-      <div id="preview" class="preview">Hover or focus a card to preview its details. Click to open the project in a new tab.</div>
+    <aside class="side" aria-label="preview and alliance tools">
+      <div id="preview" class="preview">Hover or focus a guild card to preview details. Click to open a guild page in a new tab.</div>
 
       <div class="actions" aria-hidden="true">
-        <button class="btn secondary" type="button" onclick="location.href='#'">Docs</button>
-        <button class="btn" type="button" onclick="location.href='https://github.com/thebootycheeks'">GitHub</button>
+        <button class="btn secondary" type="button" onclick="location.href='#'">Alliance Docs</button>
+        <button class="btn" type="button" onclick="location.href='https://github.com/thebootycheeks'">Alliance GitHub</button>
+      </div>
+
+      <div style="margin-top:8px;color:var(--muted);font-size:14px;font-weight:700">Recent Alliance Activity</div>
+      <div class="roster" aria-label="recent activity">
+        <div class="member"><div class="dot online" aria-hidden="true"></div><div><strong>Op Alpha</strong> launched by Chewbooty — 2h ago</div></div>
+        <div class="member"><div class="dot idle" aria-hidden="true"></div><div><strong>Logistics</strong> update from Whalebooty — 4h ago</div></div>
+        <div class="member"><div class="dot online" aria-hidden="true"></div><div><strong>Recruit Drive</strong> Dolphinbooty — 6h ago</div></div>
+        <div class="member"><div class="dot offline" aria-hidden="true"></div><div><strong>Alliance Meeting</strong> scheduled — Tomorrow</div></div>
       </div>
     </aside>
 
     <footer>
-      <div>© Bootycheeks</div>
-      <div class="muted">Theme: Galactic Explorer · Hosting: GitHub Pages</div>
+      <div>© Bootycheeks Alliance</div>
+      <div class="muted">Alliance hub · Roles: Lead, Support, Ops · Hosting: GitHub Pages</div>
     </footer>
   </main>
 
   <script>
-    // Preview enhancement for hover/focus with accessibility in mind
+    // Preview enhancement: update preview text and sample stats (simulate dynamic updates)
     (function(){
       const preview = document.getElementById('preview');
       const defaultText = preview.textContent;
-      document.querySelectorAll('.card').forEach(card => {
+      const cards = document.querySelectorAll('.card');
+
+      const stats = {
+        total: document.getElementById('total-members'),
+        online: document.getElementById('active-online'),
+        ops: document.getElementById('active-ops'),
+        guilds: document.getElementById('guild-count')
+      };
+
+      // lightweight simulated dynamic numbers (replace with real data calls if available)
+      function simulateStats(){
+        // randomize small changes
+        const baseTotal = 1248;
+        const total = baseTotal + Math.floor(Math.random()*6) - 2;
+        const online = 100 + Math.floor(Math.random()*50);
+        const ops = 5 + Math.floor(Math.random()*5);
+        stats.total.textContent = total.toLocaleString();
+        stats.online.textContent = online;
+        stats.ops.textContent = ops;
+      }
+      simulateStats();
+      setInterval(simulateStats, 15000);
+
+      cards.forEach(card => {
         const title = card.querySelector('.title')?.textContent || 'Project';
         const desc = card.querySelector('.desc')?.textContent || '';
-        const text = title + (desc ? ' — ' + desc : '');
+        const badge = card.querySelector('.badge')?.textContent || '';
+        const text = title + (badge ? ' — ' + badge : '') + (desc ? ': ' + desc : '');
+
         card.addEventListener('mouseenter', ()=> preview.textContent = text);
         card.addEventListener('focus', ()=> preview.textContent = text);
         card.addEventListener('mouseleave', ()=> preview.textContent = defaultText);
         card.addEventListener('blur', ()=> preview.textContent = defaultText);
 
-        // ensure Enter+Space activate card for keyboard-only users
         card.addEventListener('keydown', e => {
           if(e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
