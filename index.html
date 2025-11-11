@@ -1,60 +1,292 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bootycheeks Landing Page</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bootycheeks</title>
+  <meta name="description" content="Bootycheeks projects: Chewbooty, Whalebooty, Dolphinbooty" />
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 50px;
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa6bf;
+      --accent:#00b4d8;
+      --glass: rgba(255,255,255,0.04);
+      --radius:14px;
+      --maxWidth:1100px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
-    h1 {
-      margin-bottom: 40px;
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(0,180,216,0.05), transparent 10%),
+        radial-gradient(900px 400px at 90% 90%, rgba(0,180,216,0.03), transparent 10%),
+        var(--bg);
+      color:#e6eef8;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:40px;
     }
-    .icon-container {
-      display: flex;
-      justify-content: center;
-      gap: 60px;
+
+    .wrap{
+      width:100%;
+      max-width:var(--maxWidth);
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:20px;
+      padding:36px;
+      box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+      display:grid;
+      grid-template-columns:1fr 420px;
+      gap:28px;
+      align-items:center;
     }
-    .icon {
-      text-decoration: none;
-      color: #333;
+
+    /* Intro column */
+    .intro{
+      padding:8px 12px;
     }
-    .icon img {
-      width: 120px;
-      height: 120px;
-      border-radius: 20px;
-      transition: transform 0.3s;
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-bottom:10px;
     }
-    .icon img:hover {
-      transform: scale(1.1);
+    .logo {
+      width:56px;
+      height:56px;
+      border-radius:10px;
+      background:linear-gradient(135deg,var(--accent),#6dd3ff);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      color:#04212a;
+      box-shadow: 0 6px 18px rgba(3,15,30,0.6);
     }
-    .label {
-      margin-top: 10px;
-      font-size: 18px;
-      font-weight: bold;
+    h1{
+      margin:0 0 10px 0;
+      font-size:28px;
+      line-height:1.02;
+      letter-spacing:-0.2px;
+      color:#f6fbff;
+    }
+    p.lead{
+      margin:0 0 20px 0;
+      color:var(--muted);
+      font-size:15px;
+      max-width:60ch;
+    }
+
+    /* Icons grid */
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+      gap:18px;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+      border-radius:var(--radius);
+      padding:14px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      text-decoration:none;
+      color:inherit;
+      border:1px solid rgba(255,255,255,0.03);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .card:hover{
+      transform: translateY(-6px);
+      box-shadow: 0 14px 36px rgba(2,6,23,0.6);
+    }
+    .thumb{
+      width:64px;
+      height:64px;
+      flex:0 0 64px;
+      border-radius:12px;
+      overflow:hidden;
+      background:var(--glass);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .thumb img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .meta{
+      display:flex;
+      flex-direction:column;
+    }
+    .meta .title{
+      font-weight:600;
+      color:#f4fbff;
+      font-size:15px;
+      line-height:1.05;
+    }
+    .meta .desc{
+      font-size:13px;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    /* Right column */
+    .side{
+      padding:8px 12px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      align-items:flex-end;
+    }
+    .card-preview{
+      width:100%;
+      border-radius:12px;
+      overflow:hidden;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.03);
+      min-height:220px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--muted);
+      font-size:14px;
+      padding:10px;
+    }
+    .actions{
+      display:flex;
+      gap:10px;
+      width:100%;
+      justify-content:flex-end;
+    }
+    .btn{
+      appearance:none;
+      border:0;
+      padding:10px 14px;
+      border-radius:10px;
+      font-weight:600;
+      cursor:pointer;
+      color:#04212a;
+      background:var(--accent);
+      box-shadow: 0 8px 20px rgba(2,6,23,0.35);
+      transition:transform .12s ease;
+    }
+    .btn.secondary{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,0.035);
+      box-shadow:none;
+    }
+    .btn:active{transform:translateY(1px)}
+
+    footer{
+      grid-column:1/-1;
+      margin-top:10px;
+      font-size:13px;
+      color:var(--muted);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    /* Responsive */
+    @media (max-width:920px){
+      .wrap{grid-template-columns:1fr; padding:20px}
+      .side{align-items:stretch}
+      footer{flex-direction:column;gap:8px;align-items:flex-start}
     }
   </style>
 </head>
 <body>
-  <h1>Welcome to Bootycheeks</h1>
-  <div class="icon-container">
-    <a class="icon" href="https://thebootycheeks.github.io/cb/" target="_blank">
-      <img src="https://i.imgur.com/W1kflhn.gif" alt="Chewbooty Icon">
-      <div class="label">Chewbooty</div>
-    </a>
-    <a class="icon" href="https://thebootycheeks.github.io/wb/" target="_blank">
-      <img src="https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pjc2l4aXBxbmMxYXRidGd6NTQxa2tmcnE5ZWQwNmQ0eWkyaTAxcCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Z68zWR6XixSa4/200w.gif" alt="Whalebooty">
-      <div class="label">Whalebooty</div>
-    <a class="icon" href="https://thebootycheeks.github.io/db/" target="_blank">
-      <img src="https://i.imgur.com/GMdxdGN.gif" alt=Dolphinbooty Icon">
-      <div class="label">Dolphinbooty</div>
-    </a>
-    </a>
-  </div>
+  <main class="wrap" role="main" aria-labelledby="title">
+    <div class="intro">
+      <div class="brand" aria-hidden="true">
+        <div class="logo">B</div>
+        <div style="color:var(--muted);font-size:13px">projects.thebootycheeks</div>
+      </div>
+
+      <h1 id="title">Bootycheeks Projects</h1>
+      <p class="lead">Quick links to the active subprojects. Click a card to open the selected project in a new tab. Replace thumbnails with your own art or screenshots for stronger branding.</p>
+
+      <section class="cards" aria-label="project links">
+        <a class="card" href="https://thebootycheeks.github.io/cb/" target="_blank" rel="noopener noreferrer">
+          <div class="thumb" aria-hidden="true">
+            <img src="https://i.imgur.com/W1kflhn.gif" alt="Chewbooty thumbnail">
+          </div>
+          <div class="meta">
+            <div class="title">Chewbooty</div>
+            <div class="desc">Roster, tools, and dashboards for Chewbooty.</div>
+          </div>
+        </a>
+
+        <a class="card" href="https://thebootycheeks.github.io/wb/" target="_blank" rel="noopener noreferrer">
+          <div class="thumb" aria-hidden="true">
+            <img src="https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pjc2l4aXBxbmMxYXRidGd6NTQxa2tmcnE5ZWQwNmQ0eWkyaTAxcCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Z68zWR6XixSa4/200w.gif" alt="Whalebooty thumbnail">
+          </div>
+          <div class="meta">
+            <div class="title">Whalebooty</div>
+            <div class="desc">Whalebooty project pages and utilities.</div>
+          </div>
+        </a>
+
+        <a class="card" href="https://thebootycheeks.github.io/db/" target="_blank" rel="noopener noreferrer">
+          <div class="thumb" aria-hidden="true">
+            <img src="https://i.imgur.com/GMdxdGN.gif" alt="Dolphinbooty thumbnail">
+          </div>
+          <div class="meta">
+            <div class="title">Dolphinbooty</div>
+            <div class="desc">Dolphinbooty status and resources.</div>
+          </div>
+        </a>
+      </section>
+    </div>
+
+    <aside class="side" aria-label="preview and actions">
+      <div class="card-preview" id="preview">
+        Hover a card to preview the project (or click to open in a new tab).
+      </div>
+
+      <div class="actions" aria-hidden="true">
+        <button class="btn secondary" onclick="location.href='#'">Documentation</button>
+        <button class="btn" onclick="location.href='https://github.com/thebootycheeks'">GitHub</button>
+      </div>
+    </aside>
+
+    <footer>
+      <div>© Bootycheeks</div>
+      <div style="color:var(--muted)">Made with care · Hosting: GitHub Pages</div>
+    </footer>
+  </main>
+
+  <script>
+    // Small enhancement: preview text update on hover (non-blocking, accessible)
+    const preview = document.getElementById('preview');
+    document.querySelectorAll('.card').forEach(card=>{
+      const title = card.querySelector('.title').textContent;
+      const desc = card.querySelector('.desc').textContent;
+      card.addEventListener('mouseenter', ()=> {
+        preview.textContent = title + " — " + desc;
+      });
+      card.addEventListener('focus', ()=> {
+        preview.textContent = title + " — " + desc;
+      });
+      card.addEventListener('mouseleave', ()=> {
+        preview.textContent = "Hover a card to preview the project (or click to open in a new tab).";
+      });
+      card.addEventListener('blur', ()=> {
+        preview.textContent = "Hover a card to preview the project (or click to open in a new tab).";
+      });
+    });
+  </script>
 </body>
 </html>
