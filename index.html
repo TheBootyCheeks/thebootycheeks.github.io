@@ -1,169 +1,151 @@
-### Minimal Space Theme with Icons and Discord Embed
-
-Below is the updated single-file HTML page. It restores your three icons (Chewbooty, Whalebooty, Dolphinbooty) and embeds the Discord widget you provided in the right‑hand panel. Drop this file into your repo and update any URLs or copy as needed.
-
-```html
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Bootycheeks Alliance — Minimal Space</title>
-  <meta name="description" content="Minimal space-themed hub for the Bootycheeks Alliance: Chewbooty, Whalebooty, Dolphinbooty." />
+  <title>Bootycheeks Alliance — Hub</title>
+  <meta name="description" content="Bootycheeks Alliance hub — Chewbooty, Whalebooty, Dolphinbooty. Dark, fast, accessible." />
   <style>
     :root{
-      --bg-0:#030414;
-      --bg-1:#071028;
-      --panel:#071427;
-      --muted:#9aa7bd;
-      --accent:#61dafb;
+      --bg-0:#05070a;
+      --bg-1:#071827;
+      --panel:#091826;
+      --muted:#9fb0c2;
+      --accent:#39d0ff;
+      --accent-2:#7fffd4;
       --glass: rgba(255,255,255,0.03);
-      --radius:12px;
-      --maxWidth:980px;
+      --card-border: rgba(255,255,255,0.04);
+      --radius:14px;
+      --maxWidth:1100px;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
 
-    /* Reset */
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
+    /* Base */
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
     body{
       min-height:100vh;
       display:flex;
       align-items:center;
       justify-content:center;
       background:
-        radial-gradient(600px 200px at 10% 10%, rgba(97,218,251,0.03), transparent 10%),
-        radial-gradient(500px 180px at 90% 90%, rgba(125,210,255,0.02), transparent 10%),
+        radial-gradient(800px 300px at 12% 12%, rgba(57,208,255,0.02), transparent 8%),
+        radial-gradient(700px 240px at 88% 88%, rgba(127,255,212,0.01), transparent 8%),
         linear-gradient(180deg,var(--bg-0),var(--bg-1));
-      color:#eaf6ff;
+      color:#e8f6ff;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
       padding:36px;
     }
 
-    /* Subtle starfield */
-    .stars {
-      position:fixed; inset:0; pointer-events:none; z-index:0;
+    /* Starfield (subtle) */
+    .stars{position:fixed;inset:0;pointer-events:none;z-index:0;
       background-image:
-        radial-gradient(#ffffff22 1px, transparent 1px),
-        radial-gradient(#ffffff11 1px, transparent 1px);
-      background-size: 180px 180px, 60px 60px;
-      mix-blend-mode:screen;
-      opacity:0.8;
-      transform:translateZ(0);
+        radial-gradient(#ffffff11 1px, transparent 1px),
+        radial-gradient(#ffffff08 1px, transparent 1px);
+      background-size: 220px 220px, 72px 72px;
+      mix-blend-mode:screen;opacity:0.7;transform:translateZ(0);
     }
 
-    /* Container */
-    .wrap{
-      position:relative;
-      z-index:1;
-      width:100%;
-      max-width:var(--maxWidth);
+    /* Layout container */
+    .frame{
+      position:relative;z-index:1;
+      width:100%;max-width:var(--maxWidth);
       display:grid;
-      grid-template-columns:1fr 360px;
+      grid-template-columns: 1fr 360px;
       gap:24px;
-      padding:24px;
+      padding:22px;
       border-radius:16px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.008));
-      border:1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 10px 40px rgba(2,6,23,0.6);
+      background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
+      border:1px solid var(--card-border);
+      box-shadow: 0 18px 60px rgba(3,10,20,0.65);
     }
 
-    /* Left column */
-    .left h1{
-      font-size:22px;
-      letter-spacing:-0.2px;
-      margin-bottom:6px;
-      color:#f7fdff;
+    /* Header / left column */
+    .header{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+    .emblem{
+      width:72px;height:72px;border-radius:12px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:flex;align-items:center;justify-content:center;font-weight:900;color:#021214;font-size:26px;
+      box-shadow: 0 8px 22px rgba(2,6,23,0.6);
+      flex-shrink:0;
     }
-    .left .tag{
-      color:var(--muted);
-      font-size:13px;
-      margin-bottom:14px;
-    }
-    .left p.lead{
-      color:var(--muted);
-      margin-bottom:18px;
-      max-width:60ch;
-      font-size:15px;
-    }
+    .title-block{display:flex;flex-direction:column}
+    .site-title{font-size:20px;font-weight:800;margin:0;color:#f7feff}
+    .site-sub{font-size:13px;color:var(--muted);margin-top:2px}
 
+    h1.main{margin:8px 0 10px 0;font-size:26px;letter-spacing:-0.3px;color:#f8feff}
+    p.lead{margin:0 0 18px 0;color:var(--muted);max-width:64ch;font-size:15px}
+
+    /* Cards */
     .cards{
       display:grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap:12px;
+      gap:14px;
     }
     .card{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      padding:12px;
-      border-radius:12px;
-      text-decoration:none;
-      color:inherit;
-      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));
-      border:1px solid rgba(255,255,255,0.03);
-      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+      display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.008), rgba(255,255,255,0.004));
+      border:1px solid var(--card-border);
+      text-decoration:none;color:inherit;transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
       outline: none;
     }
     .card:focus, .card:hover{
       transform: translateY(-6px);
-      box-shadow: 0 14px 36px rgba(2,6,23,0.6);
-      background: linear-gradient(180deg, rgba(97,218,251,0.03), rgba(255,255,255,0.008));
+      box-shadow: 0 18px 40px rgba(2,6,23,0.6);
+      border-color: rgba(57,208,255,0.12);
     }
-    .thumb{
-      width:56px;height:56px;border-radius:10px;background:var(--glass);display:flex;align-items:center;justify-content:center;flex:0 0 56px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);
-    }
+
+    .thumb{width:64px;height:64px;border-radius:12px;background:var(--glass);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--card-border);flex:0 0 64px}
     .thumb img{width:100%;height:100%;object-fit:cover;display:block}
     .meta{display:flex;flex-direction:column}
-    .meta .title{font-weight:800;color:#f4fbff;font-size:14px}
+    .meta .title{font-weight:800;color:#f4fbff;font-size:15px}
     .meta .desc{font-size:13px;color:var(--muted);margin-top:4px}
+    .role{margin-left:auto;font-size:12px;font-weight:800;padding:6px 8px;border-radius:10px;background:#04121a;color:var(--accent-2);border:1px solid rgba(255,255,255,0.03)}
 
-    /* Right column */
-    .side{display:flex;flex-direction:column;gap:12px;padding:6px 2px}
-    .panel{
-      border-radius:12px;padding:12px;background:transparent;border:1px solid rgba(255,255,255,0.03);
-    }
-    .preview{
-      min-height:120px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;text-align:center;
-      border-radius:10px;padding:10px;
-    }
-    .discord-embed{
-      margin-top:10px;
-      display:flex;
-      justify-content:center;
-    }
-    .stats{display:flex;gap:8px;justify-content:space-between;margin-top:12px}
+    /* Right column (panel) */
+    .panel{display:flex;flex-direction:column;gap:12px;padding:12px;border-radius:12px;background:transparent;border:1px solid var(--card-border)}
+    .preview{min-height:140px;border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);background:linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.003))}
+    .stats{display:flex;gap:10px;justify-content:space-between}
     .stat{flex:1;text-align:center}
-    .stat .num{font-weight:800;font-size:18px;color:#f8feff}
+    .stat .num{font-weight:900;font-size:18px;color:#f8feff}
     .stat .label{font-size:12px;color:var(--muted);margin-top:6px}
 
-    .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
-    .btn{padding:8px 12px;border-radius:10px;border:0;font-weight:800;cursor:pointer;background:var(--accent);color:#04121a}
-    .btn.alt{background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted)}
+    .actions{display:flex;gap:10px;justify-content:flex-end}
+    .btn{padding:9px 12px;border-radius:10px;border:0;font-weight:800;cursor:pointer;background:var(--accent);color:#021214;box-shadow:0 8px 22px rgba(2,6,23,0.35)}
+    .btn.ghost{background:transparent;border:1px solid var(--card-border);color:var(--muted);box-shadow:none}
+
+    .discord-wrap{margin-top:8px;border-radius:10px;overflow:hidden;border:1px solid var(--card-border);background:linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.003))}
 
     footer{grid-column:1/-1;margin-top:8px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;align-items:center}
 
-    /* Accessibility helpers */
+    /* Small utilities */
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
     /* Responsive */
-    @media (max-width:920px){
-      .wrap{grid-template-columns:1fr;gap:16px;padding:18px}
+    @media (max-width:980px){
+      .frame{grid-template-columns:1fr;gap:18px;padding:18px}
       .actions{justify-content:space-between}
+      .discord-wrap iframe{width:100% !important;height:420px !important}
       footer{flex-direction:column;align-items:flex-start;gap:8px}
-      .discord-embed iframe{width:100% !important}
     }
   </style>
 </head>
 <body>
   <div class="stars" aria-hidden="true"></div>
 
-  <main class="wrap" role="main" aria-labelledby="main-title">
-    <section class="left">
-      <h1 id="main-title">Bootycheeks Alliance</h1>
-      <div class="tag">Minimal Space Hub — unified access for member guilds</div>
-      <p class="lead">Fast, focused links to guild rosters and tools. Keyboard friendly, lightweight, and intentionally minimal to keep the team moving.</p>
+  <main class="frame" role="main" aria-labelledby="main-title">
+    <section>
+      <div class="header" aria-hidden="true">
+        <div class="emblem">A</div>
+        <div class="title-block">
+          <div class="site-title">Bootycheeks Alliance</div>
+          <div class="site-sub">A lightweight hub for member guilds and alliance resources</div>
+        </div>
+      </div>
+
+      <h1 class="main" id="main-title">Alliance Hub</h1>
+      <p class="lead">Unified access to each guild's tools and rosters. Dark, minimal, and fast — built for quick navigation and keyboard accessibility.</p>
 
       <nav class="cards" aria-label="member guilds">
         <a class="card" href="https://thebootycheeks.github.io/cb/" target="_blank" rel="noopener noreferrer">
@@ -174,6 +156,7 @@ Below is the updated single-file HTML page. It restores your three icons (Chewbo
             <div class="title">Chewbooty</div>
             <div class="desc">Tactical roster & dashboards</div>
           </div>
+          <div class="role" aria-hidden="true">Lead</div>
         </a>
 
         <a class="card" href="https://thebootycheeks.github.io/wb/" target="_blank" rel="noopener noreferrer">
@@ -182,8 +165,9 @@ Below is the updated single-file HTML page. It restores your three icons (Chewbo
           </div>
           <div class="meta">
             <div class="title">Whalebooty</div>
-            <div class="desc">Logistics and mission tools</div>
+            <div class="desc">Logistics & mission tools</div>
           </div>
+          <div class="role" aria-hidden="true">Support</div>
         </a>
 
         <a class="card" href="https://thebootycheeks.github.io/db/" target="_blank" rel="noopener noreferrer">
@@ -192,70 +176,79 @@ Below is the updated single-file HTML page. It restores your three icons (Chewbo
           </div>
           <div class="meta">
             <div class="title">Dolphinbooty</div>
-            <div class="desc">Recruitment and events</div>
+            <div class="desc">Recruitment & events</div>
           </div>
+          <div class="role" aria-hidden="true">Ops</div>
         </a>
       </nav>
     </section>
 
-    <aside class="side" aria-label="preview and quick actions">
-      <div class="panel" aria-labelledby="stats-title">
-        <div id="stats-title" class="sr-only">Alliance statistics</div>
-        <div id="preview" class="preview">Hover or focus a card to preview details.</div>
+    <aside class="panel" aria-label="preview and alliance tools">
+      <div id="preview" class="preview" aria-live="polite">Hover or focus a guild card to preview details here. Click a card to open it in a new tab.</div>
 
-        <div class="stats" role="list" aria-label="brief statistics">
-          <div class="stat" role="listitem">
-            <div class="num" id="stat-members">1,248</div>
-            <div class="label">Members</div>
-          </div>
-          <div class="stat" role="listitem">
-            <div class="num" id="stat-online">124</div>
-            <div class="label">Online</div>
-          </div>
-          <div class="stat" role="listitem">
-            <div class="num" id="stat-guilds">3</div>
-            <div class="label">Guilds</div>
-          </div>
+      <div class="stats" role="list" aria-label="alliance stats">
+        <div class="stat" role="listitem">
+          <div class="num" id="stat-members">1,248</div>
+          <div class="label">Members</div>
         </div>
+        <div class="stat" role="listitem">
+          <div class="num" id="stat-online">124</div>
+          <div class="label">Online</div>
+        </div>
+        <div class="stat" role="listitem">
+          <div class="num" id="stat-guilds">3</div>
+          <div class="label">Guilds</div>
+        </div>
+      </div>
 
-        <div class="actions" aria-hidden="true">
-          <button class="btn alt" type="button" onclick="location.href='#'">Docs</button>
-          <button class="btn" type="button" onclick="location.href='https://github.com/thebootycheeks'">GitHub</button>
-        </div>
+      <div class="actions" aria-hidden="true">
+        <button class="btn ghost" type="button" onclick="location.href='#'">Docs</button>
+        <button class="btn" type="button" onclick="location.href='https://github.com/thebootycheeks'">GitHub</button>
+      </div>
 
-        <div class="discord-embed" aria-hidden="false">
-          <!-- User-provided Discord widget -->
-          <iframe src="https://ptb.discord.com/widget?id=430853296480321537&theme=dark"
-                  width="350" height="500" allowtransparency="true" frameborder="0"
-                  sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
-                  title="Bootycheeks Discord"></iframe>
-        </div>
+      <div class="discord-wrap" aria-label="discord widget">
+        <!-- User-provided Discord widget -->
+        <iframe src="https://ptb.discord.com/widget?id=430853296480321537&theme=dark"
+                width="350" height="500" allowtransparency="true" frameborder="0"
+                sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+                title="Bootycheeks Discord"></iframe>
       </div>
     </aside>
 
     <footer>
       <div>© Bootycheeks Alliance</div>
-      <div class="muted">Minimal Space · Fast · Accessible</div>
+      <div class="muted">Dark theme · Accessible · Fast</div>
     </footer>
   </main>
 
   <script>
-    // Lightweight progressive enhancement: hover/focus preview and simulated stats
+    // Interaction: preview on hover/focus and keyboard activation
     (function(){
-      const previewEl = document.getElementById('preview');
-      const defaultText = previewEl.textContent;
+      const preview = document.getElementById('preview');
+      const defaultText = preview.textContent;
       const cards = document.querySelectorAll('.card');
+
+      // Simple simulated stats (replace with live API calls if available)
+      const statMembers = document.getElementById('stat-members');
+      const statOnline = document.getElementById('stat-online');
+      setInterval(()=>{
+        const base = 1248;
+        statMembers.textContent = (base + Math.floor(Math.random()*7) - 3).toLocaleString();
+        statOnline.textContent = (100 + Math.floor(Math.random()*40)).toString();
+      }, 15000);
 
       cards.forEach(card => {
         const title = card.querySelector('.title')?.textContent || 'Guild';
         const desc = card.querySelector('.desc')?.textContent || '';
-        const text = title + (desc ? ' — ' + desc : '');
+        const role = card.querySelector('.role')?.textContent || '';
+        const text = role ? `${title} — ${role}\n${desc}` : `${title}\n${desc}`;
 
-        card.addEventListener('mouseenter', ()=> previewEl.textContent = text);
-        card.addEventListener('focus', ()=> previewEl.textContent = text);
-        card.addEventListener('mouseleave', ()=> previewEl.textContent = defaultText);
-        card.addEventListener('blur', ()=> previewEl.textContent = defaultText);
+        card.addEventListener('mouseenter', ()=> preview.textContent = text);
+        card.addEventListener('focus', ()=> preview.textContent = text);
+        card.addEventListener('mouseleave', ()=> preview.textContent = defaultText);
+        card.addEventListener('blur', ()=> preview.textContent = defaultText);
 
+        // Keyboard activation: Enter or Space opens the link
         card.addEventListener('keydown', e => {
           if(e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
@@ -263,17 +256,7 @@ Below is the updated single-file HTML page. It restores your three icons (Chewbo
           }
         });
       });
-
-      // Simulate minor live updates (replace with real calls if available)
-      const members = document.getElementById('stat-members');
-      const online = document.getElementById('stat-online');
-      setInterval(()=>{
-        const base = 1248;
-        members.textContent = (base + Math.floor(Math.random()*7) - 3).toLocaleString();
-        online.textContent = (100 + Math.floor(Math.random()*40)).toString();
-      }, 15000);
     })();
   </script>
 </body>
 </html>
-```
