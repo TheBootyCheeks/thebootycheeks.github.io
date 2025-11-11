@@ -3,229 +3,150 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Bootycheeks</title>
+  <title>Galactic Explorer — Bootycheeks</title>
   <meta name="description" content="Bootycheeks projects: Chewbooty, Whalebooty, Dolphinbooty" />
-
   <style>
+    /* Reset + base */
     :root{
-      --bg:#0f1724;
-      --card:#0b1220;
-      --muted:#9aa6bf;
-      --accent:#00b4d8;
+      --bg-0:#06101a;
+      --bg-1:#092235;
       --glass: rgba(255,255,255,0.04);
+      --muted:#9fb4c9;
+      --accent:#39d0ff;
+      --accent-2:#7fffd4;
+      --card:#0b2030;
       --radius:14px;
       --maxWidth:1100px;
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      font-family: Inter, ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
-
     *{box-sizing:border-box}
-    html,body{height:100%}
+    html,body{height:100%;margin:0}
     body{
-      margin:0;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
       background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(0,180,216,0.05), transparent 10%),
-        radial-gradient(900px 400px at 90% 90%, rgba(0,180,216,0.03), transparent 10%),
-        var(--bg);
-      color:#e6eef8;
+        radial-gradient(800px 300px at 10% 10%, rgba(57,208,255,0.03), transparent 10%),
+        radial-gradient(700px 250px at 90% 90%, rgba(127,255,212,0.02), transparent 10%),
+        linear-gradient(180deg,var(--bg-0),var(--bg-1));
+      color:#eaf6ff;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      padding:40px;
-    }
-
-    .wrap{
-      width:100%;
-      max-width:var(--maxWidth);
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:20px;
-      padding:36px;
-      box-shadow: 0 6px 30px rgba(2,6,23,0.6);
-      display:grid;
-      grid-template-columns:1fr 420px;
-      gap:28px;
-      align-items:center;
-    }
-
-    /* Intro column */
-    .intro{
-      padding:8px 12px;
-    }
-    .brand {
-      display:flex;
-      align-items:center;
-      gap:14px;
-      margin-bottom:10px;
-    }
-    .logo {
-      width:56px;
-      height:56px;
-      border-radius:10px;
-      background:linear-gradient(135deg,var(--accent),#6dd3ff);
       display:flex;
       align-items:center;
       justify-content:center;
-      font-weight:700;
-      color:#04212a;
-      box-shadow: 0 6px 18px rgba(3,15,30,0.6);
-    }
-    h1{
-      margin:0 0 10px 0;
-      font-size:28px;
-      line-height:1.02;
-      letter-spacing:-0.2px;
-      color:#f6fbff;
-    }
-    p.lead{
-      margin:0 0 20px 0;
-      color:var(--muted);
-      font-size:15px;
-      max-width:60ch;
+      padding:36px;
     }
 
-    /* Icons grid */
-    .cards{
+    /* Layout */
+    .container{
+      width:100%;
+      max-width:var(--maxWidth);
       display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
-      gap:18px;
+      grid-template-columns: 1fr 360px;
+      gap:28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.014), rgba(255,255,255,0.01));
+      border-radius:18px;
+      padding:28px;
+      box-shadow: 0 10px 40px rgba(2,6,23,0.6);
+      border:1px solid rgba(255,255,255,0.03);
     }
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
-      border-radius:var(--radius);
-      padding:14px;
+
+    /* Left column: hero + cards */
+    .hero{
+      padding:6px 12px;
+    }
+    .brand{
       display:flex;
       gap:12px;
       align-items:center;
-      text-decoration:none;
-      color:inherit;
-      border:1px solid rgba(255,255,255,0.03);
-      transition: transform .18s ease, box-shadow .18s ease;
+      margin-bottom:8px;
     }
-    .card:hover{
-      transform: translateY(-6px);
-      box-shadow: 0 14px 36px rgba(2,6,23,0.6);
+    .logo{
+      width:56px;height:56px;border-radius:10px;
+      background: linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:flex;align-items:center;justify-content:center;
+      color:#06121a;font-weight:800;font-size:20px;box-shadow:0 6px 18px rgba(2,6,23,0.6);
     }
-    .thumb{
-      width:64px;
-      height:64px;
-      flex:0 0 64px;
-      border-radius:12px;
-      overflow:hidden;
-      background:var(--glass);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,0.03);
-    }
-    .thumb img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    .meta{
-      display:flex;
-      flex-direction:column;
-    }
-    .meta .title{
-      font-weight:600;
-      color:#f4fbff;
-      font-size:15px;
-      line-height:1.05;
-    }
-    .meta .desc{
-      font-size:13px;
-      color:var(--muted);
-      margin-top:4px;
-    }
+    .site-meta{color:var(--muted);font-size:13px}
 
-    /* Right column */
-    .side{
-      padding:8px 12px;
-      display:flex;
-      flex-direction:column;
+    h1{
+      margin:4px 0 10px 0;
+      font-size:28px;
+      line-height:1.02;
+      letter-spacing:-0.2px;
+      color:#f8feff;
+    }
+    p.lead{margin:0 0 20px 0;color:var(--muted);font-size:15px;max-width:60ch}
+
+    /* Cards grid */
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap:14px;
-      align-items:flex-end;
+      margin-top:14px;
     }
-    .card-preview{
-      width:100%;
-      border-radius:12px;
-      overflow:hidden;
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    .card{
+      display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.008));
       border:1px solid rgba(255,255,255,0.03);
-      min-height:220px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:var(--muted);
-      font-size:14px;
-      padding:10px;
+      text-decoration:none;color:inherit;
+      transition: transform .14s ease, box-shadow .14s ease;
     }
-    .actions{
-      display:flex;
-      gap:10px;
-      width:100%;
-      justify-content:flex-end;
+    .card:focus, .card:hover{transform:translateY(-6px);box-shadow:0 14px 36px rgba(2,6,23,0.6);outline:none}
+    .thumb{width:64px;height:64px;border-radius:10px;background:var(--glass);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid rgba(255,255,255,0.03)}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .meta{display:flex;flex-direction:column}
+    .meta .title{font-weight:700;color:#f4fbff;font-size:15px}
+    .meta .desc{font-size:13px;color:var(--muted);margin-top:4px}
+
+    /* Right column: preview + actions */
+    .side{padding:6px 10px;display:flex;flex-direction:column;gap:14px;align-items:stretch}
+    .preview{
+      border-radius:12px;min-height:220px;padding:12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.008));
+      border:1px solid rgba(255,255,255,0.03);
+      color:var(--muted);font-size:14px;display:flex;align-items:center;justify-content:center;text-align:center;
     }
+    .actions{display:flex;gap:10px;justify-content:flex-end}
     .btn{
-      appearance:none;
-      border:0;
-      padding:10px 14px;
-      border-radius:10px;
-      font-weight:600;
-      cursor:pointer;
-      color:#04212a;
-      background:var(--accent);
-      box-shadow: 0 8px 20px rgba(2,6,23,0.35);
-      transition:transform .12s ease;
+      appearance:none;border:0;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;
+      color:#062021;background:var(--accent);box-shadow: 0 10px 28px rgba(2,6,23,0.35);transition:transform .12s ease;
     }
-    .btn.secondary{
-      background:transparent;
-      color:var(--muted);
-      border:1px solid rgba(255,255,255,0.035);
-      box-shadow:none;
-    }
+    .btn.secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.03);box-shadow:none}
     .btn:active{transform:translateY(1px)}
 
-    footer{
-      grid-column:1/-1;
-      margin-top:10px;
-      font-size:13px;
-      color:var(--muted);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-    }
+    /* Small helper */
+    .muted{color:var(--muted);font-size:13px}
+    footer{grid-column:1/-1;margin-top:6px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;font-size:13px}
 
     /* Responsive */
-    @media (max-width:920px){
-      .wrap{grid-template-columns:1fr; padding:20px}
-      .side{align-items:stretch}
-      footer{flex-direction:column;gap:8px;align-items:flex-start}
+    @media (max-width:980px){
+      .container{grid-template-columns:1fr;gap:18px;padding:20px}
+      .actions{justify-content:space-between}
+      footer{flex-direction:column;align-items:flex-start;gap:8px}
     }
   </style>
 </head>
 <body>
-  <main class="wrap" role="main" aria-labelledby="title">
-    <div class="intro">
+  <main class="container" role="main" aria-labelledby="main-title">
+    <section class="hero" aria-labelledby="main-title">
       <div class="brand" aria-hidden="true">
-        <div class="logo">B</div>
-        <div style="color:var(--muted);font-size:13px">projects.thebootycheeks</div>
+        <div class="logo" aria-hidden="true">B</div>
+        <div>
+          <div class="site-meta">projects.thebootycheeks</div>
+        </div>
       </div>
 
-      <h1 id="title">Bootycheeks Projects</h1>
-      <p class="lead">Quick links to the active subprojects. Click a card to open the selected project in a new tab. Replace thumbnails with your own art or screenshots for stronger branding.</p>
+      <h1 id="main-title">Galactic Explorer — Bootycheeks</h1>
+      <p class="lead">A clean, modern hub for your guild projects: rosters, mission tools, and resources. Click a card to open a project in a new tab.</p>
 
-      <section class="cards" aria-label="project links">
+      <nav class="cards" aria-label="project links">
         <a class="card" href="https://thebootycheeks.github.io/cb/" target="_blank" rel="noopener noreferrer">
           <div class="thumb" aria-hidden="true">
+            <!-- Replace with your own curated thumbnail -->
             <img src="https://i.imgur.com/W1kflhn.gif" alt="Chewbooty thumbnail">
           </div>
           <div class="meta">
             <div class="title">Chewbooty</div>
-            <div class="desc">Roster, tools, and dashboards for Chewbooty.</div>
+            <div class="desc">Rosters, dashboards, and team tools.</div>
           </div>
         </a>
 
@@ -235,7 +156,7 @@
           </div>
           <div class="meta">
             <div class="title">Whalebooty</div>
-            <div class="desc">Whalebooty project pages and utilities.</div>
+            <div class="desc">Project pages and utilities.</div>
           </div>
         </a>
 
@@ -245,48 +166,50 @@
           </div>
           <div class="meta">
             <div class="title">Dolphinbooty</div>
-            <div class="desc">Dolphinbooty status and resources.</div>
+            <div class="desc">Status, tools, and resources.</div>
           </div>
         </a>
-      </section>
-    </div>
+      </nav>
+    </section>
 
-    <aside class="side" aria-label="preview and actions">
-      <div class="card-preview" id="preview">
-        Hover a card to preview the project (or click to open in a new tab).
-      </div>
+    <aside class="side" aria-label="preview and quick actions">
+      <div id="preview" class="preview">Hover or focus a card to preview its details. Click to open the project in a new tab.</div>
 
       <div class="actions" aria-hidden="true">
-        <button class="btn secondary" onclick="location.href='#'">Documentation</button>
-        <button class="btn" onclick="location.href='https://github.com/thebootycheeks'">GitHub</button>
+        <button class="btn secondary" type="button" onclick="location.href='#'">Docs</button>
+        <button class="btn" type="button" onclick="location.href='https://github.com/thebootycheeks'">GitHub</button>
       </div>
     </aside>
 
     <footer>
       <div>© Bootycheeks</div>
-      <div style="color:var(--muted)">Made with care · Hosting: GitHub Pages</div>
+      <div class="muted">Theme: Galactic Explorer · Hosting: GitHub Pages</div>
     </footer>
   </main>
 
   <script>
-    // Small enhancement: preview text update on hover (non-blocking, accessible)
-    const preview = document.getElementById('preview');
-    document.querySelectorAll('.card').forEach(card=>{
-      const title = card.querySelector('.title').textContent;
-      const desc = card.querySelector('.desc').textContent;
-      card.addEventListener('mouseenter', ()=> {
-        preview.textContent = title + " — " + desc;
+    // Preview enhancement for hover/focus with accessibility in mind
+    (function(){
+      const preview = document.getElementById('preview');
+      const defaultText = preview.textContent;
+      document.querySelectorAll('.card').forEach(card => {
+        const title = card.querySelector('.title')?.textContent || 'Project';
+        const desc = card.querySelector('.desc')?.textContent || '';
+        const text = title + (desc ? ' — ' + desc : '');
+        card.addEventListener('mouseenter', ()=> preview.textContent = text);
+        card.addEventListener('focus', ()=> preview.textContent = text);
+        card.addEventListener('mouseleave', ()=> preview.textContent = defaultText);
+        card.addEventListener('blur', ()=> preview.textContent = defaultText);
+
+        // ensure Enter+Space activate card for keyboard-only users
+        card.addEventListener('keydown', e => {
+          if(e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            card.click();
+          }
+        });
       });
-      card.addEventListener('focus', ()=> {
-        preview.textContent = title + " — " + desc;
-      });
-      card.addEventListener('mouseleave', ()=> {
-        preview.textContent = "Hover a card to preview the project (or click to open in a new tab).";
-      });
-      card.addEventListener('blur', ()=> {
-        preview.textContent = "Hover a card to preview the project (or click to open in a new tab).";
-      });
-    });
+    })();
   </script>
 </body>
 </html>
