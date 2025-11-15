@@ -14,7 +14,6 @@
       --panel:#0b1422;
       --muted:#9fb0c2;
       --accent:#ffe81f;
-      --accent-2:#39d0ff;
       --glass: rgba(255,255,255,0.03);
       --card-border: rgba(255,255,255,0.08);
       --radius:14px;
@@ -112,9 +111,10 @@
     .meta .title{font-weight:800;color:#f4fbff;font-size:16px}
     .meta .desc{font-size:13px;color:var(--muted);margin-top:4px}
     .role{
-      margin-left:auto;font-size:12px;font-weight:800;padding:6px 8px;border-radius:10px;
+      margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;padding:6px 8px;border-radius:10px;
       background:#091420;color:#ffe81f;border:1px solid rgba(255,255,255,0.06)
     }
+    .role a{color:#ffe81f;text-decoration:underline;font-weight:900;font-size:12px}
 
     .info{
       border-top:1px solid var(--card-border);
@@ -150,21 +150,6 @@
     }
     .discord-wrap .iframe-container{position:relative;padding-top:calc(500 / 350 * 100%);height:0;width:100%}
     .discord-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;display:block}
-
-    .points{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      padding:12px;border:1px solid var(--card-border);border-radius:10px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.008), rgba(255,255,255,0.003));
-    }
-    .points .label{color:var(--muted);font-size:13px}
-    .points .value{
-      font-family: Orbitron, sans-serif;font-weight:900;color:#ffe81f;font-size:18px;
-      text-shadow: 0 0 10px rgba(255,232,31,0.35);
-    }
-    .points .action{
-      padding:8px 12px;border-radius:10px;border:1px solid var(--card-border);
-      background:#091420;color:#ffe81f;font-weight:800;cursor:pointer;
-    }
 
     footer{grid-column:1/-1;margin-top:8px;color:var(--muted);font-size:13px;display:flex;flex-direction:row;justify-content:space-between;align-items:center;gap:10px}
 
@@ -223,7 +208,11 @@
               <div class="title">Chewbooty</div>
               <div class="desc">Tactical rosters & dashboards</div>
             </div>
-            <div class="role" aria-hidden="true">Lead</div>
+
+            <div class="role" aria-hidden="false">
+              <span>Lead</span>
+              <a href="https://swgoh.gg/g/U48yJw7LRXmvqd2TKavaKA/" target="_blank" rel="noopener noreferrer" title="Chewbooty on SWGOH.GG">SWGOH.GG</a>
+            </div>
           </div>
 
           <div class="info" id="info-chewbooty" aria-label="Chewbooty info">
@@ -255,7 +244,11 @@
               <div class="title">Whalebooty</div>
               <div class="desc">Logistics & mission tools</div>
             </div>
-            <div class="role" aria-hidden="true">Support</div>
+
+            <div class="role" aria-hidden="false">
+              <span>Support</span>
+              <a href="https://swgoh.gg/g/4nCSKBUXRfyjlElFcmIkvg/" target="_blank" rel="noopener noreferrer" title="Whalebooty on SWGOH.GG">SWGOH.GG</a>
+            </div>
           </div>
 
           <div class="info" id="info-whalebooty" aria-label="Whalebooty info">
@@ -287,7 +280,11 @@
               <div class="title">Dolphinbooty</div>
               <div class="desc">Recruitment & events</div>
             </div>
-            <div class="role" aria-hidden="true">Ops</div>
+
+            <div class="role" aria-hidden="false">
+              <span>Ops</span>
+              <a href="https://swgoh.gg/g/OiPYqOuwS6mkNLE3T2Wy5w/" target="_blank" rel="noopener noreferrer" title="Dolphinbooty on SWGOH.GG">SWGOH.GG</a>
+            </div>
           </div>
 
           <div class="info" id="info-dolphinbooty" aria-label="Dolphinbooty info">
@@ -336,7 +333,6 @@
         <button class="btn" type="button" onclick="location.href='https://github.com/thebootycheeks'">GitHub</button>
       </div>
 
-      <!-- Discord iframe (kept) -->
       <div class="discord-wrap" aria-label="Discord widget">
         <div class="iframe-container">
           <iframe
@@ -347,13 +343,6 @@
           </iframe>
         </div>
       </div>
-
-      <!-- Community points tracker (embed version) -->
-      <div class="points" aria-live="polite">
-        <div class="label">Community points</div>
-        <div class="value" id="pointsTotal">—</span></div>
-        <button class="action" id="pointsAdd" type="button" aria-label="Add one point">Add 1 point</button>
-      </div>
     </aside>
 
     <footer>
@@ -362,8 +351,6 @@
     </footer>
   </main>
 
-  <!-- CounterAPI embed script -->
-  <script src="https://counterapi.com/c.js?ns=thebootycheeks.github.io" async></script>
   <script>
     (function(){
       // Preview interactions
@@ -372,7 +359,7 @@
       document.querySelectorAll('.card').forEach(card=>{
         const title = card.querySelector('.meta .title')?.textContent || 'Guild';
         const desc = card.querySelector('.meta .desc')?.textContent || '';
-        const role = card.querySelector('.role')?.textContent || '';
+        const role = card.querySelector('.role span')?.textContent || '';
         const text = role ? `${title} — ${role}\n${desc}` : `${title}\n${desc}`;
         card.addEventListener('mouseenter', ()=> preview.textContent = text);
         card.addEventListener('focus', ()=> preview.textContent = text);
@@ -382,66 +369,6 @@
           if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); card.click(); }
         });
       });
-
-      // Demo stats pulse
-      const statMembers = document.getElementById('stat-members');
-      const statOnline = document.getElementById('stat-online');
-      setInterval(()=>{
-        const base = 1248;
-        statMembers.textContent = (base + Math.floor(Math.random()*7) - 3).toLocaleString();
-        statOnline.textContent = (100 + Math.floor(Math.random()*40)).toString();
-      }, 15000);
-
-      // Points tracker via CounterAPI embed
-      const ns  = 'thebootycheeks.github.io';
-      const key = 'bootycheeks-community-points';
-      const totalEl = document.getElementById('pointsTotal');
-      const addBtn  = document.getElementById('pointsAdd');
-
-      function setLoading(){ totalEl.textContent = '—'; }
-      function setValue(v){ totalEl.textContent = Number(v).toLocaleString(); }
-
-      async function ensureReady(){
-        const start = Date.now();
-        while (!window.CounterAPI) {
-          await new Promise(r=> setTimeout(r, 50));
-          if (Date.now() - start > 6000) throw new Error('CounterAPI embed timeout');
-        }
-      }
-
-      async function get(){
-        setLoading();
-        try {
-          await ensureReady();
-          const v = await window.CounterAPI.get({ namespace: ns, name: key, behavior: 'vote' });
-          setValue(v);
-        } catch (e){
-          totalEl.textContent = 'N/A';
-          console.warn('Points get failed:', e.message);
-        }
-      }
-
-      async function hit(){
-        addBtn.disabled = true; addBtn.textContent = 'Adding…';
-        try {
-          await ensureReady();
-          const v = await window.CounterAPI.up({ namespace: ns, name: key, behavior: 'vote' });
-          setValue(v);
-          addBtn.textContent = 'Added!';
-        } catch (e){
-          addBtn.textContent = 'Try again';
-          console.warn('Points hit failed:', e.message);
-        } finally {
-          setTimeout(()=> { addBtn.textContent = 'Add 1 point'; addBtn.disabled = false; }, 1200);
-        }
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', get);
-      } else {
-        get();
-      }
-      addBtn.addEventListener('click', hit);
     })();
   </script>
 </body>
