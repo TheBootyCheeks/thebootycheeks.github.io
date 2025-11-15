@@ -89,7 +89,7 @@
 
     .cards{ display:grid; grid-template-columns: 1fr; gap:12px; }
     .card{
-      display:flex;gap:12px;align-items:center;padding:14px;border-radius:12px;
+      display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:12px;
       background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
       border:1px solid var(--card-border); text-decoration:none;color:inherit;
       transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
@@ -101,6 +101,7 @@
       border-color: rgba(255,232,31,0.25);
       background:linear-gradient(180deg, rgba(255,232,31,0.06), rgba(255,255,255,0.02));
     }
+    .row{display:flex;gap:12px;align-items:center}
     .thumb{
       width:72px;height:72px;border-radius:12px;background:var(--glass);
       display:flex;align-items:center;justify-content:center;overflow:hidden;
@@ -115,15 +116,12 @@
       background:#091420;color:#ffe81f;border:1px solid rgba(255,255,255,0.06)
     }
 
-    /* Info panel inside each card */
+    /* Info panel inside each card (visible by default) */
     .info{
-      margin-top:10px;
       border-top:1px solid var(--card-border);
       padding-top:10px;
-      display:none;
       width:100%;
     }
-    .info.open{display:block}
     .info-grid{
       display:grid;grid-template-columns: repeat(3, 1fr);gap:10px;
     }
@@ -134,11 +132,6 @@
     }
     .pill .k{font-size:11px;color:var(--muted)}
     .pill .v{font-weight:900;font-size:14px;color:#f8feff}
-
-    .toggle{
-      position:absolute;right:10px;bottom:10px;font-size:12px;color:#ffe81f;cursor:pointer;
-      user-select:none;
-    }
 
     .panel{display:flex;flex-direction:column;gap:12px;padding:12px;border-radius:12px;background:transparent;border:1px solid var(--card-border)}
     .preview{
@@ -159,15 +152,20 @@
     .discord-wrap .iframe-container{position:relative;padding-top:calc(500 / 350 * 100%);height:0;width:100%}
     .discord-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;display:block}
 
-    .counter{
+    /* Community points tracker */
+    .points{
       display:flex;align-items:center;justify-content:space-between;gap:12px;
       padding:12px;border:1px solid var(--card-border);border-radius:10px;
       background:linear-gradient(180deg, rgba(255,255,255,0.008), rgba(255,255,255,0.003));
     }
-    .counter .label{color:var(--muted);font-size:13px}
-    .counter .value{
+    .points .label{color:var(--muted);font-size:13px}
+    .points .value{
       font-family: Orbitron, sans-serif;font-weight:900;color:#ffe81f;font-size:18px;
       text-shadow: 0 0 10px rgba(255,232,31,0.35);
+    }
+    .points .action{
+      padding:8px 12px;border-radius:10px;border:1px solid var(--card-border);
+      background:#091420;color:#ffe81f;font-weight:800;cursor:pointer;
     }
 
     footer{grid-column:1/-1;margin-top:8px;color:var(--muted);font-size:13px;display:flex;flex-direction:row;justify-content:space-between;align-items:center;gap:10px}
@@ -219,16 +217,19 @@
       <nav class="cards" aria-label="Member guilds">
         <!-- Chewbooty -->
         <a class="card" href="https://thebootycheeks.github.io/cb/" target="_blank" rel="noopener noreferrer" aria-label="Open Chewbooty">
-          <div class="thumb" aria-hidden="true">
-            <img src="https://i.imgur.com/W1kflhn.gif" alt="Chewbooty guild image">
+          <div class="row">
+            <div class="thumb" aria-hidden="true">
+              <!-- Keep your existing image -->
+              <img src="https://i.imgur.com/W1kflhn.gif" alt="Chewbooty guild image">
+            </div>
+            <div class="meta">
+              <div class="title">Chewbooty</div>
+              <div class="desc">Tactical rosters & dashboards</div>
+            </div>
+            <div class="role" aria-hidden="true">Lead</div>
           </div>
-          <div class="meta">
-            <div class="title">Chewbooty</div>
-            <div class="desc">Tactical rosters & dashboards</div>
-          </div>
-          <div class="role" aria-hidden="true">Lead</div>
 
-          <!-- Info panel populated with SWGOH.GG data -->
+          <!-- Info visible by default -->
           <div class="info" id="info-chewbooty" aria-label="Chewbooty info">
             <div class="info-grid">
               <div class="pill"><div class="k">Members</div><div class="v">50</div></div>
@@ -245,22 +246,23 @@
               <div class="k">Tagline</div>
               <div class="v">“Voted #1 luscious unit by PlayBooty magazine.”</div>
             </div>
-            <div class="toggle" data-target="info-chewbooty" role="button" aria-expanded="false">Details</div>
           </div>
         </a>
 
         <!-- Whalebooty -->
         <a class="card" href="https://thebootycheeks.github.io/wb/" target="_blank" rel="noopener noreferrer" aria-label="Open Whalebooty">
-          <div class="thumb" aria-hidden="true">
-            <img src="https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pjc2l4aXBxbmMxYXRidGd6NTQxa2tmcnE5ZWQwNmQ0eWkyaTAxcCZlcD12MV9naWZzX3NlYXJjaCZjdT1n/Z68zWR6XixSa4/200w.gif" alt="Whalebooty guild image">
+          <div class="row">
+            <div class="thumb" aria-hidden="true">
+              <!-- Keep your existing image -->
+              <img src="https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pjc2l4aXBxbmMxYXRidGd6NTQxa2tmcnE5ZWQwNmQ0eWkyaTAxcCZlcD12MV9naWZzX3NlYXJjaCZjdT1n/Z68zWR6XixSa4/200w.gif" alt="Whalebooty guild image">
+            </div>
+            <div class="meta">
+              <div class="title">Whalebooty</div>
+              <div class="desc">Logistics & mission tools</div>
+            </div>
+            <div class="role" aria-hidden="true">Support</div>
           </div>
-          <div class="meta">
-            <div class="title">Whalebooty</div>
-            <div class="desc">Logistics & mission tools</div>
-          </div>
-          <div class="role" aria-hidden="true">Support</div>
 
-          <!-- Placeholder info (update with your data) -->
           <div class="info" id="info-whalebooty" aria-label="Whalebooty info">
             <div class="info-grid">
               <div class="pill"><div class="k">Members</div><div class="v">—</div></div>
@@ -273,22 +275,23 @@
               <div class="k">Tagline</div>
               <div class="v">“Powerful whales of the galaxy.”</div>
             </div>
-            <div class="toggle" data-target="info-whalebooty" role="button" aria-expanded="false">Details</div>
           </div>
         </a>
 
         <!-- Dolphinbooty -->
         <a class="card" href="https://thebootycheeks.github.io/db/" target="_blank" rel="noopener noreferrer" aria-label="Open Dolphinbooty">
-          <div class="thumb" aria-hidden="true">
-            <img src="https://i.imgur.com/GMdxdGN.gif" alt="Dolphinbooty guild image">
+          <div class="row">
+            <div class="thumb" aria-hidden="true">
+              <!-- Keep your existing image -->
+              <img src="https://i.imgur.com/GMdxdGN.gif" alt="Dolphinbooty guild image">
+            </div>
+            <div class="meta">
+              <div class="title">Dolphinbooty</div>
+              <div class="desc">Recruitment & events</div>
+            </div>
+            <div class="role" aria-hidden="true">Ops</div>
           </div>
-          <div class="meta">
-            <div class="title">Dolphinbooty</div>
-            <div class="desc">Recruitment & events</div>
-          </div>
-          <div class="role" aria-hidden="true">Ops</div>
 
-          <!-- Placeholder info (update with your data) -->
           <div class="info" id="info-dolphinbooty" aria-label="Dolphinbooty info">
             <div class="info-grid">
               <div class="pill"><div class="k">Members</div><div class="v">—</div></div>
@@ -301,7 +304,6 @@
               <div class="k">Tagline</div>
               <div class="v">“Balanced and resourceful fighters.”</div>
             </div>
-            <div class="toggle" data-target="info-dolphinbooty" role="button" aria-expanded="false">Details</div>
           </div>
         </a>
       </nav>
@@ -332,6 +334,7 @@
         <button class="btn" type="button" onclick="location.href='https://github.com/thebootycheeks'">GitHub</button>
       </div>
 
+      <!-- Discord iframe (kept) -->
       <div class="discord-wrap" aria-label="Discord widget">
         <div class="iframe-container">
           <iframe
@@ -343,9 +346,11 @@
         </div>
       </div>
 
-      <div class="counter" aria-live="polite">
-        <div class="label">Unique guests</div>
-        <div class="value"><span id="guestCount">—</span></div>
+      <!-- Community points tracker -->
+      <div class="points" aria-live="polite">
+        <div class="label">Community points</div>
+        <div class="value"><span id="pointsTotal">—</span></div>
+        <button class="action" id="pointsAdd" type="button" aria-label="Add one point">Add 1 point</button>
       </div>
     </aside>
 
@@ -374,17 +379,6 @@
         });
       });
 
-      // Toggle info panels
-      document.querySelectorAll('.toggle').forEach(t => {
-        t.addEventListener('click', ()=>{
-          const id = t.getAttribute('data-target');
-          const panel = document.getElementById(id);
-          const open = panel.classList.toggle('open');
-          t.setAttribute('aria-expanded', String(open));
-          t.textContent = open ? 'Hide' : 'Details';
-        });
-      });
-
       // Demo stats pulse
       const statMembers = document.getElementById('stat-members');
       const statOnline = document.getElementById('stat-online');
@@ -394,19 +388,21 @@
         statOnline.textContent = (100 + Math.floor(Math.random()*40)).toString();
       }, 15000);
 
-      // Resilient unique guest counter (CountAPI -> CounterAPI fallback)
-      const guestEl = document.getElementById('guestCount');
-      const LOCAL_KEY = 'bc-guest-counted';
-      const counted = (()=> { try { return !!localStorage.getItem(LOCAL_KEY); } catch { return true; } })();
+      // Community points tracker (click to add 1)
+      const pointsEl = document.getElementById('pointsTotal');
+      const addBtn = document.getElementById('pointsAdd');
+
       const NAMESPACE = 'thebootycheeks.github.io';
-      const KEY       = 'bootycheeks-guest-counter';
+      const KEY = 'bootycheeks-community-points';
 
       const providers = {
+        // Provider A: CountAPI
         countapi: {
           create: () => `https://api.countapi.xyz/create?namespace=${encodeURIComponent(NAMESPACE)}&key=${encodeURIComponent(KEY)}`,
           get:    () => `https://api.countapi.xyz/get/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`,
           hit:    () => `https://api.countapi.xyz/hit/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`
         },
+        // Provider B: CounterAPI (fallback)
         counterapi: {
           get:  () => `https://api.counterapi.dev/v1/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`,
           up:   () => `https://api.counterapi.dev/v1/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}/up`
@@ -420,54 +416,74 @@
         return res.json();
       }
 
-      async function tryCountAPI(increment){
+      async function tryCountAPI(op){
         try { await safeFetchJSON(providers.countapi.create()); } catch {}
-        const url = increment ? providers.countapi.hit() : providers.countapi.get();
-        const data = await safeFetchJSON(url);
-        const value = Number(data.value);
-        if (Number.isFinite(value)) return value;
+        if (op === 'get') {
+          const data = await safeFetchJSON(providers.countapi.get());
+          const value = Number(data.value);
+          if (Number.isFinite(value)) return value;
+        } else if (op === 'hit') {
+          const data = await safeFetchJSON(providers.countapi.hit());
+          const value = Number(data.value);
+          if (Number.isFinite(value)) return value;
+        }
         throw new Error('CountAPI invalid response');
       }
 
-      async function tryCounterAPI(increment){
-        if (increment) {
-          const inc = await safeFetchJSON(providers.counterapi.up(), { method: 'POST' });
-          if (Number.isFinite(Number(inc.count))) return Number(inc.count);
-        } else {
+      async function tryCounterAPI(op){
+        if (op === 'get') {
           const got = await safeFetchJSON(providers.counterapi.get());
           if (Number.isFinite(Number(got.count))) return Number(got.count);
+        } else if (op === 'hit') {
+          const inc = await safeFetchJSON(providers.counterapi.up(), { method: 'POST' });
+          if (Number.isFinite(Number(inc.count))) return Number(inc.count);
         }
         throw new Error('CounterAPI invalid response');
       }
 
-      async function initCounter(){
-        if(!guestEl) return;
-        guestEl.textContent = '—';
-        const doIncrement = !counted;
-
+      async function pointsGet(){
+        pointsEl.textContent = '—';
         try {
-          const val = await tryCountAPI(doIncrement);
-          guestEl.textContent = val.toLocaleString();
-          try { localStorage.setItem(LOCAL_KEY, '1'); } catch {}
-          return;
+          const val = await tryCountAPI('get');
+          pointsEl.textContent = val.toLocaleString();
         } catch {
           try {
-            const val2 = await tryCounterAPI(doIncrement);
-            guestEl.textContent = val2.toLocaleString();
-            try { localStorage.setItem(LOCAL_KEY, '1'); } catch {}
-            return;
+            const val2 = await tryCounterAPI('get');
+            pointsEl.textContent = val2.toLocaleString();
           } catch {
-            guestEl.textContent = 'N/A';
-            console.warn('Guest counter failed on both providers.');
+            pointsEl.textContent = 'N/A';
           }
         }
       }
 
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initCounter);
-      } else {
-        initCounter();
+      async function pointsHit(){
+        addBtn.disabled = true;
+        addBtn.textContent = 'Adding…';
+        try {
+          const val = await tryCountAPI('hit');
+          pointsEl.textContent = val.toLocaleString();
+          addBtn.textContent = 'Added!';
+          setTimeout(()=> { addBtn.textContent = 'Add 1 point'; addBtn.disabled = false; }, 1200);
+        } catch {
+          try {
+            const val2 = await tryCounterAPI('hit');
+            pointsEl.textContent = val2.toLocaleString();
+            addBtn.textContent = 'Added!';
+            setTimeout(()=> { addBtn.textContent = 'Add 1 point'; addBtn.disabled = false; }, 1200);
+          } catch {
+            addBtn.textContent = 'Try again';
+            addBtn.disabled = false;
+          }
+        }
       }
+
+      // Init and hook up button
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', pointsGet);
+      } else {
+        pointsGet();
+      }
+      addBtn.addEventListener('click', pointsHit);
     })();
   </script>
 </body>
