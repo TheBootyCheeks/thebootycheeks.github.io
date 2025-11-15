@@ -1,10 +1,11 @@
+```html
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Bootycheeks Alliance — Galaxy Hub</title>
-  <meta name="description" content="The Bootycheeks Hub" />
+  <meta name="description" content="Bootycheeks Alliance hub for Star Wars Galaxy of Heroes — Chewbooty, Whalebooty, Dolphinbooty." />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
   <style>
@@ -13,7 +14,7 @@
       --bg-1:#0a1220;
       --panel:#0b1422;
       --muted:#9fb0c2;
-      --accent:#ffe81f; /* Star Wars crawl yellow */
+      --accent:#ffe81f;
       --accent-2:#39d0ff;
       --glass: rgba(255,255,255,0.03);
       --card-border: rgba(255,255,255,0.08);
@@ -21,6 +22,9 @@
       --maxWidth:1100px;
       --gap:18px;
       --text:#eaf6ff;
+      --good:#36d399;
+      --warn:#fbbf24;
+      --bad:#f87171;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
@@ -67,10 +71,11 @@
       box-shadow: 0 18px 60px rgba(3,10,20,0.65);
     }
 
-    /* Hero header */
-    .hero{
+    /* Header */
+    header.hero{
+      grid-column:1/-1;
       border-radius:14px;
-      padding:16px;
+      padding:18px 18px 8px 18px;
       background:
         linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)),
         repeating-linear-gradient(90deg, transparent 0 18px, rgba(255,255,255,0.015) 18px 19px);
@@ -91,14 +96,17 @@
     .title-wrap{display:flex;flex-direction:column}
     .site-title{
       font-family: Orbitron, sans-serif;
-      font-size:22px;font-weight:900;margin:0;color:#fff3b0;letter-spacing:1px;
+      font-size:24px;font-weight:900;margin:0;color:#fff3b0;letter-spacing:1px;
       text-shadow: 0 0 10px rgba(255,232,31,0.35);
     }
     .site-sub{font-size:13px;color:var(--muted);margin-top:4px}
-    h1.main{margin:10px 0 10px 0;font-size:24px;letter-spacing:0.2px;color:#f8feff}
-    p.lead{margin:0 0 16px 0;color:var(--muted);max-width:70ch;font-size:14px}
+    .crawl{
+      margin:10px 0 0 0;
+      color:#ffe81f;font-family: Orbitron, sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;
+      opacity:0.9;
+    }
 
-    /* Guild cards rail with subtle glow */
+    /* Guild cards */
     .cards{ display:grid; grid-template-columns: 1fr; gap:12px; }
     .card{
       display:flex;gap:12px;align-items:center;padding:14px;border-radius:12px;
@@ -134,7 +142,7 @@
       background:linear-gradient(180deg, rgba(255,255,255,0.008), rgba(255,255,255,0.003))
     }
     .stats{display:flex;gap:8px;justify-content:space-between}
-    .stat{flex:1;text-align:center}
+    .stat{flex:1;text-align:center;border:1px solid var(--card-border);border-radius:10px;padding:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005))}
     .stat .num{font-weight:900;font-size:18px;color:#f8feff}
     .stat .label{font-size:12px;color:var(--muted);margin-top:6px}
     .actions{display:flex;gap:10px;justify-content:flex-end}
@@ -148,7 +156,7 @@
     .discord-wrap .iframe-container{position:relative;padding-top:calc(500 / 350 * 100%);height:0;width:100%}
     .discord-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;display:block}
 
-    /* Visitor counter display */
+    /* Visitor counter */
     .counter{
       display:flex;align-items:center;justify-content:space-between;gap:12px;
       padding:12px;border:1px solid var(--card-border);border-radius:10px;
@@ -160,6 +168,7 @@
       text-shadow: 0 0 10px rgba(255,232,31,0.35);
     }
 
+    /* Footer */
     footer{grid-column:1/-1;margin-top:8px;color:var(--muted);font-size:13px;display:flex;flex-direction:row;justify-content:space-between;align-items:center;gap:10px}
 
     /* Mobile */
@@ -168,7 +177,7 @@
       .cards{grid-template-columns:1fr}
       .card{padding:12px}
       .emblem{width:60px;height:60px;font-size:22px}
-      h1.main{font-size:22px}
+      .site-title{font-size:22px}
       .preview{min-height:100px}
       .discord-wrap .iframe-container{padding-top:60%}
       .actions{justify-content:space-between}
@@ -184,6 +193,7 @@
     }
 
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    a.card:focus-visible{outline:2px solid #ffe81f; outline-offset:2px}
   </style>
 </head>
 <body>
@@ -191,37 +201,39 @@
 
   <main class="frame" role="main" aria-labelledby="main-title">
     <!-- Hero -->
-    <section class="hero">
+    <header class="hero">
       <div class="brand" aria-hidden="true">
         <div class="emblem" aria-hidden="true">A</div>
         <div class="title-wrap">
           <div class="site-title">Bootycheeks Alliance</div>
-          <div class="site-sub">Hub for member guilds and shared resources</div>
+          <div class="site-sub">Chewbooty • Whalebooty • Dolphinbooty</div>
         </div>
       </div>
-      <h1 class="main" id="main-title">Galaxy Hub</h1>
-      <p class="lead">Unified access to each guild’s tools and rosters. Cinematic dark theme, accessible, and tuned for mobile navigation.</p>
-    </section>
+      <p class="crawl">A long time ago in a dashboard far, far away…</p>
+    </header>
 
-    <!-- Guild cards -->
-    <section>
-      <nav class="cards" aria-label="member guilds">
-        <!-- Chewbooty (keep your image) -->
-        <a class="card" href="https://thebootycheeks.github.io/cb/" target="_blank" rel="noopener noreferrer">
+    <!-- Guild cards (left) -->
+    <section aria-label="Guilds">
+      <h1 id="main-title" class="sr-only">Galaxy Hub</h1>
+      <nav class="cards" aria-label="Member guilds">
+        <!-- Chewbooty (keep your existing image src from your code) -->
+        <a class="card" href="https://thebootycheeks.github.io/cb/" target="_blank" rel="noopener noreferrer" aria-label="Open Chewbooty">
           <div class="thumb" aria-hidden="true">
-            <img src="https://i.imgur.com/W1kflhn.gif" alt="Chewbooty icon">
+            <!-- Replace src below with the exact image you already use for Chewbooty -->
+            <img src="https://i.imgur.com/W1kflhn.gif" alt="Chewbooty guild image">
           </div>
           <div class="meta">
             <div class="title">Chewbooty</div>
-            <div class="desc">Tactical roster & dashboards</div>
+            <div class="desc">Tactical rosters & dashboards</div>
           </div>
           <div class="role" aria-hidden="true">Lead</div>
         </a>
 
-        <!-- Whalebooty (keep your image) -->
-        <a class="card" href="https://thebootycheeks.github.io/wb/" target="_blank" rel="noopener noreferrer">
+        <!-- Whalebooty (keep your existing image src from your code) -->
+        <a class="card" href="https://thebootycheeks.github.io/wb/" target="_blank" rel="noopener noreferrer" aria-label="Open Whalebooty">
           <div class="thumb" aria-hidden="true">
-            <img src="https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pjc2l4aXBxbmMxYXRidGd6NTQxa2tmcnE5ZWQwNmQ0eWkyaTAxcCZlcD12MV9naWZzX3NlYXJjaCZjdT1n/Z68zWR6XixSa4/200w.gif" alt="Whalebooty icon">
+            <!-- Replace src below with the exact image you already use for Whalebooty -->
+            <img src="https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pjc2l4aXBxbmMxYXRidGd6NTQxa2tmcnE5ZWQwNmQ0eWkyaTAxcCZlcD12MV9naWZzX3NlYXJjaCZjdT1n/Z68zWR6XixSa4/200w.gif" alt="Whalebooty guild image">
           </div>
           <div class="meta">
             <div class="title">Whalebooty</div>
@@ -230,10 +242,11 @@
           <div class="role" aria-hidden="true">Support</div>
         </a>
 
-        <!-- Dolphinbooty (keep your image) -->
-        <a class="card" href="https://thebootycheeks.github.io/db/" target="_blank" rel="noopener noreferrer">
+        <!-- Dolphinbooty (keep your existing image src from your code) -->
+        <a class="card" href="https://thebootycheeks.github.io/db/" target="_blank" rel="noopener noreferrer" aria-label="Open Dolphinbooty">
           <div class="thumb" aria-hidden="true">
-            <img src="https://i.imgur.com/GMdxdGN.gif" alt="Dolphinbooty icon">
+            <!-- Replace src below with the exact image you already use for Dolphinbooty -->
+            <img src="https://i.imgur.com/GMdxdGN.gif" alt="Dolphinbooty guild image">
           </div>
           <div class="meta">
             <div class="title">Dolphinbooty</div>
@@ -245,17 +258,17 @@
     </section>
 
     <!-- Right panel -->
-    <aside class="panel" aria-label="preview and alliance tools">
+    <aside class="panel" aria-label="Alliance tools">
       <div id="preview" class="preview" aria-live="polite">
         Hover or focus a guild card to preview details here. Tap a card to open it.
       </div>
 
-      <div class="stats" role="list" aria-label="alliance stats">
-        <div class="stat" role="listitem">
+      <div class="stats" role="list" aria-label="Alliance stats">
+        <div class="stat" role="listitem" aria-live="polite">
           <div class="num" id="stat-members">1,248</div>
           <div class="label">Members</div>
         </div>
-        <div class="stat" role="listitem">
+        <div class="stat" role="listitem" aria-live="polite">
           <div class="num" id="stat-online">124</div>
           <div class="label">Online</div>
         </div>
@@ -266,12 +279,12 @@
       </div>
 
       <div class="actions" aria-hidden="true">
-        <button class="btn ghost" type="button" onclick="location.href='#'">Docs</button>
+        <button class="btn ghost" type="button" onclick="location.href='https://discord.gg/bootycheeks'">Join Discord</button>
         <button class="btn" type="button" onclick="location.href='https://github.com/thebootycheeks'">GitHub</button>
       </div>
 
-      <!-- Discord widget (kept intact) -->
-      <div class="discord-wrap" aria-label="discord widget">
+      <!-- Discord widget (preserved) -->
+      <div class="discord-wrap" aria-label="Discord widget">
         <div class="iframe-container">
           <iframe
             src="https://ptb.discord.com/widget?id=430853296480321537&theme=dark"
@@ -282,7 +295,7 @@
         </div>
       </div>
 
-      <!-- Visitor counter (unique guests) -->
+      <!-- Unique guest counter -->
       <div class="counter" aria-live="polite">
         <div class="label">Unique guests</div>
         <div class="value"><span id="guestCount">—</span></div>
@@ -291,7 +304,7 @@
 
     <footer>
       <div>© Bootycheeks Alliance</div>
-      <div class="muted">Cinematic dark theme · Mobile first · Accessible</div>
+      <div class="muted">Cinematic dark · Mobile-first · Accessible</div>
     </footer>
   </main>
 
@@ -301,8 +314,8 @@
       const preview = document.getElementById('preview');
       const defaultText = preview.textContent;
       document.querySelectorAll('.card').forEach(card=>{
-        const title = card.querySelector('.title')?.textContent || 'Guild';
-        const desc = card.querySelector('.desc')?.textContent || '';
+        const title = card.querySelector('.meta .title')?.textContent || 'Guild';
+        const desc = card.querySelector('.meta .desc')?.textContent || '';
         const role = card.querySelector('.role')?.textContent || '';
         const text = role ? `${title} — ${role}\n${desc}` : `${title}\n${desc}`;
         card.addEventListener('mouseenter', ()=> preview.textContent = text);
@@ -316,7 +329,7 @@
         card.addEventListener('touchend', ()=> { card.style.transform = ''; });
       });
 
-      // Simulated live stats refresh (client-side only demo)
+      // Light client-side pulse for demo stats
       const statMembers = document.getElementById('stat-members');
       const statOnline = document.getElementById('stat-online');
       setInterval(()=>{
@@ -325,49 +338,82 @@
         statOnline.textContent = (100 + Math.floor(Math.random()*40)).toString();
       }, 15000);
 
-      // Unique guest counter using CountAPI and localStorage to avoid double-counting per device.
-      // This works on GitHub Pages without a backend.
+      // Robust unique guest counter using CountAPI with localStorage gating
       const NAMESPACE = 'thebootycheeks.github.io';
-      const KEY = 'bootycheeks-guest-counter';
-      const LOCAL_KEY = 'bc-guest-counted'; // mark device as counted
-
+      const KEY       = 'bootycheeks-guest-counter';
+      const LOCAL_KEY = 'bc-guest-counted';
+      const base = 'https://api.countapi.xyz';
       const guestEl = document.getElementById('guestCount');
 
-      async function initGuestCounter(){
-        try {
-          // Create key if missing
-          await fetch(`https://api.countapi.xyz/create?namespace=${encodeURIComponent(NAMESPACE)}&key=${encodeURIComponent(KEY)}`, { method: 'GET' });
+      const endpoints = {
+        create: `${base}/create?namespace=${encodeURIComponent(NAMESPACE)}&key=${encodeURIComponent(KEY)}`,
+        get:    `${base}/get/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`,
+        hit:    `${base}/hit/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`
+      };
 
-          // If not counted on this device, increment once
-          const seen = localStorage.getItem(LOCAL_KEY);
-          if(!seen){
-            const inc = await fetch(`https://api.countapi.xyz/hit/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`);
-            const incData = await inc.json();
-            guestEl.textContent = incData.value.toLocaleString();
-            localStorage.setItem(LOCAL_KEY, '1');
-          } else {
-            // Just get current value
-            const get = await fetch(`https://api.countapi.xyz/get/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`);
-            const getData = await get.json();
-            guestEl.textContent = getData.value.toLocaleString();
-          }
+      const timeout = (ms) => new Promise((_, reject)=> setTimeout(()=> reject(new Error('timeout')), ms));
+
+      async function safeFetch(url){
+        try {
+          const res = await Promise.race([ fetch(url, {cache:'no-store'}), timeout(6000) ]);
+          if(!res.ok){ throw new Error(`HTTP ${res.status}`); }
+          return await res.json();
         } catch (e){
-          guestEl.textContent = 'N/A';
-          console.warn('Guest counter error', e);
+          console.warn('Counter fetch failed:', e.message);
+          throw e;
         }
       }
 
-      initGuestCounter();
-
-      // Discord sizing hook (kept in case of future dynamic adjustments)
-      function adjustDiscordHeight(){
-        const iframe = document.querySelector('.discord-wrap .iframe-container iframe');
-        if(!iframe) return;
-        // Height managed by CSS aspect ratio; hook reserved for future needs.
+      async function ensureKey(){
+        try {
+          const data = await safeFetch(endpoints.get);
+          return data && typeof data.value === 'number';
+        } catch {
+          try {
+            await safeFetch(endpoints.create);
+            return true;
+          } catch {
+            return false;
+          }
+        }
       }
-      window.addEventListener('resize', adjustDiscordHeight);
-      adjustDiscordHeight();
+
+      async function initCounter(){
+        if(!guestEl){ return; }
+        guestEl.textContent = '—';
+
+        const ok = await ensureKey();
+        if(!ok){
+          guestEl.textContent = 'N/A';
+          return;
+        }
+
+        const counted = (()=> {
+          try { return !!localStorage.getItem(LOCAL_KEY); }
+          catch { return true; } // if localStorage blocked, avoid incrementing
+        })();
+
+        try {
+          const data = await safeFetch(counted ? endpoints.get : endpoints.hit);
+          guestEl.textContent = Number(data.value).toLocaleString();
+          try { localStorage.setItem(LOCAL_KEY, '1'); } catch {}
+        } catch {
+          try {
+            const data2 = await safeFetch(endpoints.get);
+            guestEl.textContent = Number(data2.value).toLocaleString();
+          } catch {
+            guestEl.textContent = 'N/A';
+          }
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCounter);
+      } else {
+        initCounter();
+      }
     })();
   </script>
 </body>
 </html>
+```
