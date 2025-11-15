@@ -3,26 +3,28 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Bootycheeks Alliance — Hub (Mobile Friendly)</title>
-  <meta name="description" content="Bootycheeks Alliance hub — Chewbooty, Whalebooty, Dolphinbooty. Dark, accessible, and optimized for mobile." />
+  <title>Bootycheeks Alliance — Galaxy Hub</title>
+  <meta name="description" content="Bootycheeks Alliance hub — Chewbooty, Whalebooty, Dolphinbooty. Dark, cinematic, and mobile-first." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg-0:#05070a;
-      --bg-1:#071827;
-      --panel:#091826;
+      --bg-0:#04070e;
+      --bg-1:#0a1220;
+      --panel:#0b1422;
       --muted:#9fb0c2;
-      --accent:#39d0ff;
-      --accent-2:#7fffd4;
+      --accent:#ffe81f; /* Star Wars crawl yellow */
+      --accent-2:#39d0ff;
       --glass: rgba(255,255,255,0.03);
-      --card-border: rgba(255,255,255,0.04);
+      --card-border: rgba(255,255,255,0.08);
       --radius:14px;
       --maxWidth:1100px;
-      --gap:20px;
+      --gap:18px;
+      --text:#eaf6ff;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
     }
-
     *{box-sizing:border-box}
     html,body{height:100%;margin:0}
     body{
@@ -31,116 +33,153 @@
       align-items:flex-start;
       justify-content:center;
       background:
-        radial-gradient(800px 300px at 12% 12%, rgba(57,208,255,0.02), transparent 8%),
-        radial-gradient(700px 240px at 88% 88%, rgba(127,255,212,0.01), transparent 8%),
+        radial-gradient(900px 300px at 15% 12%, rgba(57,208,255,0.06), transparent 12%),
+        radial-gradient(700px 240px at 85% 88%, rgba(127,255,212,0.05), transparent 12%),
         linear-gradient(180deg,var(--bg-0),var(--bg-1));
-      color:#e8f6ff;
-      padding:20px;
+      color:var(--text);
+      padding:18px;
+      overflow-x:hidden;
     }
 
+    /* Subtle starfield + parallax drift */
     .stars{position:fixed;inset:0;pointer-events:none;z-index:0;
       background-image:
-        radial-gradient(#ffffff11 1px, transparent 1px),
-        radial-gradient(#ffffff08 1px, transparent 1px);
+        radial-gradient(#ffffff15 1px, transparent 1px),
+        radial-gradient(#ffffff0a 1px, transparent 1px);
       background-size: 220px 220px, 72px 72px;
-      mix-blend-mode:screen;opacity:0.7;transform:translateZ(0);
+      mix-blend-mode:screen;opacity:0.7;
+      transform:translateZ(0);
+      animation: drift 40s linear infinite;
+    }
+    @keyframes drift{
+      0% { transform: translate(0,0); }
+      50% { transform: translate(-12px,8px); }
+      100% { transform: translate(0,0); }
     }
 
     .frame{
       position:relative;z-index:1;
       width:100%;max-width:var(--maxWidth);
-      display:grid;
-      grid-template-columns: 1fr 360px;
-      gap:20px;
-      padding:18px;
-      border-radius:14px;
+      display:grid;grid-template-columns: 1fr 360px;
+      gap:20px;padding:18px;border-radius:14px;
       background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
       border:1px solid var(--card-border);
       box-shadow: 0 18px 60px rgba(3,10,20,0.65);
     }
 
-    /* Header & hero */
-    .header{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+    /* Hero header */
+    .hero{
+      border-radius:14px;
+      padding:16px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)),
+        repeating-linear-gradient(90deg, transparent 0 18px, rgba(255,255,255,0.015) 18px 19px);
+      border:1px solid var(--card-border);
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;margin-bottom:8px
+    }
     .emblem{
-      width:64px;height:64px;border-radius:12px;
-      background:linear-gradient(135deg,var(--accent),var(--accent-2));
-      display:flex;align-items:center;justify-content:center;font-weight:900;color:#021214;font-size:22px;
+      width:70px;height:70px;border-radius:12px;
+      background:linear-gradient(135deg,var(--accent),#ffcf33);
+      display:flex;align-items:center;justify-content:center;
+      font-family: Orbitron, sans-serif;
+      font-weight:900;color:#091016;font-size:26px;
       box-shadow: 0 8px 22px rgba(2,6,23,0.5);
-      flex-shrink:0;
+      letter-spacing:1px;
     }
-    .title-block{display:flex;flex-direction:column}
-    .site-title{font-size:18px;font-weight:800;margin:0;color:#f7feff}
-    .site-sub{font-size:12.5px;color:var(--muted);margin-top:2px}
-
-    h1.main{margin:8px 0 10px 0;font-size:22px;letter-spacing:-0.3px;color:#f8feff}
-    p.lead{margin:0 0 14px 0;color:var(--muted);max-width:64ch;font-size:14px}
-
-    /* Cards */
-    .cards{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:12px;
+    .title-wrap{display:flex;flex-direction:column}
+    .site-title{
+      font-family: Orbitron, sans-serif;
+      font-size:22px;font-weight:900;margin:0;color:#fff3b0;letter-spacing:1px;
+      text-shadow: 0 0 10px rgba(255,232,31,0.35);
     }
+    .site-sub{font-size:13px;color:var(--muted);margin-top:4px}
+    h1.main{margin:10px 0 10px 0;font-size:24px;letter-spacing:0.2px;color:#f8feff}
+    p.lead{margin:0 0 16px 0;color:var(--muted);max-width:70ch;font-size:14px}
+
+    /* Guild cards rail with subtle glow */
+    .cards{ display:grid; grid-template-columns: 1fr; gap:12px; }
     .card{
       display:flex;gap:12px;align-items:center;padding:14px;border-radius:12px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.008), rgba(255,255,255,0.003));
-      border:1px solid var(--card-border);
-      text-decoration:none;color:inherit;transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-      outline: none;
-      touch-action:manipulation;
+      background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
+      border:1px solid var(--card-border); text-decoration:none;color:inherit;
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+      outline: none; touch-action:manipulation;
     }
     .card:focus, .card:hover{
       transform: translateY(-6px);
-      box-shadow: 0 18px 40px rgba(2,6,23,0.55);
-      border-color: rgba(57,208,255,0.12);
+      box-shadow: 0 18px 44px rgba(2,6,23,0.58);
+      border-color: rgba(255,232,31,0.25);
+      background:linear-gradient(180deg, rgba(255,232,31,0.06), rgba(255,255,255,0.02));
     }
-    .thumb{width:64px;height:64px;border-radius:12px;background:var(--glass);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--card-border);flex:0 0 64px}
+    .thumb{
+      width:72px;height:72px;border-radius:12px;background:var(--glass);
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+      border:1px solid var(--card-border);flex:0 0 72px
+    }
     .thumb img{width:100%;height:100%;object-fit:cover;display:block}
     .meta{display:flex;flex-direction:column}
-    .meta .title{font-weight:800;color:#f4fbff;font-size:15px}
+    .meta .title{font-weight:800;color:#f4fbff;font-size:16px}
     .meta .desc{font-size:13px;color:var(--muted);margin-top:4px}
-    .role{margin-left:auto;font-size:12px;font-weight:800;padding:6px 8px;border-radius:10px;background:#04121a;color:var(--accent-2);border:1px solid rgba(255,255,255,0.03)}
+    .role{
+      margin-left:auto;font-size:12px;font-weight:800;padding:6px 8px;border-radius:10px;
+      background:#091420;color:#ffe81f;border:1px solid rgba(255,255,255,0.06)
+    }
 
-    /* Right column (panel) */
+    /* Right column panel */
     .panel{display:flex;flex-direction:column;gap:12px;padding:12px;border-radius:12px;background:transparent;border:1px solid var(--card-border)}
-    .preview{min-height:120px;border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);background:linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.003))}
+    .preview{
+      min-height:120px;border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);
+      background:linear-gradient(180deg, rgba(255,255,255,0.008), rgba(255,255,255,0.003))
+    }
     .stats{display:flex;gap:8px;justify-content:space-between}
     .stat{flex:1;text-align:center}
     .stat .num{font-weight:900;font-size:18px;color:#f8feff}
     .stat .label{font-size:12px;color:var(--muted);margin-top:6px}
-
     .actions{display:flex;gap:10px;justify-content:flex-end}
-    .btn{padding:10px 14px;border-radius:10px;border:0;font-weight:800;cursor:pointer;background:var(--accent);color:#021214;box-shadow:0 8px 22px rgba(2,6,23,0.35)}
+    .btn{padding:10px 14px;border-radius:10px;border:0;font-weight:800;cursor:pointer;background:var(--accent);color:#091016;box-shadow:0 8px 22px rgba(2,6,23,0.35)}
     .btn.ghost{background:transparent;border:1px solid var(--card-border);color:var(--muted);box-shadow:none}
 
-    .discord-wrap{margin-top:8px;border-radius:10px;overflow:hidden;border:1px solid var(--card-border);background:linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.003))}
+    /* Discord widget */
+    .discord-wrap{margin-top:8px;border-radius:10px;overflow:hidden;border:1px solid var(--card-border);
+      background:linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.003))
+    }
     .discord-wrap .iframe-container{position:relative;padding-top:calc(500 / 350 * 100%);height:0;width:100%}
     .discord-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;display:block}
 
+    /* Visitor counter display */
+    .counter{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:12px;border:1px solid var(--card-border);border-radius:10px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.008), rgba(255,255,255,0.003));
+    }
+    .counter .label{color:var(--muted);font-size:13px}
+    .counter .value{
+      font-family: Orbitron, sans-serif;font-weight:900;color:#ffe81f;font-size:18px;
+      text-shadow: 0 0 10px rgba(255,232,31,0.35);
+    }
+
     footer{grid-column:1/-1;margin-top:8px;color:var(--muted);font-size:13px;display:flex;flex-direction:row;justify-content:space-between;align-items:center;gap:10px}
 
-    /* Small screens: stack + larger touch targets + condensed stats */
+    /* Mobile */
     @media (max-width:880px){
       .frame{grid-template-columns:1fr;gap:16px;padding:14px}
       .cards{grid-template-columns:1fr}
       .card{padding:12px}
-      .emblem{width:56px;height:56px;font-size:18px}
-      h1.main{font-size:20px}
+      .emblem{width:60px;height:60px;font-size:22px}
+      h1.main{font-size:22px}
       .preview{min-height:100px}
-      .stats{flex-direction:row;gap:8px}
-      .stat .num{font-size:16px}
       .discord-wrap .iframe-container{padding-top:60%}
       .actions{justify-content:space-between}
       footer{flex-direction:column;align-items:flex-start}
     }
-
-    /* Very small screens: further spacing increases for touch comfort */
     @media (max-width:420px){
       body{padding:12px}
       .frame{padding:12px;border-radius:12px}
       .card{gap:10px;padding:12px;border-radius:10px}
-      .thumb{width:56px;height:56px}
-      .emblem{width:48px;height:48px}
+      .thumb{width:64px;height:64px}
+      .emblem{width:50px;height:50px}
       .btn{padding:10px 12px;font-size:14px}
     }
 
@@ -151,19 +190,23 @@
   <div class="stars" aria-hidden="true"></div>
 
   <main class="frame" role="main" aria-labelledby="main-title">
-    <section>
-      <div class="header" aria-hidden="true">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="brand" aria-hidden="true">
         <div class="emblem" aria-hidden="true">A</div>
-        <div class="title-block">
+        <div class="title-wrap">
           <div class="site-title">Bootycheeks Alliance</div>
           <div class="site-sub">Hub for member guilds and shared resources</div>
         </div>
       </div>
+      <h1 class="main" id="main-title">Galaxy Hub</h1>
+      <p class="lead">Unified access to each guild’s tools and rosters. Cinematic dark theme, accessible, and tuned for mobile navigation.</p>
+    </section>
 
-      <h1 class="main" id="main-title">Alliance Hub</h1>
-      <p class="lead">Unified access to each guild's tools and rosters. Dark, minimal, and optimized for mobile navigation.</p>
-
+    <!-- Guild cards -->
+    <section>
       <nav class="cards" aria-label="member guilds">
+        <!-- Chewbooty (keep your image) -->
         <a class="card" href="https://thebootycheeks.github.io/cb/" target="_blank" rel="noopener noreferrer">
           <div class="thumb" aria-hidden="true">
             <img src="https://i.imgur.com/W1kflhn.gif" alt="Chewbooty icon">
@@ -175,9 +218,10 @@
           <div class="role" aria-hidden="true">Lead</div>
         </a>
 
+        <!-- Whalebooty (keep your image) -->
         <a class="card" href="https://thebootycheeks.github.io/wb/" target="_blank" rel="noopener noreferrer">
           <div class="thumb" aria-hidden="true">
-            <img src="https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pjc2l4aXBxbmMxYXRidGd6NTQxa2tmcnE5ZWQwNmQ0eWkyaTAxcCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Z68zWR6XixSa4/200w.gif" alt="Whalebooty icon">
+            <img src="https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pjc2l4aXBxbmMxYXRidGd6NTQxa2tmcnE5ZWQwNmQ0eWkyaTAxcCZlcD12MV9naWZzX3NlYXJjaCZjdT1n/Z68zWR6XixSa4/200w.gif" alt="Whalebooty icon">
           </div>
           <div class="meta">
             <div class="title">Whalebooty</div>
@@ -186,6 +230,7 @@
           <div class="role" aria-hidden="true">Support</div>
         </a>
 
+        <!-- Dolphinbooty (keep your image) -->
         <a class="card" href="https://thebootycheeks.github.io/db/" target="_blank" rel="noopener noreferrer">
           <div class="thumb" aria-hidden="true">
             <img src="https://i.imgur.com/GMdxdGN.gif" alt="Dolphinbooty icon">
@@ -199,8 +244,11 @@
       </nav>
     </section>
 
+    <!-- Right panel -->
     <aside class="panel" aria-label="preview and alliance tools">
-      <div id="preview" class="preview" aria-live="polite">Hover or focus a guild card to preview details here. Tap a card to open it.</div>
+      <div id="preview" class="preview" aria-live="polite">
+        Hover or focus a guild card to preview details here. Tap a card to open it.
+      </div>
 
       <div class="stats" role="list" aria-label="alliance stats">
         <div class="stat" role="listitem">
@@ -222,26 +270,34 @@
         <button class="btn" type="button" onclick="location.href='https://github.com/thebootycheeks'">GitHub</button>
       </div>
 
+      <!-- Discord widget (kept intact) -->
       <div class="discord-wrap" aria-label="discord widget">
-        <div class="iframe-container"></div>
-        <div class="iframe-container" style="display:none"></div>
         <div class="iframe-container">
-          <iframe src="https://ptb.discord.com/widget?id=430853296480321537&theme=dark"
-                  allowtransparency="true"
-                  sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
-                  title="Bootycheeks Discord"></iframe>
+          <iframe
+            src="https://ptb.discord.com/widget?id=430853296480321537&theme=dark"
+            allowtransparency="true"
+            sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+            title="Bootycheeks Discord">
+          </iframe>
         </div>
+      </div>
+
+      <!-- Visitor counter (unique guests) -->
+      <div class="counter" aria-live="polite">
+        <div class="label">Unique guests</div>
+        <div class="value"><span id="guestCount">—</span></div>
       </div>
     </aside>
 
     <footer>
       <div>© Bootycheeks Alliance</div>
-      <div class="muted">Dark theme · Mobile first · Accessible</div>
+      <div class="muted">Cinematic dark theme · Mobile first · Accessible</div>
     </footer>
   </main>
 
   <script>
     (function(){
+      // Interactive preview text on card focus/hover
       const preview = document.getElementById('preview');
       const defaultText = preview.textContent;
       document.querySelectorAll('.card').forEach(card=>{
@@ -249,27 +305,18 @@
         const desc = card.querySelector('.desc')?.textContent || '';
         const role = card.querySelector('.role')?.textContent || '';
         const text = role ? `${title} — ${role}\n${desc}` : `${title}\n${desc}`;
-
         card.addEventListener('mouseenter', ()=> preview.textContent = text);
         card.addEventListener('focus', ()=> preview.textContent = text);
         card.addEventListener('mouseleave', ()=> preview.textContent = defaultText);
         card.addEventListener('blur', ()=> preview.textContent = defaultText);
-
         card.addEventListener('keydown', e=>{
           if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); card.click(); }
         });
-
-        // Larger tap target: make whole card clickable on touch with a fast response
-        card.addEventListener('touchstart', ()=> {
-          // quick visual feedback
-          card.style.transform = 'translateY(-3px)';
-        }, {passive:true});
-        card.addEventListener('touchend', ()=> {
-          card.style.transform = '';
-        });
+        card.addEventListener('touchstart', ()=> { card.style.transform = 'translateY(-3px)'; }, {passive:true});
+        card.addEventListener('touchend', ()=> { card.style.transform = ''; });
       });
 
-      // Simulated live stats (replace with real endpoints)
+      // Simulated live stats refresh (client-side only demo)
       const statMembers = document.getElementById('stat-members');
       const statOnline = document.getElementById('stat-online');
       setInterval(()=>{
@@ -278,11 +325,45 @@
         statOnline.textContent = (100 + Math.floor(Math.random()*40)).toString();
       }, 15000);
 
-      // Ensure discord iframe resizes correctly when container width changes (mobile)
+      // Unique guest counter using CountAPI and localStorage to avoid double-counting per device.
+      // This works on GitHub Pages without a backend.
+      const NAMESPACE = 'thebootycheeks.github.io';
+      const KEY = 'bootycheeks-guest-counter';
+      const LOCAL_KEY = 'bc-guest-counted'; // mark device as counted
+
+      const guestEl = document.getElementById('guestCount');
+
+      async function initGuestCounter(){
+        try {
+          // Create key if missing
+          await fetch(`https://api.countapi.xyz/create?namespace=${encodeURIComponent(NAMESPACE)}&key=${encodeURIComponent(KEY)}`, { method: 'GET' });
+
+          // If not counted on this device, increment once
+          const seen = localStorage.getItem(LOCAL_KEY);
+          if(!seen){
+            const inc = await fetch(`https://api.countapi.xyz/hit/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`);
+            const incData = await inc.json();
+            guestEl.textContent = incData.value.toLocaleString();
+            localStorage.setItem(LOCAL_KEY, '1');
+          } else {
+            // Just get current value
+            const get = await fetch(`https://api.countapi.xyz/get/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`);
+            const getData = await get.json();
+            guestEl.textContent = getData.value.toLocaleString();
+          }
+        } catch (e){
+          guestEl.textContent = 'N/A';
+          console.warn('Guest counter error', e);
+        }
+      }
+
+      initGuestCounter();
+
+      // Discord sizing hook (kept in case of future dynamic adjustments)
       function adjustDiscordHeight(){
-        const wrap = document.querySelector('.discord-wrap .iframe-container iframe');
-        if(!wrap) return;
-        // height is handled by CSS aspect-ratio (padding-top) so nothing required here
+        const iframe = document.querySelector('.discord-wrap .iframe-container iframe');
+        if(!iframe) return;
+        // Height managed by CSS aspect ratio; hook reserved for future needs.
       }
       window.addEventListener('resize', adjustDiscordHeight);
       adjustDiscordHeight();
