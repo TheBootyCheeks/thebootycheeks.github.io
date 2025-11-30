@@ -6,23 +6,98 @@
 <title>Bootycheeks Alliance — Galaxy Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg-0:#04070e;--bg-1:#0a1220;--muted:#9fb0c2;--accent:#ffe81f;--glass:rgba(255,255,255,0.03);--card-border:rgba(255,255,255,0.08);--maxWidth:1100px;--text:#eaf6ff;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial}
-*{box-sizing:border-box}html,body{height:100%;margin:0}body{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;background:radial-gradient(900px 300px at 15% 12%, rgba(57,208,255,0.06), transparent 12%),linear-gradient(180deg,var(--bg-0),var(--bg-1));color:var(--text);padding:18px}
-.frame{width:100%;max-width:var(--maxWidth);display:grid;grid-template-columns:1fr 360px;gap:20px;padding:18px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));border:1px solid var(--card-border);box-shadow:0 18px 60px rgba(3,10,20,0.65)}
+:root{
+  --bg-0:#04070e;
+  --bg-1:#0a1220;
+  --muted:#9fb0c2;
+  --accent:#ffe81f;
+  --glass:rgba(255,255,255,0.03);
+  --card-border:rgba(255,255,255,0.08);
+  --maxWidth:1100px;
+  --text:#eaf6ff;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  min-height:100vh;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  background:
+    radial-gradient(900px 300px at 15% 12%, rgba(57,208,255,0.06), transparent 12%),
+    linear-gradient(180deg,var(--bg-0),var(--bg-1));
+  color:var(--text);
+  padding:18px;
+  overflow-x:hidden;
+}
+
+.frame{
+  width:100%;
+  max-width:var(--maxWidth);
+  display:grid;
+  grid-template-columns:1fr 360px;
+  gap:20px;
+  padding:18px;
+  border-radius:14px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
+  border:1px solid var(--card-border);
+  box-shadow:0 18px 60px rgba(3,10,20,0.65);
+}
+
 header.hero{grid-column:1/-1;border-radius:14px;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid var(--card-border)}
-.brand{display:flex;align-items:center;gap:12px}.emblem{width:70px;height:70px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#ffcf33);display:flex;align-items:center;justify-content:center;font-family:Orbitron;color:#091016;font-weight:900}
-.site-title{font-family:Orbitron;font-size:24px;font-weight:900;color:#fff3b0;margin:0}.site-sub{font-size:13px;color:var(--muted);margin-top:4px}.crawl{margin-top:10px;color:#ffe81f;font-family:Orbitron;font-weight:700;font-size:13px}
-.cards{display:grid;gap:12px}.card{display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));border:1px solid var(--card-border);text-decoration:none;color:inherit;position:relative}
-.card:hover{transform:translateY(-6px);box-shadow:0 18px 44px rgba(2,6,23,0.58);border-color:rgba(255,232,31,0.25)}
-.row{display:flex;gap:12px;align-items:center}.thumb{width:72px;height:72px;border-radius:12px;background:var(--glass);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--card-border);flex:0 0 72px}
-.meta .title{font-weight:800;color:#f4fbff;font-size:16px}.role{margin-left:auto;font-size:12px;font-weight:800;padding:6px 8px;border-radius:10px;background:#091420;color:#ffe81f;border:1px solid rgba(255,255,255,0.06)}
-.info{border-top:1px solid var(--card-border);padding-top:10px}.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.pill{border:1px solid var(--card-border);border-radius:10px;padding:8px;text-align:center;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006))}
+.brand{display:flex;align-items:center;gap:12px}
+.emblem{width:70px;height:70px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#ffcf33);display:flex;align-items:center;justify-content:center;font-family:Orbitron;color:#091016;font-weight:900}
+.site-title{font-family:Orbitron;font-size:24px;font-weight:900;color:#fff3b0;margin:0}
+.site-sub{font-size:13px;color:var(--muted);margin-top:4px}
+.crawl{margin-top:10px;color:#ffe81f;font-family:Orbitron;font-weight:700;font-size:13px}
+
+.cards{display:grid;gap:12px}
+.card{display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));border:1px solid var(--card-border);text-decoration:none;color:inherit;position:relative;outline:none}
+.card:focus,.card:hover{transform:translateY(-6px);box-shadow:0 18px 44px rgba(2,6,23,0.58);border-color:rgba(255,232,31,0.25)}
+.row{display:flex;gap:12px;align-items:center}
+.thumb{
+  width:72px;height:72px;border-radius:12px;background:var(--glass);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--card-border);flex:0 0 72px;
+}
+.thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  /* ensure large images are scaled down and centered */
+  max-width:100%;
+  max-height:100%;
+}
+
+.meta{display:flex;flex-direction:column}
+.meta .title{font-weight:800;color:#f4fbff;font-size:16px}
+.role{margin-left:auto;font-size:12px;font-weight:800;padding:6px 8px;border-radius:10px;background:#091420;color:#ffe81f;border:1px solid rgba(255,255,255,0.06)}
+
+.info{border-top:1px solid var(--card-border);padding-top:10px;width:100%}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pill{border:1px solid var(--card-border);border-radius:10px;padding:8px;text-align:center;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006))}
+.pill .k{font-size:11px;color:var(--muted)}
+.pill .v{font-weight:900;font-size:14px;color:#f8feff}
+
+.panel{display:flex;flex-direction:column;gap:12px;padding:12px;border-radius:12px;background:transparent;border:1px solid var(--card-border)}
 .preview{min-height:120px;border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);background:linear-gradient(180deg, rgba(255,255,255,0.008), rgba(255,255,255,0.003))}
-.stats{display:flex;gap:8px;justify-content:space-between}.stat{flex:1;text-align:center;border:1px solid var(--card-border);border-radius:10px;padding:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005))}
-.btn{padding:10px 14px;border-radius:10px;border:0;font-weight:800;cursor:pointer;background:var(--accent);color:#091016}
+.stats{display:flex;gap:8px;justify-content:space-between}
+.stat{flex:1;text-align:center;border:1px solid var(--card-border);border-radius:10px;padding:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005))}
+.stat .num{font-weight:900;font-size:18px;color:#f8feff}
+.stat .label{font-size:12px;color:var(--muted);margin-top:6px}
+
+.btn{padding:10px 14px;border-radius:10px;border:0;font-weight:800;cursor:pointer;background:var(--accent);color:#091016;box-shadow:0 8px 22px rgba(2,6,23,0.35)}
+.btn.ghost{background:transparent;border:1px solid var(--card-border);color:var(--muted);box-shadow:none}
+.btn.small{padding:8px 10px;border-radius:8px;font-size:13px;background:transparent;border:1px solid var(--card-border);color:var(--muted);margin-right:8px}
+
+.placeholder-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+
 .discord-wrap{margin-top:8px;border-radius:10px;overflow:hidden;border:1px solid var(--card-border);background:linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.003))}
-.iframe-container{position:relative;padding-top:60%;height:0;width:100%}.discord-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;display:block}
+.iframe-container{position:relative;padding-top:0;height:420px;width:100%} /* increased height for longer widget */
+.discord-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;display:block}
+
 @media (max-width:880px){.frame{grid-template-columns:1fr;gap:16px;padding:14px}.info-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:420px){body{padding:12px}.thumb{width:64px;height:64px}.emblem{width:50px;height:50px}}
 </style>
 </head>
 <body>
@@ -40,41 +115,48 @@ header.hero{grid-column:1/-1;border-radius:14px;padding:18px;background:linear-g
 
   <section aria-label="Guilds">
     <h1 id="main-title" class="sr-only">Galaxy Hub</h1>
+
     <nav class="cards" aria-label="Member guilds">
       <!-- Chewbooty -->
       <a class="card" href="https://swgoh.gg/g/U48yJw7LRXmvqd2TKavaKA/" target="_blank" rel="noopener noreferrer">
         <div class="row">
           <div class="thumb"><img src="https://i.imgur.com/W1kflhn.gif" alt="Chewbooty"></div>
-          <div class="meta"><div class="title">Chewbooty</div></div>
+          <div class="meta">
+            <div class="title">Chewbooty</div>
+          </div>
           <div class="role">#1</div>
         </div>
-        <div class="info">
+
+        <div class="info" id="info-chewbooty">
           <div class="info-grid">
-            <div class="pill"><div class="k">Members</div><div class="v"><strong>50</strong></div></div>
-            <div class="pill"><div class="k">Total GP</div><div class="v"><strong>549M</strong></div></div>
-            <div class="pill"><div class="k">Avg GP</div><div class="v"><strong>11M</strong></div></div>
-            <div class="pill"><div class="k">Character GP</div><div class="v"><strong>339M</strong></div></div>
-            <div class="pill"><div class="k">Ship GP</div><div class="v"><strong>210M</strong></div></div>
-            <div class="pill"><div class="k">Avg Skill</div><div class="v"><strong>2,859</strong></div></div>
+            <div class="pill"><div class="k">Members</div><div class="v">50</div></div>
+            <div class="pill"><div class="k">Total GP</div><div class="v">549M</div></div>
+            <div class="pill"><div class="k">Avg GP</div><div class="v">11M</div></div>
+            <div class="pill"><div class="k">Character GP</div><div class="v">339M</div></div>
+            <div class="pill"><div class="k">Ship GP</div><div class="v">210M</div></div>
+            <div class="pill"><div class="k">Avg Skill</div><div class="v">2,859</div></div>
           </div>
         </div>
       </a>
 
-      <!-- WhaleBooty -->
+      <!-- Whalebooty -->
       <a class="card" href="https://swgoh.gg/g/4nCSKBUXRfyjlElFcmIkvg/" target="_blank" rel="noopener noreferrer">
         <div class="row">
-          <div class="thumb"><img src="https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pjc2l4aXBxbmMxYXRidGd6NTQxa2tmcnE5ZWQwNmQ0eWkyaTAxcCZlcD12MV9naWZzX3NlYXJjaCZjdT1n/Z68zWR6XixSa4/200w.gif" alt="WhaleBooty"></div>
-          <div class="meta"><div class="title">WhaleBooty</div></div>
+          <div class="thumb"><img src="https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pjc2l4aXBxbmMxYXRidGd6NTQxa2tmcnE5ZWQwNmQ0eWkyaTAxcCZlcD12MV9naWZzX3NlYXJjaCZjdT1n/Z68zWR6XixSa4/200w.gif" alt="Whalebooty"></div>
+          <div class="meta">
+            <div class="title">Whalebooty</div>
+          </div>
           <div class="role">#2</div>
         </div>
-        <div class="info">
+
+        <div class="info" id="info-whalebooty">
           <div class="info-grid">
-            <div class="pill"><div class="k">Members</div><div class="v"><strong>50</strong></div></div>
-            <div class="pill"><div class="k">Total GP</div><div class="v"><strong>459M</strong></div></div>
-            <div class="pill"><div class="k">Avg GP</div><div class="v"><strong>9.19M</strong></div></div>
-            <div class="pill"><div class="k">Character GP</div><div class="v"><strong>283M</strong></div></div>
-            <div class="pill"><div class="k">Ship GP</div><div class="v"><strong>176M</strong></div></div>
-            <div class="pill"><div class="k">Avg Skill</div><div class="v"><strong>2,510</strong></div></div>
+            <div class="pill"><div class="k">Members</div><div class="v">50</div></div>
+            <div class="pill"><div class="k">Total GP</div><div class="v">459M</div></div>
+            <div class="pill"><div class="k">Avg GP</div><div class="v">9.19M</div></div>
+            <div class="pill"><div class="k">Character GP</div><div class="v">283M</div></div>
+            <div class="pill"><div class="k">Ship GP</div><div class="v">176M</div></div>
+            <div class="pill"><div class="k">Avg Skill</div><div class="v">2,510</div></div>
           </div>
         </div>
       </a>
@@ -83,17 +165,20 @@ header.hero{grid-column:1/-1;border-radius:14px;padding:18px;background:linear-g
       <a class="card" href="https://swgoh.gg/g/OiPYqOuwS6mkNLE3T2Wy5w/" target="_blank" rel="noopener noreferrer">
         <div class="row">
           <div class="thumb"><img src="https://i.imgur.com/GMdxdGN.gif" alt="Dolphinbooty"></div>
-          <div class="meta"><div class="title">Dolphinbooty</div></div>
+          <div class="meta">
+            <div class="title">Dolphinbooty</div>
+          </div>
           <div class="role">#3</div>
         </div>
-        <div class="info">
+
+        <div class="info" id="info-dolphinbooty">
           <div class="info-grid">
-            <div class="pill"><div class="k">Members</div><div class="v"><strong>49</strong></div></div>
-            <div class="pill"><div class="k">Total GP</div><div class="v"><strong>219M</strong></div></div>
-            <div class="pill"><div class="k">Avg GP</div><div class="v"><strong>4.47M</strong></div></div>
-            <div class="pill"><div class="k">Character GP</div><div class="v"><strong>133M</strong></div></div>
-            <div class="pill"><div class="k">Ship GP</div><div class="v"><strong>86M</strong></div></div>
-            <div class="pill"><div class="k">Avg Skill</div><div class="v"><strong>1,879</strong></div></div>
+            <div class="pill"><div class="k">Members</div><div class="v">49</div></div>
+            <div class="pill"><div class="k">Total GP</div><div class="v">219M</div></div>
+            <div class="pill"><div class="k">Avg GP</div><div class="v">4.47M</div></div>
+            <div class="pill"><div class="k">Character GP</div><div class="v">133M</div></div>
+            <div class="pill"><div class="k">Ship GP</div><div class="v">86M</div></div>
+            <div class="pill"><div class="k">Avg Skill</div><div class="v">1,879</div></div>
           </div>
         </div>
       </a>
@@ -101,14 +186,29 @@ header.hero{grid-column:1/-1;border-radius:14px;padding:18px;background:linear-g
   </section>
 
   <aside class="panel" aria-label="Alliance tools">
-    <div id="preview" class="preview">Hover or focus a guild card to preview details here. Tap a card to open it.</div>
+    <!-- Placeholder buttons (replaces hover preview) -->
+    <div class="placeholder-row" aria-hidden="false">
+      <button class="btn small" type="button" aria-label="Placeholder 1">Placeholder 1</button>
+      <button class="btn small" type="button" aria-label="Placeholder 2">Placeholder 2</button>
+      <button class="btn small" type="button" aria-label="Placeholder 3">Placeholder 3</button>
+    </div>
+
     <div class="stats" role="list" aria-label="Alliance stats">
       <div class="stat" role="listitem"><div class="num" id="stat-members">1,248</div><div class="label">Members</div></div>
       <div class="stat" role="listitem"><div class="num" id="stat-online">124</div><div class="label">Online</div></div>
       <div class="stat" role="listitem"><div class="num" id="stat-guilds">3</div><div class="label">Guilds</div></div>
     </div>
-    <div class="actions"><button class="btn ghost" type="button" onclick="location.href='https://discord.gg/bootycheeks'">Join Discord</button><button class="btn" type="button" onclick="location.href='https://github.com/thebootycheeks'">GitHub</button></div>
-    <div class="discord-wrap" aria-label="Discord widget"><div class="iframe-container"><iframe src="https://ptb.discord.com/widget?id=430853296480321537&theme=dark" allowtransparency="true" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts" title="Bootycheeks Discord"></iframe></div></div>
+
+    <div class="actions" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+      <button class="btn ghost" type="button" onclick="location.href='https://discord.gg/bootycheeks'">Join Discord</button>
+      <button class="btn" type="button" onclick="location.href='https://github.com/thebootycheeks'">GitHub</button>
+    </div>
+
+    <div class="discord-wrap" aria-label="Discord widget">
+      <div class="iframe-container">
+        <iframe src="https://ptb.discord.com/widget?id=430853296480321537&theme=dark" allowtransparency="true" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts" title="Bootycheeks Discord"></iframe>
+      </div>
+    </div>
   </aside>
 
   <footer>© Bootycheeks Alliance <span style="color:var(--muted)">· Cinematic dark · Mobile-first · Accessible</span></footer>
@@ -116,18 +216,20 @@ header.hero{grid-column:1/-1;border-radius:14px;padding:18px;background:linear-g
 
 <script>
 (function(){
-  const preview = document.getElementById('preview');
-  const defaultText = preview.textContent;
+  // Keep keyboard accessibility for cards and demo stats pulse.
   document.querySelectorAll('.card').forEach(card=>{
-    const title = card.querySelector('.meta .title')?.textContent || 'Guild';
-    const role = card.querySelector('.role')?.textContent || '';
-    const text = role ? `${title} — ${role}` : `${title}`;
-    card.addEventListener('mouseenter', ()=> preview.textContent = text);
-    card.addEventListener('focus', ()=> preview.textContent = text);
-    card.addEventListener('mouseleave', ()=> preview.textContent = defaultText);
-    card.addEventListener('blur', ()=> preview.textContent = defaultText);
-    card.addEventListener('keydown', e=>{ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); card.click(); }});
+    card.setAttribute('tabindex','0');
+    card.addEventListener('keydown', e=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        // follow the link
+        const link = card.getAttribute('href') || card.querySelector('a')?.href;
+        if(card.href) { window.open(card.href, '_blank'); }
+        else if(link) { window.open(link, '_blank'); }
+      }
+    });
   });
+
   const statMembers = document.getElementById('stat-members');
   const statOnline = document.getElementById('stat-online');
   setInterval(()=>{
