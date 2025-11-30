@@ -64,7 +64,6 @@ header.hero{grid-column:1/-1;border-radius:14px;padding:18px;background:linear-g
   height:100%;
   object-fit:cover;
   display:block;
-  /* ensure large images are scaled down and centered */
   max-width:100%;
   max-height:100%;
 }
@@ -80,7 +79,6 @@ header.hero{grid-column:1/-1;border-radius:14px;padding:18px;background:linear-g
 .pill .v{font-weight:900;font-size:14px;color:#f8feff}
 
 .panel{display:flex;flex-direction:column;gap:12px;padding:12px;border-radius:12px;background:transparent;border:1px solid var(--card-border)}
-.preview{min-height:120px;border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);background:linear-gradient(180deg, rgba(255,255,255,0.008), rgba(255,255,255,0.003))}
 .stats{display:flex;gap:8px;justify-content:space-between}
 .stat{flex:1;text-align:center;border:1px solid var(--card-border);border-radius:10px;padding:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005))}
 .stat .num{font-weight:900;font-size:18px;color:#f8feff}
@@ -117,8 +115,8 @@ header.hero{grid-column:1/-1;border-radius:14px;padding:18px;background:linear-g
     <h1 id="main-title" class="sr-only">Galaxy Hub</h1>
 
     <nav class="cards" aria-label="Member guilds">
-      <!-- Chewbooty -->
-      <a class="card" href="https://thebootycheeks.github.io/cb/" target="_blank" rel="noopener noreferrer">
+      <!-- Chewbooty (uses the href you provided) -->
+      <a class="card" href="https://thebootycheeks.github.io/cb/">
         <div class="row">
           <div class="thumb"><img src="https://i.imgur.com/W1kflhn.gif" alt="Chewbooty"></div>
           <div class="meta">
@@ -139,8 +137,8 @@ header.hero{grid-column:1/-1;border-radius:14px;padding:18px;background:linear-g
         </div>
       </a>
 
-      <!-- Whalebooty -->
-      <a class="card" href="https://thebootycheeks.github.io/wb/" target="_blank" rel="noopener noreferrer">
+      <!-- Whalebooty (uses the href you provided) -->
+      <a class="card" href="https://thebootycheeks.github.io/wb/">
         <div class="row">
           <div class="thumb"><img src="https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pjc2l4aXBxbmMxYXRidGd6NTQxa2tmcnE5ZWQwNmQ0eWkyaTAxcCZlcD12MV9naWZzX3NlYXJjaCZjdT1n/Z68zWR6XixSa4/200w.gif" alt="Whalebooty"></div>
           <div class="meta">
@@ -161,8 +159,8 @@ header.hero{grid-column:1/-1;border-radius:14px;padding:18px;background:linear-g
         </div>
       </a>
 
-      <!-- Dolphinbooty -->
-      <a class="card" href="https://thebootycheeks.github.io/db/" target="_blank" rel="noopener noreferrer">
+      <!-- Dolphinbooty (uses the href you provided) -->
+      <a class="card" href="https://thebootycheeks.github.io/db/">
         <div class="row">
           <div class="thumb"><img src="https://i.imgur.com/GMdxdGN.gif" alt="Dolphinbooty"></div>
           <div class="meta">
@@ -210,27 +208,39 @@ header.hero{grid-column:1/-1;border-radius:14px;padding:18px;background:linear-g
 
 <script>
 (function(){
-  // Keep keyboard accessibility for cards and demo stats pulse.
+  // Make cards keyboard-focusable and ensure clicking anywhere on the card follows the provided href in the same tab.
   document.querySelectorAll('.card').forEach(card=>{
     card.setAttribute('tabindex','0');
+
+    // If user presses Enter/Space while focused on the card, navigate in the same tab to the card's href.
     card.addEventListener('keydown', e=>{
       if(e.key === 'Enter' || e.key === ' '){
         e.preventDefault();
-        // follow the link
-        const link = card.getAttribute('href') || card.querySelector('a')?.href;
-        if(card.href) { window.open(card.href, '_blank'); }
-        else if(link) { window.open(link, '_blank'); }
+        const href = card.getAttribute('href');
+        if (href) window.location.href = href;
+      }
+    });
+
+    // Clicking anywhere on the card navigates in the same tab to the card's href.
+    card.addEventListener('click', e=>{
+      // If the click target is a real link or button inside the card, allow default behavior.
+      const href = card.getAttribute('href');
+      if (href && !e.defaultPrevented) {
+        window.location.href = href;
       }
     });
   });
 
+  // Demo stats pulse placeholders (keeps code from throwing if elements are absent)
   const statMembers = document.getElementById('stat-members');
   const statOnline = document.getElementById('stat-online');
-  setInterval(()=>{
-    const base = 1248;
-    statMembers.textContent = (base + Math.floor(Math.random()*7) - 3).toLocaleString();
-    statOnline.textContent = (100 + Math.floor(Math.random()*40)).toString();
-  },15000);
+  if (statMembers && statOnline) {
+    setInterval(()=>{
+      const base = 1248;
+      statMembers.textContent = (base + Math.floor(Math.random()*7) - 3).toLocaleString();
+      statOnline.textContent = (100 + Math.floor(Math.random()*40)).toString();
+    },15000);
+  }
 })();
 </script>
 </body>
