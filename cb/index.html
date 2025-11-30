@@ -50,6 +50,31 @@
     letter-spacing:0.2px;
   }
 
+  /* Back button */
+  .back-btn {
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 12px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.06);
+    background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+    color:var(--muted);
+    font-weight:700;
+    cursor:pointer;
+    text-decoration:none;
+    transition:transform 160ms cubic-bezier(.2,.9,.2,1), box-shadow 160ms;
+  }
+  .back-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 24px rgba(0,0,0,0.45);
+    color:#fff;
+  }
+  .back-btn .arrow {
+    font-size:14px;
+    color:var(--accent);
+  }
+
   /* Winners strip */
   .winners-wrap{ display:flex; gap:12px; align-items:stretch; min-width:0; }
 
@@ -123,7 +148,6 @@
     border-radius:12px;
     padding:10px;
     box-shadow:var(--shadow);
-    /* allow page scrolling so table headers can stick to viewport */
     overflow: visible;
   }
 
@@ -137,9 +161,9 @@
 
   thead th{
     position:sticky;
-    top:0; /* stick to the top of the viewport when page scrolls */
-    z-index:999; /* ensure headers stay above other content */
-    background: var(--panel); /* solid header background to avoid transparency artifacts */
+    top:0;
+    z-index:999;
+    background: var(--panel);
     color:var(--accent);
     padding:10px 12px;
     text-align:center;
@@ -202,7 +226,13 @@
 </head>
 <body>
   <header>
-    <h1>Chewbooty Player Monthly Progression</h1>
+    <div style="display:flex;align-items:center;gap:12px;min-width:0;">
+      <a class="back-btn" href="https://thebootycheeks.github.io/" title="Back to Alliance Hub" rel="noopener noreferrer">
+        <span class="arrow">←</span>
+        <span>Back to Hub</span>
+      </a>
+      <h1>Chewbooty Player Monthly Progression</h1>
+    </div>
 
     <div class="winners-wrap" style="min-width:0;">
       <div id="winnersContainer" class="winners-strip" aria-live="polite" aria-atomic="true">
