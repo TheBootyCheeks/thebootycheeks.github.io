@@ -52,54 +52,74 @@ header.hero{grid-column:1/-1;border-radius:14px;padding:18px;background:linear-g
 .site-sub{font-size:13px;color:var(--muted);margin-top:4px}
 .crawl{margin-top:10px;color:#ffe81f;font-family:Orbitron;font-weight:700;font-size:13px}
 
-.cards{display:grid;gap:12px}
-.card{display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));border:1px solid var(--card-border);text-decoration:none;color:inherit;position:relative;outline:none}
-.card:focus,.card:hover{transform:translateY(-6px);box-shadow:0 18px 44px rgba(2,6,23,0.58);border-color:rgba(255,232,31,0.25)}
-.row{display:flex;gap:12px;align-items:center}
+.cards{display:grid;gap:20px}
+.card{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding:20px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--card-border);
+  position:relative;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.card:hover{border-color:rgba(255,232,31,0.3)}
+
+.row{display:flex;gap:16px;align-items:center}
 .thumb{
-  width:72px;height:72px;border-radius:12px;background:var(--glass);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--card-border);flex:0 0 72px;
+  width:80px;height:80px;border-radius:12px;background:var(--glass);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--card-border);flex:0 0 80px;
 }
-.thumb img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-  max-width:100%;
-  max-height:100%;
-}
+.thumb img{width:100%;height:100%;object-fit:cover}
 
-.meta{display:flex;flex-direction:column}
-.meta .title{font-weight:800;color:#f4fbff;font-size:16px}
-.role{margin-left:auto;font-size:12px;font-weight:800;padding:6px 8px;border-radius:10px;background:#091420;color:#ffe81f;border:1px solid rgba(255,255,255,0.06)}
+.meta .title{font-family:Orbitron;font-weight:800;color:#f4fbff;font-size:20px;letter-spacing:1px}
+.role{margin-left:auto;font-size:12px;font-weight:800;padding:6px 12px;border-radius:20px;background:rgba(255,232,31,0.1);color:#ffe81f;border:1px solid rgba(255,232,31,0.2)}
 
-.info{border-top:1px solid var(--card-border);padding-top:10px;width:100%}
+.info{border-top:1px solid var(--card-border);border-bottom:1px solid var(--card-border);padding:15px 0;margin:5px 0}
 .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.pill{border:1px solid var(--card-border);border-radius:10px;padding:8px;text-align:center;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006))}
-.pill .k{font-size:11px;color:var(--muted)}
-.pill .v{font-weight:900;font-size:14px;color:#f8feff}
+.pill{border:1px solid var(--card-border);border-radius:8px;padding:8px;text-align:center;background:rgba(0,0,0,0.2)}
+.pill .k{font-size:10px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;letter-spacing:0.5px}
+.pill .v{font-weight:900;font-size:15px;color:#fff}
+
+/* New Button Group Styles */
+.card-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:5px}
+.btn-portal{
+  text-decoration:none;
+  text-align:center;
+  padding:10px 5px;
+  font-size:11px;
+  font-weight:800;
+  text-transform:uppercase;
+  border-radius:6px;
+  background:rgba(255,255,255,0.05);
+  color:var(--muted);
+  border:1px solid var(--card-border);
+  transition:all 0.2s ease;
+}
+.btn-portal:hover{background:var(--accent);color:#000;border-color:var(--accent)}
 
 .panel{display:flex;flex-direction:column;gap:12px;padding:12px;border-radius:12px;background:transparent;border:1px solid var(--card-border)}
-.stats{display:flex;gap:8px;justify-content:space-between}
-.stat{flex:1;text-align:center;border:1px solid var(--card-border);border-radius:10px;padding:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005))}
-.stat .num{font-weight:900;font-size:18px;color:#f8feff}
-.stat .label{font-size:12px;color:var(--muted);margin-top:6px}
+.btn{padding:10px 14px;border-radius:10px;border:0;font-weight:800;cursor:pointer;background:var(--accent);color:#091016;text-decoration:none;display:inline-block;text-align:center}
+.btn.ghost{background:transparent;border:1px solid var(--card-border);color:var(--muted)}
 
-.btn{padding:10px 14px;border-radius:10px;border:0;font-weight:800;cursor:pointer;background:var(--accent);color:#091016;box-shadow:0 8px 22px rgba(2,6,23,0.35)}
-.btn.ghost{background:transparent;border:1px solid var(--card-border);color:var(--muted);box-shadow:none}
-.btn.small{padding:8px 10px;border-radius:8px;font-size:13px;background:transparent;border:1px solid var(--card-border);color:var(--muted);margin-right:8px}
+.discord-wrap{margin-top:8px;border-radius:10px;overflow:hidden;border:1px solid var(--card-border)}
+.iframe-container{height:450px;width:100%}
+.iframe-container iframe{width:100%;height:100%;border:0}
 
-.placeholder-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+footer{grid-column:1/-1;text-align:center;padding:20px;font-size:12px;color:var(--muted);opacity:0.6}
 
-.discord-wrap{margin-top:8px;border-radius:10px;overflow:hidden;border:1px solid var(--card-border);background:linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.003))}
-.iframe-container{position:relative;padding-top:0;height:420px;width:100%} /* increased height for longer widget */
-.discord-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;display:block}
-
-@media (max-width:880px){.frame{grid-template-columns:1fr;gap:16px;padding:14px}.info-grid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:420px){body{padding:12px}.thumb{width:64px;height:64px}.emblem{width:50px;height:50px}}
+@media (max-width:880px){
+  .frame{grid-template-columns:1fr}
+  .info-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:500px){
+  .info-grid{grid-template-columns:repeat(2,1fr)}
+  .card-actions{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
-<main class="frame" role="main" aria-labelledby="main-title">
+<main class="frame">
   <header class="hero">
     <div class="brand">
       <div class="emblem">A</div>
@@ -112,136 +132,106 @@ header.hero{grid-column:1/-1;border-radius:14px;padding:18px;background:linear-g
   </header>
 
   <section aria-label="Guilds">
-    <h1 id="main-title" class="sr-only">Galaxy Hub</h1>
-
-    <nav class="cards" aria-label="Member guilds">
-      <!-- Chewbooty (uses the href you provided) -->
-      <a class="card" href="https://thebootycheeks.github.io/cb/">
+    <div class="cards">
+      
+      <article class="card">
         <div class="row">
           <div class="thumb"><img src="https://i.imgur.com/W1kflhn.gif" alt="Chewbooty"></div>
           <div class="meta">
             <div class="title">Chewbooty</div>
           </div>
-          <div class="role">#1</div>
+          <div class="role">LEAD GUILD</div>
         </div>
 
-        <div class="info" id="info-chewbooty">
+        <div class="info">
           <div class="info-grid">
             <div class="pill"><div class="k">Members</div><div class="v">50</div></div>
             <div class="pill"><div class="k">Total GP</div><div class="v">549M</div></div>
             <div class="pill"><div class="k">Avg GP</div><div class="v">11M</div></div>
-            <div class="pill"><div class="k">Character GP</div><div class="v">339M</div></div>
+            <div class="pill"><div class="k">Char GP</div><div class="v">339M</div></div>
             <div class="pill"><div class="k">Ship GP</div><div class="v">210M</div></div>
             <div class="pill"><div class="k">Avg Skill</div><div class="v">2,859</div></div>
           </div>
         </div>
-      </a>
 
-      <!-- Whalebooty (uses the href you provided) -->
-      <a class="card" href="https://thebootycheeks.github.io/wb/">
+        <div class="card-actions">
+          <a href="https://thebootycheeks.github.io/cb/" class="btn-portal">Roster Page</a>
+          <a href="#" class="btn-portal">TB Stats</a>
+          <a href="#" class="btn-portal">TW Stats</a>
+        </div>
+      </article>
+
+      <article class="card">
         <div class="row">
           <div class="thumb"><img src="https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pjc2l4aXBxbmMxYXRidGd6NTQxa2tmcnE5ZWQwNmQ0eWkyaTAxcCZlcD12MV9naWZzX3NlYXJjaCZjdT1n/Z68zWR6XixSa4/200w.gif" alt="Whalebooty"></div>
           <div class="meta">
             <div class="title">Whalebooty</div>
           </div>
-          <div class="role">#2</div>
+          <div class="role">COMPETITIVE</div>
         </div>
 
-        <div class="info" id="info-whalebooty">
+        <div class="info">
           <div class="info-grid">
             <div class="pill"><div class="k">Members</div><div class="v">50</div></div>
             <div class="pill"><div class="k">Total GP</div><div class="v">459M</div></div>
             <div class="pill"><div class="k">Avg GP</div><div class="v">9.19M</div></div>
-            <div class="pill"><div class="k">Character GP</div><div class="v">283M</div></div>
+            <div class="pill"><div class="k">Char GP</div><div class="v">283M</div></div>
             <div class="pill"><div class="k">Ship GP</div><div class="v">176M</div></div>
             <div class="pill"><div class="k">Avg Skill</div><div class="v">2,510</div></div>
           </div>
         </div>
-      </a>
 
-      <!-- Dolphinbooty (uses the href you provided) -->
-      <a class="card" href="https://thebootycheeks.github.io/db/">
+        <div class="card-actions">
+          <a href="https://thebootycheeks.github.io/wb/" class="btn-portal">Roster Page</a>
+          <a href="#" class="btn-portal">TB Stats</a>
+          <a href="#" class="btn-portal">TW Stats</a>
+        </div>
+      </article>
+
+      <article class="card">
         <div class="row">
           <div class="thumb"><img src="https://i.imgur.com/GMdxdGN.gif" alt="Dolphinbooty"></div>
           <div class="meta">
             <div class="title">Dolphinbooty</div>
           </div>
-          <div class="role">#3</div>
+          <div class="role">DEVELOPMENT</div>
         </div>
 
-        <div class="info" id="info-dolphinbooty">
+        <div class="info">
           <div class="info-grid">
             <div class="pill"><div class="k">Members</div><div class="v">49</div></div>
             <div class="pill"><div class="k">Total GP</div><div class="v">219M</div></div>
             <div class="pill"><div class="k">Avg GP</div><div class="v">4.47M</div></div>
-            <div class="pill"><div class="k">Character GP</div><div class="v">133M</div></div>
+            <div class="pill"><div class="k">Char GP</div><div class="v">133M</div></div>
             <div class="pill"><div class="k">Ship GP</div><div class="v">86M</div></div>
             <div class="pill"><div class="k">Avg Skill</div><div class="v">1,879</div></div>
           </div>
         </div>
-      </a>
-    </nav>
+
+        <div class="card-actions">
+          <a href="https://thebootycheeks.github.io/db/" class="btn-portal">Roster Page</a>
+          <a href="#" class="btn-portal">TB Stats</a>
+          <a href="#" class="btn-portal">TW Stats</a>
+        </div>
+      </article>
+
+    </div>
   </section>
 
-  <aside class="panel" aria-label="Alliance tools">
-    <!-- Placeholder buttons (replaces hover preview) -->
-    <div class="placeholder-row" aria-hidden="false">
-      <button class="btn small" type="button" aria-label="Placeholder 1">Placeholder 1</button>
-      <button class="btn small" type="button" aria-label="Placeholder 2">Placeholder 2</button>
-      <button class="btn small" type="button" aria-label="Placeholder 3">Placeholder 3</button>
+  <aside class="panel">
+    <div class="actions" style="display:flex;gap:8px;flex-direction:column">
+      <a href="https://discord.gg/cAu5Dttg7p" class="btn ghost">Join Alliance Discord</a>
+      <a href="https://github.com/thebootycheeks" class="btn">Alliance GitHub</a>
     </div>
 
-    <div class="actions" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
-      <button class="btn ghost" type="button" onclick="location.href='https://discord.gg/cAu5Dttg7p'">Join Discord</button>
-      <button class="btn" type="button" onclick="location.href='https://github.com/thebootycheeks'">GitHub</button>
-    </div>
-
-    <div class="discord-wrap" aria-label="Discord widget">
+    <div class="discord-wrap">
       <div class="iframe-container">
-        <iframe src="https://ptb.discord.com/widget?id=430853296480321537&theme=dark" allowtransparency="true" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts" title="Bootycheeks Discord"></iframe>
+        <iframe src="https://ptb.discord.com/widget?id=430853296480321537&theme=dark" allowtransparency="true" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
       </div>
     </div>
   </aside>
 
-  <footer>© Bootycheeks Alliance</footer>
+  <footer>&copy; 2025 Bootycheeks Alliance • Galactic Portal</footer>
 </main>
-
-<script>
-(function(){
-  // Make cards keyboard-focusable and ensure clicking anywhere on the card follows the provided href in the same tab.
-  document.querySelectorAll('.card').forEach(card=>{
-    card.setAttribute('tabindex','0');
-
-    // If user presses Enter/Space while focused on the card, navigate in the same tab to the card's href.
-    card.addEventListener('keydown', e=>{
-      if(e.key === 'Enter' || e.key === ' '){
-        e.preventDefault();
-        const href = card.getAttribute('href');
-        if (href) window.location.href = href;
-      }
-    });
-
-    // Clicking anywhere on the card navigates in the same tab to the card's href.
-    card.addEventListener('click', e=>{
-      // If the click target is a real link or button inside the card, allow default behavior.
-      const href = card.getAttribute('href');
-      if (href && !e.defaultPrevented) {
-        window.location.href = href;
-      }
-    });
-  });
-
-  // Demo stats pulse placeholders (keeps code from throwing if elements are absent)
-  const statMembers = document.getElementById('stat-members');
-  const statOnline = document.getElementById('stat-online');
-  if (statMembers && statOnline) {
-    setInterval(()=>{
-      const base = 1248;
-      statMembers.textContent = (base + Math.floor(Math.random()*7) - 3).toLocaleString();
-      statOnline.textContent = (100 + Math.floor(Math.random()*40)).toString();
-    },15000);
-  }
-})();
-</script>
 </body>
 </html>
