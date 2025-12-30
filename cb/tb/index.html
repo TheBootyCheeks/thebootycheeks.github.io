@@ -72,54 +72,85 @@
     // --- CONFIGURATION ---
     const GITHUB_USER = "thebootycheeks";
     const GITHUB_REPO = "cb";
-    const FOLDER_PATH = "tb"; // Make sure this matches your folder name exactly
+    // If your CSVs are in the same folder as this HTML file, leave this as ""
+    // If they are in a subfolder, put the name here (e.g., "data")
+    const FOLDER_PATH = ""; 
 
     async function scanForFiles() {
         const selector = document.getElementById('dateSelector');
         const status = document.getElementById('status');
         
         try {
-            // Updated API URL for your specific repository
+            // Attempt to get file list via GitHub API
             const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FOLDER_PATH}`;
             const response = await fetch(apiUrl);
             
-            if (!response.ok) {
-                const errData = await response.json();
-                status.innerText = `Error: ${response.status} - ${errData.message}`;
-                return;
+            if (response.ok) {
+                const files = await response.json();
+                const csvFiles = files
+                    .filter(file => /^tb_\d{4}-\d{2}-\d{2}\.csv$/.test(file.name))
+                    .map(file => file.name);
+
+                if (csvFiles.length > 0) {
+                    populateDropdown(csvFiles);
+                    return; // Success!
+                }
             }
+        } catch (e) {
+            console.error("API failed, falling back to manual scan", e);
+        }
+
+        // FALLBACK: If API fails or 404s, try the date-loop method
+        runManualScan();
+    }
+
+    function populateDropdown(files) {
+        const selector = document.getElementById('dateSelector');
+        selector.innerHTML = "";
+        files.sort().reverse();
+        files.forEach((fileName, index) => {
+            const datePart = fileName.replace('tb_', '').replace('.csv', '');
+            const label = index === 0 ? `${datePart} (Latest)` : datePart;
+            selector.add(new Option(label, fileName));
+        });
+        loadCsvData(files[0]);
+    }
+
+    async function runManualScan() {
+        const foundFiles = [];
+        let checkDate = new Date();
+        // Look back 10 weeks
+        for (let i = 0; i < 70; i += 7) {
+            let d = new Date();
+            d.setDate(d.getDate() - i);
+            const dateStr = d.toISOString().split('T')[0];
+            const fileName = `tb_${dateStr}.csv`;
             
-            const files = await response.json();
-            
-            // Filter: Must start with 'tb_', end with '.csv', and have a date in between
-            const csvFiles = files
-                .filter(file => /^tb_\d{4}-\d{2}-\d{2}\.csv$/.test(file.name))
-                .map(file => file.name);
+            try {
+                const resp = await fetch(fileName, { method: 'HEAD' });
+                if (resp.ok) foundFiles.push(fileName);
+            } catch (e) {}
+        }
 
-            if (csvFiles.length > 0) {
-                // Sort descending (Latest date first)
-                csvFiles.sort().reverse();
-
-                selector.innerHTML = ""; // Clear any placeholders
-                csvFiles.forEach((fileName, index) => {
-                    const datePart = fileName.replace('tb_', '').replace('.csv', '');
-                    const label = index === 0 ? `${datePart} (Latest)` : datePart;
-                    selector.add(new Option(label, fileName));
-                });
-
-                // Load the first (latest) file automatically
-                loadCsvData(csvFiles[0]);
-            } else {
-                status.innerText = "No files matching 'tb_YYYY-MM-DD.csv' found in /tb folder.";
+        // Add specific known dates if the loop misses them
+        const specificDates = ["tb_2025-12-28.csv", "tb_2024-12-22.csv"];
+        for(let f of specificDates) {
+            if(!foundFiles.includes(f)) {
+                try {
+                    const resp = await fetch(f, { method: 'HEAD' });
+                    if (resp.ok) foundFiles.push(f);
+                } catch (e) {}
             }
-        } catch (error) {
-            status.innerText = "Connection failed. Check your internet or GitHub status.";
-            console.error(error);
+        }
+
+        if (foundFiles.length > 0) {
+            populateDropdown(foundFiles);
+        } else {
+            document.getElementById('status').innerText = "Could not find any CSV files.";
         }
     }
 
     function loadCsvData(filename) {
-        // Path construction: since index.html is in /tb/, we just use the filename
         Papa.parse(filename, {
             download: true,
             header: true,
@@ -131,7 +162,7 @@
         });
     }
 
-    // ... (Keep the rest of your processAndRender, formatDetails, and renderMainChart exactly as they were)
+    // ... [Rest of your processAndRender, etc. remains the same]
     scanForFiles();
 </script>
 
