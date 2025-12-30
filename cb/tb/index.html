@@ -29,7 +29,7 @@
     <div class="header-card d-flex justify-content-between align-items-center flex-wrap">
         <div>
             <h1 class="fw-bold mb-1">Guild TB Dashboard</h1>
-            <p class="mb-0 opacity-75" id="status">Loading files...</p>
+            <p class="mb-0 opacity-75" id="status">Syncing with GitHub directory...</p>
         </div>
         <div class="bg-white p-3 rounded text-dark shadow-sm">
             <label class="small fw-bold d-block mb-1 text-muted text-uppercase">Select TB Date</label>
@@ -49,7 +49,7 @@
     </div>
 
     <div class="table-card">
-        <h5 class="fw-bold mb-3">Member Performance <small class="text-muted fw-normal">(Click + to see Phase 1-6 details)</small></h5>
+        <h5 class="fw-bold mb-3">Member Performance <small class="text-muted fw-normal">(Click + for details)</small></h5>
         <table id="statsTable" class="table table-hover align-middle" style="width:100%">
             <thead>
                 <tr>
@@ -75,7 +75,7 @@
     let dataTable;
     let mainChart;
 
-    // CONFIGURATION
+    // These settings ensure the code looks at the correct folder
     const GITHUB_USER = "thebootycheeks";
     const GITHUB_REPO = "cb";
     const FOLDER_PATH = "tb"; 
@@ -85,13 +85,18 @@
         const statusText = document.getElementById('status');
         
         try {
+            // API call to get all files in the /tb folder
             const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FOLDER_PATH}`;
             const response = await fetch(apiUrl);
-            if (!response.ok) throw new Error("API Access Denied");
+            
+            if (!response.ok) {
+                statusText.innerText = "Error: Folder not found or API limit reached.";
+                return;
+            }
             
             const files = await response.json();
             
-            // REGEX: matches "tb_" followed by 4 digits, dash, 2 digits, dash, 2 digits, ending in .csv
+            // This Regex ensures we only pick files named tb_YYYY-MM-DD.csv
             const datePattern = /^tb_\d{4}-\d{2}-\d{2}\.csv$/;
 
             const csvFiles = files
@@ -99,28 +104,31 @@
                 .map(file => file.name);
 
             if (csvFiles.length > 0) {
-                // Sorting alphabetically descending puts the newest date at the top
+                // Sort descending (newest dates first)
                 csvFiles.sort().reverse();
 
                 csvFiles.forEach((fileName, index) => {
-                    // Extract just the YYYY-MM-DD for the dropdown label
-                    let displayDate = fileName.match(/\d{4}-\d{2}-\d{2}/)[0];
-                    let opt = new Option(displayDate + (index === 0 ? " (Latest)" : ""), fileName);
-                    selector.add(opt);
+                    const datePart = fileName.match(/\d{4}-\d{2}-\d{2}/)[0];
+                    const label = index === 0 ? `${datePart} (Latest)` : datePart;
+                    selector.add(new Option(label, fileName));
                 });
 
+                // Load the first (latest) file automatically
                 loadCsvData(csvFiles[0]);
             } else {
-                statusText.innerText = "No files found matching 'tb_YYYY-MM-DD.csv'";
+                statusText.innerText = "No valid 'tb_YYYY-MM-DD.csv' files found.";
             }
         } catch (error) {
+            statusText.innerText = "Directory sync failed.";
             console.error(error);
-            statusText.innerText = "Error scanning directory.";
         }
     }
 
     function loadCsvData(filename) {
-        Papa.parse(filename, {
+        // Path construction for the CSV load
+        const rawUrl = filename; 
+        
+        Papa.parse(rawUrl, {
             download: true,
             header: true,
             dynamicTyping: true,
@@ -132,11 +140,10 @@
     }
 
     function processAndRender(data, filename) {
-        document.getElementById('status').innerText = "Viewing: " + filename;
+        document.getElementById('status').innerText = "Currently Viewing: " + filename;
         
-        // Ensure data is valid before rendering chart
-        const validData = data.filter(row => row['Name'] && row['Combat Waves'] !== undefined);
-        const sortedForChart = [...validData].sort((a, b) => b['Combat Waves'] - a['Combat Waves']).slice(0, 10);
+        const validData = data.filter(row => row['Name']);
+        const sortedForChart = [...validData].sort((a, b) => (b['Combat Waves'] || 0) - (a['Combat Waves'] || 0)).slice(0, 10);
         renderMainChart(sortedForChart);
 
         if (dataTable) dataTable.destroy();
