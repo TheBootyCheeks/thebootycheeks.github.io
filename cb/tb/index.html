@@ -70,34 +70,49 @@
     let dataTable;
     let mainChart;
 
+    // --- CONFIGURATION ---
+    const repoOwner = "TheBootyCheeks"; // e.g., "Skywalker"
+    const repoName = "thebootycheeks.github.io"; // e.g., "swgoh-dashboard"
+    const folderPath = ""; // Leave empty if files are in the main folder
+    // ---------------------
+
     async function scanForFiles() {
         const selector = document.getElementById('dateSelector');
-        const foundFiles = [];
-        let checkDate = new Date(); 
-        checkDate.setDate(checkDate.getDate() + (7 - checkDate.getDay()) % 7);
+        const statusEl = document.getElementById('status');
+        
+        // GitHub API endpoint to list repository contents
+        const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}`;
 
-        for (let i = 0; i < 52; i++) {
-            const dateStr = checkDate.toISOString().split('T')[0];
-            const fileName = `tb_${dateStr}.csv`;
-            try {
-                const resp = await fetch(fileName, { method: 'HEAD' });
-                if (resp.ok) foundFiles.push(fileName);
-            } catch (e) {}
-            checkDate.setDate(checkDate.getDate() - 7);
-        }
+        try {
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) {
+                throw new Error('Could not reach GitHub API');
+            }
 
-        const manualFile = "tb_2025-12-28.csv";
-        if (!foundFiles.includes(manualFile)) {
-            const resp = await fetch(manualFile, { method: 'HEAD' });
-            if (resp.ok) foundFiles.push(manualFile);
-        }
+            const files = await response.json();
+            
+            // Filter: must be a file, must end in .csv, and start with tb_
+            const csvFiles = files
+                .filter(file => file.type === 'file' && file.name.toLowerCase().endsWith('.csv') && file.name.startsWith('tb_'))
+                .map(file => file.name);
 
-        if (foundFiles.length > 0) {
-            foundFiles.sort().reverse().forEach((file, index) => {
-                let opt = new Option(file.replace('tb_','').replace('.csv','') + (index === 0 ? " (Latest)" : ""), file);
-                selector.add(opt);
-            });
-            loadCsvData(foundFiles[0]);
+            if (csvFiles.length > 0) {
+                // Sort descending so the most recent date appears first
+                csvFiles.sort().reverse().forEach((file, index) => {
+                    let displayDate = file.replace('tb_', '').replace('.csv', '');
+                    let opt = new Option(displayDate + (index === 0 ? " (Latest)" : ""), file);
+                    selector.add(opt);
+                });
+                
+                // Load the first (latest) file found
+                loadCsvData(csvFiles[0]);
+            } else {
+                statusEl.innerText = "No CSV files found (looking for tb_*.csv)";
+            }
+        } catch (error) {
+            console.error("Error scanning directory:", error);
+            statusEl.innerText = "Error: Check GitHub Repository settings in code.";
         }
     }
 
@@ -106,6 +121,7 @@
             download: true,
             header: true,
             dynamicTyping: true,
+            skipEmptyLines: true,
             complete: function(results) {
                 processAndRender(results.data, filename);
             }
@@ -115,18 +131,20 @@
     function processAndRender(data, filename) {
         document.getElementById('status').innerText = "Viewing: " + filename;
         
-        const sortedForChart = [...data].sort((a, b) => b['Combat Waves'] - a['Combat Waves']).slice(0, 10);
+        // Filter out any empty rows
+        const cleanData = data.filter(row => row['Name']);
+        
+        const sortedForChart = [...cleanData].sort((a, b) => b['Combat Waves'] - a['Combat Waves']).slice(0, 10);
         renderMainChart(sortedForChart);
 
         if (dataTable) dataTable.destroy();
         const body = document.getElementById('tableBody');
         body.innerHTML = '';
 
-        data.forEach((row) => {
+        cleanData.forEach((row) => {
             const tr = document.createElement('tr');
             tr.setAttribute('data-child-data', JSON.stringify(row));
             
-            // Simple calculation for Avg Waves (Total Waves divided by 6 phases)
             const avgWaves = (row['Combat Waves'] / 6).toFixed(1);
             
             tr.innerHTML = `
@@ -142,10 +160,11 @@
 
         dataTable = $('#statsTable').DataTable({
             order: [[3, 'desc']], 
-            pageLength: 25
+            pageLength: 25,
+            responsive: true
         });
 
-        $('#statsTable tbody').on('click', 'td.expand-btn', function () {
+        $('#statsTable tbody').off('click').on('click', 'td.expand-btn', function () {
             const tr = $(this).closest('tr');
             const row = dataTable.row(tr);
             if (row.child.isShown()) {
@@ -164,11 +183,11 @@
         let html = '<div class="p-3"><h6>Phase-by-Phase Breakdown:</h6><div class="d-flex flex-wrap">';
         for (let i = 1; i <= 6; i++) {
             const deployed = d[`P${i} Deployed`];
-            if (deployed !== "No" && deployed !== 0) {
+            if (deployed !== "No" && deployed !== 0 && deployed !== null) {
                 html += `
                     <div class="phase-box">
                         <div class="fw-bold text-primary border-bottom mb-1">Phase ${i}</div>
-                        <div class="small">Waves: <strong>${d[`P${i} Waves`]}</strong></div>
+                        <div class="small">Waves: <strong>${d[`P${i} Waves`] || 0}</strong></div>
                         <div class="small">GP: ${(d[`P${i} Deployed GP`] || 0).toLocaleString()}</div>
                         <div class="small">Specials: ${d[`P${i} Special Attempts`] || 0}</div>
                     </div>`;
@@ -201,6 +220,7 @@
         });
     }
 
+    // Initialize the scan on page load
     scanForFiles();
 </script>
 
