@@ -60,43 +60,64 @@
     let dataTable;
     let mainChart;
 
+    // --- CONFIGURATION ---
+    const GITHUB_USER = "thebootycheeks";
+    const GITHUB_REPO = "cb";
+    const FOLDER_PATH = "tb"; // The folder where your CSVs are stored
+
     async function scanForFiles() {
         const selector = document.getElementById('dateSelector');
-        const foundFiles = [];
+        const status = document.getElementById('status');
         
-        // Manual check for specific dates
-        const datesToCheck = ["tb_2025-12-28.csv", "tb_2024-12-22.csv"];
-        
-        // Also check recent Sundays
-        let d = new Date();
-        for(let i=0; i<10; i++) {
-            const dateStr = d.toISOString().split('T')[0];
-            datesToCheck.push(`tb_${dateStr}.csv`);
-            d.setDate(d.getDate() - 7);
-        }
+        try {
+            // This URL fetches the list of files directly from the GitHub API
+            const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FOLDER_PATH}`;
+            
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+            }
 
-        for (const file of [...new Set(datesToCheck)]) {
-            try {
-                const resp = await fetch(file, { method: 'HEAD' });
-                if (resp.ok) foundFiles.push(file);
-            } catch (e) {}
-        }
+            const files = await response.json();
+            
+            // Filter: Only grab files that look like 'tb_2025-12-28.csv'
+            const csvFiles = files
+                .filter(file => file.name.startsWith('tb_') && file.name.endsWith('.csv'))
+                .map(file => file.name);
 
-        if (foundFiles.length > 0) {
-            foundFiles.sort().reverse();
-            selector.innerHTML = "";
-            foundFiles.forEach((f, i) => {
-                const label = f.replace('tb_','').replace('.csv','') + (i===0 ? " (Latest)" : "");
-                selector.add(new Option(label, f));
-            });
-            loadCsvData(foundFiles[0]);
-        } else {
-            document.getElementById('status').innerText = "No CSV files detected.";
+            if (csvFiles.length > 0) {
+                // Sort them so the newest date is at the top
+                csvFiles.sort().reverse();
+
+                selector.innerHTML = ""; // Clear the dropdown
+                csvFiles.forEach((fileName, index) => {
+                    // Extract the date part for the label
+                    const displayDate = fileName.replace('tb_', '').replace('.csv', '');
+                    const label = index === 0 ? `${displayDate} (Latest)` : displayDate;
+                    selector.add(new Option(label, fileName));
+                });
+
+                // Load the first (latest) file automatically
+                loadCsvData(csvFiles[0]);
+            } else {
+                status.innerText = "No matching CSV files found in the /tb folder.";
+            }
+        } catch (error) {
+            status.innerText = "Error: Could not list files. (Make sure repo is public)";
+            console.error("Fetch error:", error);
+            
+            // EMERGENCY FALLBACK: Just load the one file we know exists
+            selector.add(new Option("2025-12-28 (Manual)", "tb_2025-12-28.csv"));
+            loadCsvData("tb_2025-12-28.csv");
         }
     }
 
     function loadCsvData(filename) {
         document.getElementById('status').innerText = "Loading " + filename + "...";
+        
+        // Since the HTML is likely in the same folder as the CSVs, 
+        // we just use the filename directly.
         Papa.parse(filename, {
             download: true,
             header: true,
@@ -106,98 +127,18 @@
                 if (results.data && results.data.length > 0) {
                     processAndRender(results.data, filename);
                 } else {
-                    document.getElementById('status').innerText = "Error: File is empty or unreadable.";
+                    document.getElementById('status').innerText = "File is empty.";
                 }
             },
-            error: function(err) {
-                document.getElementById('status').innerText = "Error parsing CSV.";
-                console.error(err);
+            error: function() {
+                document.getElementById('status').innerText = "Error parsing file.";
             }
         });
     }
 
-    function processAndRender(data, filename) {
-        document.getElementById('status').innerText = "Viewing: " + filename;
-        
-        // Filter out empty rows and ensure 'Name' exists
-        const cleanData = data.filter(row => row['Name'] || row['Player Name'] || row['player']);
-
-        // Update Chart
-        const chartData = [...cleanData].sort((a, b) => (b['Combat Waves'] || 0) - (a['Combat Waves'] || 0)).slice(0, 10);
-        renderMainChart(chartData);
-
-        // Update Table
-        if (dataTable) dataTable.destroy();
-        const body = document.getElementById('tableBody');
-        body.innerHTML = '';
-
-        cleanData.forEach((row) => {
-            const name = row['Name'] || row['Player Name'] || "Unknown";
-            const points = row['Total Territory Points'] || row['Total Points'] || 0;
-            const waves = row['Combat Waves'] || 0;
-            const platoons = row['Platoon Units'] || 0;
-            const avg = (waves / 6).toFixed(1);
-
-            const tr = document.createElement('tr');
-            tr.setAttribute('data-child-data', JSON.stringify(row));
-            tr.innerHTML = `
-                <td class="expand-btn">+</td>
-                <td class="fw-bold">${name}</td>
-                <td>${points.toLocaleString()}</td>
-                <td><span class="badge bg-success">${waves}</span></td>
-                <td>${avg}</td>
-                <td>${platoons}</td>
-            `;
-            body.appendChild(tr);
-        });
-
-        dataTable = $('#statsTable').DataTable({ order: [[3, 'desc']], pageLength: 25 });
-
-        $('#statsTable tbody').off('click').on('click', 'td.expand-btn', function() {
-            const tr = $(this).closest('tr');
-            const row = dataTable.row(tr);
-            if (row.child.isShown()) {
-                row.child.hide();
-                $(this).text('+');
-            } else {
-                const d = JSON.parse(tr.attr('data-child-data'));
-                row.child(formatDetails(d)).show();
-                $(this).text('-');
-            }
-        });
-    }
-
-    function formatDetails(d) {
-        let html = '<div class="p-3"><h6>Phase Breakdown:</h6><div class="d-flex flex-wrap">';
-        for (let i = 1; i <= 6; i++) {
-            const w = d[`P${i} Waves`] || 0;
-            const gp = d[`P${i} Deployed GP`] || 0;
-            html += `<div class="phase-box">
-                <div class="fw-bold text-primary">Phase ${i}</div>
-                <div>Waves: ${w}</div>
-                <div class="small">GP: ${gp.toLocaleString()}</div>
-            </div>`;
-        }
-        return html + '</div></div>';
-    }
-
-    function renderMainChart(chartData) {
-        const ctx = document.getElementById('guildChart').getContext('2d');
-        if (mainChart) mainChart.destroy();
-        mainChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: chartData.map(d => d.Name || d['Player Name']),
-                datasets: [{
-                    label: 'Waves',
-                    data: chartData.map(d => d['Combat Waves'] || 0),
-                    backgroundColor: '#1a2a6c'
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-    }
-
+    // ... (Keep your processAndRender, renderMainChart, and formatDetails from the previous version)
+    
+    // Start the scan
     scanForFiles();
 </script>
 </body>
