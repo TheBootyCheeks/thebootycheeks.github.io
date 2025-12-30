@@ -9,10 +9,12 @@
     <style>
         body { background-color: #f0f2f5; padding: 20px; font-family: 'Inter', sans-serif; }
         .header-card { background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); color: white; padding: 30px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .stat-card, .table-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .stat-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); height: 100%; }
+        .table-card { background: white; border-radius: 12px; padding: 15px; margin-top: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        
         #statsTable thead th { background-color: #2c3e50; color: white; border: none; }
         .details-row { background-color: #f8f9fa !important; border-left: 5px solid #1a2a6c; }
-        .phase-box { background: white; border: 1px solid #ddd; border-radius: 5px; padding: 10px; margin: 5px; display: inline-block; min-width: 140px; }
+        .phase-box { background: white; border: 1px solid #ddd; border-radius: 5px; padding: 10px; margin: 5px; display: inline-block; min-width: 160px; }
         .expand-btn { cursor: pointer; color: #1a2a6c; font-weight: bold; text-align: center; width: 30px; }
     </style>
 </head>
@@ -22,7 +24,7 @@
     <div class="header-card d-flex justify-content-between align-items-center flex-wrap">
         <div>
             <h1 class="fw-bold mb-1">Guild TB Dashboard</h1>
-            <p class="mb-0 opacity-75" id="status">Scanning for files...</p>
+            <p class="mb-0 opacity-75" id="status">Scanning for data...</p>
         </div>
         <div class="bg-white p-3 rounded text-dark shadow-sm">
             <label class="small fw-bold d-block mb-1 text-muted text-uppercase">Select TB Date</label>
@@ -30,23 +32,27 @@
         </div>
     </div>
 
-    <div class="stat-card">
-        <h5 class="fw-bold">Combat Wave Leaders (Top 10)</h5>
-        <div style="height: 300px;">
-            <canvas id="guildChart"></canvas>
+    <div class="row">
+        <div class="col-lg-12 mb-4">
+            <div class="stat-card">
+                <h5 class="fw-bold">Combat Wave Leaders (Top 10)</h5>
+                <div style="height: 300px;">
+                    <canvas id="guildChart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="table-card">
-        <h5 class="fw-bold mb-3">Member Performance <small class="text-muted fw-normal">(Click + to see details)</small></h5>
+        <h5 class="fw-bold mb-3">Member Performance <small class="text-muted fw-normal">(Click + to see Phase 1-6 details)</small></h5>
         <table id="statsTable" class="table table-hover align-middle" style="width:100%">
             <thead>
                 <tr>
                     <th></th> <th>Player Name</th>
                     <th>Total Points</th>
                     <th>Total Waves</th>
-                    <th>Avg Waves</th>
-                    <th>Platoons</th>
+                    <th>Avg Waves/Phase</th>
+                    <th>Platoon Units</th>
                 </tr>
             </thead>
             <tbody id="tableBody"></tbody>
@@ -64,171 +70,137 @@
     let dataTable;
     let mainChart;
 
-    // --- GITHUB CONFIGURATION ---
-    const GITHUB_USER = "thebootycheeks";
-    const GITHUB_REPO = "cb";
-    const FOLDER_PATH = "tb"; 
-
-    // 1. WILDCARD FILE SCANNER
     async function scanForFiles() {
         const selector = document.getElementById('dateSelector');
-        const status = document.getElementById('status');
-        
-        try {
-            // Fetch list of all files in the /tb folder from GitHub API
-            const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FOLDER_PATH}`;
-            const response = await fetch(apiUrl);
-            
-            if (!response.ok) throw new Error("Could not reach GitHub API");
-            const allFiles = await response.json();
+        const foundFiles = [];
+        let checkDate = new Date(); 
+        checkDate.setDate(checkDate.getDate() + (7 - checkDate.getDay()) % 7);
 
-            // This Regex acts as our wildcard: tb_YYYY-MM-DD.csv
-            const pattern = /^tb_\d{4}-\d{2}-\d{2}\.csv$/;
-            
-            const matchedFiles = allFiles
-                .filter(file => pattern.test(file.name))
-                .map(file => file.name);
+        for (let i = 0; i < 52; i++) {
+            const dateStr = checkDate.toISOString().split('T')[0];
+            const fileName = `tb_${dateStr}.csv`;
+            try {
+                const resp = await fetch(fileName, { method: 'HEAD' });
+                if (resp.ok) foundFiles.push(fileName);
+            } catch (e) {}
+            checkDate.setDate(checkDate.getDate() - 7);
+        }
 
-            if (matchedFiles.length > 0) {
-                // Sort by name descending (Latest date at the top)
-                matchedFiles.sort().reverse();
+        const manualFile = "tb_2025-12-28.csv";
+        if (!foundFiles.includes(manualFile)) {
+            const resp = await fetch(manualFile, { method: 'HEAD' });
+            if (resp.ok) foundFiles.push(manualFile);
+        }
 
-                selector.innerHTML = "";
-                matchedFiles.forEach((fileName, index) => {
-                    const datePart = fileName.replace('tb_', '').replace('.csv', '');
-                    const label = index === 0 ? `${datePart} (Latest)` : datePart;
-                    selector.add(new Option(label, fileName));
-                });
-
-                // Load the most recent file
-                loadCsvData(matchedFiles[0]);
-            } else {
-                status.innerText = "No files matching tb_YYYY-MM-DD.csv found.";
-            }
-        } catch (error) {
-            console.error(error);
-            status.innerText = "Error scanning folder. Check repository settings.";
+        if (foundFiles.length > 0) {
+            foundFiles.sort().reverse().forEach((file, index) => {
+                let opt = new Option(file.replace('tb_','').replace('.csv','') + (index === 0 ? " (Latest)" : ""), file);
+                selector.add(opt);
+            });
+            loadCsvData(foundFiles[0]);
         }
     }
 
-    // 2. CSV DATA LOADER
     function loadCsvData(filename) {
-        document.getElementById('status').innerText = "Loading " + filename + "...";
-        
-        // Use direct path if already in the subfolder, otherwise prepend
-        const filePath = filename.includes('/') ? filename : `${FOLDER_PATH}/${filename}`;
-
-        Papa.parse(filePath, {
+        Papa.parse(filename, {
             download: true,
             header: true,
             dynamicTyping: true,
-            skipEmptyLines: true,
             complete: function(results) {
-                if (results.data && results.data.length > 0) {
-                    processAndRender(results.data, filename);
-                } else {
-                    document.getElementById('status').innerText = "File is empty.";
-                }
-            },
-            error: function() {
-                // Fallback attempt without prefix
-                Papa.parse(filename, { download: true, header: true, complete: (res) => processAndRender(res.data, filename) });
+                processAndRender(results.data, filename);
             }
         });
     }
 
-    // 3. PROCESS & RENDER
     function processAndRender(data, filename) {
         document.getElementById('status').innerText = "Viewing: " + filename;
         
-        // Support different column naming conventions
-        let nameKey = "Name";
-        const sample = data.find(d => d.Name || d['Player Name'] || d.player);
-        if (sample) {
-            if (sample['Player Name']) nameKey = 'Player Name';
-            else if (sample.player) nameKey = 'player';
-        }
+        const sortedForChart = [...data].sort((a, b) => b['Combat Waves'] - a['Combat Waves']).slice(0, 10);
+        renderMainChart(sortedForChart);
 
-        const cleanData = data.filter(row => row[nameKey]);
-
-        // Charting (Top 10)
-        const chartData = [...cleanData].sort((a, b) => (b['Combat Waves'] || 0) - (a['Combat Waves'] || 0)).slice(0, 10);
-        renderMainChart(chartData, nameKey);
-
-        // Table Building
         if (dataTable) dataTable.destroy();
         const body = document.getElementById('tableBody');
         body.innerHTML = '';
 
-        cleanData.forEach((row) => {
-            const name = row[nameKey] || "Unknown";
-            const points = row['Total Territory Points'] || row['Total Points'] || 0;
-            const waves = row['Combat Waves'] || 0;
-            const platoons = row['Platoon Units'] || 0;
-            const avg = (waves / 6).toFixed(1);
-
+        data.forEach((row) => {
             const tr = document.createElement('tr');
             tr.setAttribute('data-child-data', JSON.stringify(row));
+            
+            // Simple calculation for Avg Waves (Total Waves divided by 6 phases)
+            const avgWaves = (row['Combat Waves'] / 6).toFixed(1);
+            
             tr.innerHTML = `
                 <td class="expand-btn">+</td>
-                <td class="fw-bold">${name}</td>
-                <td>${points.toLocaleString()}</td>
-                <td><span class="badge bg-success">${waves}</span></td>
-                <td>${avg}</td>
-                <td>${platoons}</td>
+                <td class="fw-bold">${row['Name']}</td>
+                <td>${(row['Total Territory Points'] || 0).toLocaleString()}</td>
+                <td><span class="badge bg-success" style="font-size: 0.9rem;">${row['Combat Waves']}</span></td>
+                <td>${avgWaves}</td>
+                <td>${row['Platoon Units'] || 0}</td>
             `;
             body.appendChild(tr);
         });
 
-        dataTable = $('#statsTable').DataTable({ order: [[3, 'desc']], pageLength: 25 });
+        dataTable = $('#statsTable').DataTable({
+            order: [[3, 'desc']], 
+            pageLength: 25
+        });
 
-        // Expand Details Logic
-        $('#statsTable tbody').off('click').on('click', 'td.expand-btn', function() {
+        $('#statsTable tbody').on('click', 'td.expand-btn', function () {
             const tr = $(this).closest('tr');
             const row = dataTable.row(tr);
             if (row.child.isShown()) {
                 row.child.hide();
                 $(this).text('+');
             } else {
-                const d = JSON.parse(tr.attr('data-child-data'));
-                row.child(formatDetails(d)).show();
+                const fullData = JSON.parse(tr.attr('data-child-data'));
+                row.child(formatDetails(fullData)).show();
+                tr.next().addClass('details-row');
                 $(this).text('-');
             }
         });
     }
 
     function formatDetails(d) {
-        let html = '<div class="p-3"><h6>Phase Breakdown:</h6><div class="d-flex flex-wrap">';
+        let html = '<div class="p-3"><h6>Phase-by-Phase Breakdown:</h6><div class="d-flex flex-wrap">';
         for (let i = 1; i <= 6; i++) {
-            const w = d[`P${i} Waves`] || d[`Phase ${i} Waves`] || 0;
-            const gp = d[`P${i} Deployed GP`] || d[`Phase ${i} Deployed GP`] || 0;
-            html += `<div class="phase-box">
-                <div class="fw-bold text-primary">Phase ${i}</div>
-                <div>Waves: ${w}</div>
-                <div class="small">GP: ${gp.toLocaleString()}</div>
-            </div>`;
+            const deployed = d[`P${i} Deployed`];
+            if (deployed !== "No" && deployed !== 0) {
+                html += `
+                    <div class="phase-box">
+                        <div class="fw-bold text-primary border-bottom mb-1">Phase ${i}</div>
+                        <div class="small">Waves: <strong>${d[`P${i} Waves`]}</strong></div>
+                        <div class="small">GP: ${(d[`P${i} Deployed GP`] || 0).toLocaleString()}</div>
+                        <div class="small">Specials: ${d[`P${i} Special Attempts`] || 0}</div>
+                    </div>`;
+            }
         }
-        return html + '</div></div>';
+        html += '</div></div>';
+        return html;
     }
 
-    function renderMainChart(chartData, nameKey) {
+    function renderMainChart(chartData) {
         const ctx = document.getElementById('guildChart').getContext('2d');
         if (mainChart) mainChart.destroy();
         mainChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: chartData.map(d => d[nameKey]),
+                labels: chartData.map(d => d.Name),
                 datasets: [{
-                    label: 'Waves',
-                    data: chartData.map(d => d['Combat Waves'] || 0),
-                    backgroundColor: '#1a2a6c'
+                    label: 'Combat Waves',
+                    data: chartData.map(d => d['Combat Waves']),
+                    backgroundColor: '#1a2a6c',
+                    borderRadius: 4
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, title: { display: true, text: 'Waves' } } }
+            }
         });
     }
 
-    // Start everything
     scanForFiles();
 </script>
 
