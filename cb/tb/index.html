@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script type="text/javascript">
+      if (window.location.hostname.includes("github.io") && !window.location.hostname.includes("thebootycheeks")) {
+          window.location.replace("https://thebootycheeks.github.io/cb/tb/");
+      }
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SWGOH TB Performance Dashboard</title>
@@ -11,7 +17,6 @@
         .header-card { background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); color: white; padding: 30px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .stat-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); height: 100%; }
         .table-card { background: white; border-radius: 12px; padding: 15px; margin-top: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        
         #statsTable thead th { background-color: #2c3e50; color: white; border: none; }
         .details-row { background-color: #f8f9fa !important; border-left: 5px solid #1a2a6c; }
         .phase-box { background: white; border: 1px solid #ddd; border-radius: 5px; padding: 10px; margin: 5px; display: inline-block; min-width: 160px; }
@@ -24,7 +29,7 @@
     <div class="header-card d-flex justify-content-between align-items-center flex-wrap">
         <div>
             <h1 class="fw-bold mb-1">Guild TB Dashboard</h1>
-            <p class="mb-0 opacity-75" id="status">Scanning for data...</p>
+            <p class="mb-0 opacity-75" id="status">Fetching file list from GitHub...</p>
         </div>
         <div class="bg-white p-3 rounded text-dark shadow-sm">
             <label class="small fw-bold d-block mb-1 text-muted text-uppercase">Select TB Date</label>
@@ -70,42 +75,57 @@
     let dataTable;
     let mainChart;
 
+    // CONFIGURATION: Update these to match your new repo details
+    const GITHUB_USER = "thebootycheeks";
+    const GITHUB_REPO = "cb";
+    const FOLDER_PATH = "tb"; // The folder where your CSVs are
+
     async function scanForFiles() {
         const selector = document.getElementById('dateSelector');
-        const foundFiles = [];
-        let checkDate = new Date(); 
-        checkDate.setDate(checkDate.getDate() + (7 - checkDate.getDay()) % 7);
+        const statusText = document.getElementById('status');
+        
+        try {
+            // This calls the GitHub API to list all files in your /tb/ folder
+            const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FOLDER_PATH}`;
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) throw new Error("Could not access GitHub directory");
+            
+            const files = await response.json();
+            
+            // Filter for only .csv files
+            const csvFiles = files
+                .filter(file => file.name.endsWith('.csv'))
+                .map(file => file.name);
 
-        for (let i = 0; i < 52; i++) {
-            const dateStr = checkDate.toISOString().split('T')[0];
-            const fileName = `tb_${dateStr}.csv`;
-            try {
-                const resp = await fetch(fileName, { method: 'HEAD' });
-                if (resp.ok) foundFiles.push(fileName);
-            } catch (e) {}
-            checkDate.setDate(checkDate.getDate() - 7);
-        }
+            if (csvFiles.length > 0) {
+                // Sort descending so the latest date (by filename) is first
+                csvFiles.sort().reverse();
 
-        const manualFile = "tb_2025-12-28.csv";
-        if (!foundFiles.includes(manualFile)) {
-            const resp = await fetch(manualFile, { method: 'HEAD' });
-            if (resp.ok) foundFiles.push(manualFile);
-        }
+                csvFiles.forEach((fileName, index) => {
+                    let displayDate = fileName.replace('tb_','').replace('.csv','');
+                    let opt = new Option(displayDate + (index === 0 ? " (Latest)" : ""), fileName);
+                    selector.add(opt);
+                });
 
-        if (foundFiles.length > 0) {
-            foundFiles.sort().reverse().forEach((file, index) => {
-                let opt = new Option(file.replace('tb_','').replace('.csv','') + (index === 0 ? " (Latest)" : ""), file);
-                selector.add(opt);
-            });
-            loadCsvData(foundFiles[0]);
+                // Automatically load the first (latest) file
+                loadCsvData(csvFiles[0]);
+            } else {
+                statusText.innerText = "No CSV files found in the /tb/ folder.";
+            }
+        } catch (error) {
+            console.error(error);
+            statusText.innerText = "Error auto-detecting files. Ensure the repo is public.";
         }
     }
 
     function loadCsvData(filename) {
+        // Use the raw path for loading the actual data
         Papa.parse(filename, {
             download: true,
             header: true,
             dynamicTyping: true,
+            skipEmptyLines: true,
             complete: function(results) {
                 processAndRender(results.data, filename);
             }
@@ -115,7 +135,7 @@
     function processAndRender(data, filename) {
         document.getElementById('status').innerText = "Viewing: " + filename;
         
-        const sortedForChart = [...data].sort((a, b) => b['Combat Waves'] - a['Combat Waves']).slice(0, 10);
+        const sortedForChart = [...data].sort((a, b) => (b['Combat Waves'] || 0) - (a['Combat Waves'] || 0)).slice(0, 10);
         renderMainChart(sortedForChart);
 
         if (dataTable) dataTable.destroy();
@@ -123,17 +143,16 @@
         body.innerHTML = '';
 
         data.forEach((row) => {
+            if(!row['Name']) return;
             const tr = document.createElement('tr');
             tr.setAttribute('data-child-data', JSON.stringify(row));
-            
-            // Simple calculation for Avg Waves (Total Waves divided by 6 phases)
             const avgWaves = (row['Combat Waves'] / 6).toFixed(1);
             
             tr.innerHTML = `
                 <td class="expand-btn">+</td>
                 <td class="fw-bold">${row['Name']}</td>
                 <td>${(row['Total Territory Points'] || 0).toLocaleString()}</td>
-                <td><span class="badge bg-success" style="font-size: 0.9rem;">${row['Combat Waves']}</span></td>
+                <td><span class="badge bg-success" style="font-size: 0.9rem;">${row['Combat Waves'] || 0}</span></td>
                 <td>${avgWaves}</td>
                 <td>${row['Platoon Units'] || 0}</td>
             `;
@@ -145,7 +164,7 @@
             pageLength: 25
         });
 
-        $('#statsTable tbody').on('click', 'td.expand-btn', function () {
+        $('#statsTable tbody').off('click').on('click', 'td.expand-btn', function () {
             const tr = $(this).closest('tr');
             const row = dataTable.row(tr);
             if (row.child.isShown()) {
@@ -163,13 +182,14 @@
     function formatDetails(d) {
         let html = '<div class="p-3"><h6>Phase-by-Phase Breakdown:</h6><div class="d-flex flex-wrap">';
         for (let i = 1; i <= 6; i++) {
-            const deployed = d[`P${i} Deployed`];
-            if (deployed !== "No" && deployed !== 0) {
+            const waves = d[`P${i} Waves`];
+            const deployed = d[`P${i} Deployed GP`];
+            if (waves > 0 || deployed > 0) {
                 html += `
                     <div class="phase-box">
                         <div class="fw-bold text-primary border-bottom mb-1">Phase ${i}</div>
-                        <div class="small">Waves: <strong>${d[`P${i} Waves`]}</strong></div>
-                        <div class="small">GP: ${(d[`P${i} Deployed GP`] || 0).toLocaleString()}</div>
+                        <div class="small">Waves: <strong>${waves || 0}</strong></div>
+                        <div class="small">GP: ${(deployed || 0).toLocaleString()}</div>
                         <div class="small">Specials: ${d[`P${i} Special Attempts`] || 0}</div>
                     </div>`;
             }
