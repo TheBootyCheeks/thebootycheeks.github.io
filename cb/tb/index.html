@@ -29,7 +29,7 @@
     <div class="header-card d-flex justify-content-between align-items-center flex-wrap">
         <div>
             <h1 class="fw-bold mb-1">Guild TB Dashboard</h1>
-            <p class="mb-0 opacity-75" id="status">Fetching file list from GitHub...</p>
+            <p class="mb-0 opacity-75" id="status">Loading files...</p>
         </div>
         <div class="bg-white p-3 rounded text-dark shadow-sm">
             <label class="small fw-bold d-block mb-1 text-muted text-uppercase">Select TB Date</label>
@@ -75,52 +75,51 @@
     let dataTable;
     let mainChart;
 
-    // CONFIGURATION: Update these to match your new repo details
+    // CONFIGURATION
     const GITHUB_USER = "thebootycheeks";
     const GITHUB_REPO = "cb";
-    const FOLDER_PATH = "tb"; // The folder where your CSVs are
+    const FOLDER_PATH = "tb"; 
 
     async function scanForFiles() {
         const selector = document.getElementById('dateSelector');
         const statusText = document.getElementById('status');
         
         try {
-            // This calls the GitHub API to list all files in your /tb/ folder
             const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FOLDER_PATH}`;
             const response = await fetch(apiUrl);
-            
-            if (!response.ok) throw new Error("Could not access GitHub directory");
+            if (!response.ok) throw new Error("API Access Denied");
             
             const files = await response.json();
             
-            // Filter for only .csv files
+            // REGEX: matches "tb_" followed by 4 digits, dash, 2 digits, dash, 2 digits, ending in .csv
+            const datePattern = /^tb_\d{4}-\d{2}-\d{2}\.csv$/;
+
             const csvFiles = files
-                .filter(file => file.name.endsWith('.csv'))
+                .filter(file => datePattern.test(file.name))
                 .map(file => file.name);
 
             if (csvFiles.length > 0) {
-                // Sort descending so the latest date (by filename) is first
+                // Sorting alphabetically descending puts the newest date at the top
                 csvFiles.sort().reverse();
 
                 csvFiles.forEach((fileName, index) => {
-                    let displayDate = fileName.replace('tb_','').replace('.csv','');
+                    // Extract just the YYYY-MM-DD for the dropdown label
+                    let displayDate = fileName.match(/\d{4}-\d{2}-\d{2}/)[0];
                     let opt = new Option(displayDate + (index === 0 ? " (Latest)" : ""), fileName);
                     selector.add(opt);
                 });
 
-                // Automatically load the first (latest) file
                 loadCsvData(csvFiles[0]);
             } else {
-                statusText.innerText = "No CSV files found in the /tb/ folder.";
+                statusText.innerText = "No files found matching 'tb_YYYY-MM-DD.csv'";
             }
         } catch (error) {
             console.error(error);
-            statusText.innerText = "Error auto-detecting files. Ensure the repo is public.";
+            statusText.innerText = "Error scanning directory.";
         }
     }
 
     function loadCsvData(filename) {
-        // Use the raw path for loading the actual data
         Papa.parse(filename, {
             download: true,
             header: true,
@@ -135,15 +134,16 @@
     function processAndRender(data, filename) {
         document.getElementById('status').innerText = "Viewing: " + filename;
         
-        const sortedForChart = [...data].sort((a, b) => (b['Combat Waves'] || 0) - (a['Combat Waves'] || 0)).slice(0, 10);
+        // Ensure data is valid before rendering chart
+        const validData = data.filter(row => row['Name'] && row['Combat Waves'] !== undefined);
+        const sortedForChart = [...validData].sort((a, b) => b['Combat Waves'] - a['Combat Waves']).slice(0, 10);
         renderMainChart(sortedForChart);
 
         if (dataTable) dataTable.destroy();
         const body = document.getElementById('tableBody');
         body.innerHTML = '';
 
-        data.forEach((row) => {
-            if(!row['Name']) return;
+        validData.forEach((row) => {
             const tr = document.createElement('tr');
             tr.setAttribute('data-child-data', JSON.stringify(row));
             const avgWaves = (row['Combat Waves'] / 6).toFixed(1);
@@ -180,7 +180,7 @@
     }
 
     function formatDetails(d) {
-        let html = '<div class="p-3"><h6>Phase-by-Phase Breakdown:</h6><div class="d-flex flex-wrap">';
+        let html = '<div class="p-3"><h6>Phase Breakdown:</h6><div class="d-flex flex-wrap">';
         for (let i = 1; i <= 6; i++) {
             const waves = d[`P${i} Waves`];
             const deployed = d[`P${i} Deployed GP`];
@@ -216,7 +216,7 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, title: { display: true, text: 'Waves' } } }
+                scales: { y: { beginAtZero: true } }
             }
         });
     }
