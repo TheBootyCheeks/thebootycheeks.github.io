@@ -60,82 +60,96 @@
     let dataTable;
     let mainChart;
 
+    // --- CONFIGURATION ---
+    const GITHUB_USER = "thebootycheeks";
+    const GITHUB_REPO = "cb";
+    
+    // Fallback list in case API fails (keep your manual files here as backup)
+    const MANUAL_FILES = [
+        "tb_2025-12-28.csv",
+        "tb_2024-12-22.csv"
+    ];
+
     async function scanForFiles() {
         const selector = document.getElementById('dateSelector');
         const status = document.getElementById('status');
-        status.innerText = "Scanning for files...";
+        let foundFiles = [];
 
-        // 1. Setup the scanner to look for Sundays and Saturdays
-        const potentialFiles = [];
-        
-        // Start from today
-        let d = new Date();
-        
-        // Find the most recent Sunday to align the search
-        const day = d.getDay(); 
-        const diff = d.getDate() - day; // Adjust to last Sunday
-        d.setDate(diff);
+        status.innerText = "Connecting to GitHub API...";
 
-        // Loop back 52 weeks (1 year)
-        for(let i=0; i<52; i++) {
-            // Check Sunday
-            potentialFiles.push(`tb_${d.toISOString().split('T')[0]}.csv`);
+        try {
+            // 1. Try to fetch the ROOT of the repository first
+            let apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/`;
+            let response = await fetch(apiUrl);
+
+            if (!response.ok) {
+                // If main fails, try 'gh-pages' branch
+                console.log("Main branch failed, trying gh-pages branch...");
+                apiUrl += "?ref=gh-pages";
+                response = await fetch(apiUrl);
+            }
+
+            if (!response.ok) throw new Error("Could not access repository. Is it Private?");
+
+            const rootFiles = await response.json();
             
-            // Check Saturday (in case TB ended a day early)
-            let sat = new Date(d);
-            sat.setDate(sat.getDate() - 1);
-            potentialFiles.push(`tb_${sat.toISOString().split('T')[0]}.csv`);
+            // 2. Look for the 'tb' folder (case insensitive)
+            const tbFolder = rootFiles.find(f => f.name.toLowerCase() === 'tb' && f.type === 'dir');
+            
+            if (tbFolder) {
+                // 3. Fetch the contents of the 'tb' folder
+                status.innerText = `Scanning /${tbFolder.name} folder...`;
+                const folderResponse = await fetch(tbFolder.url); // Use the API URL provided by GitHub
+                const folderFiles = await folderResponse.json();
 
-            // Move back 1 week
-            d.setDate(d.getDate() - 7);
+                // 4. Filter for CSVs
+                foundFiles = folderFiles
+                    .filter(f => f.name.startsWith('tb_') && f.name.endsWith('.csv'))
+                    .map(f => f.name);
+            } else {
+                // If no 'tb' folder, maybe CSVs are in the root?
+                console.log("No 'tb' folder found, checking root...");
+                foundFiles = rootFiles
+                    .filter(f => f.name.startsWith('tb_') && f.name.endsWith('.csv'))
+                    .map(f => f.name);
+            }
+
+        } catch (err) {
+            console.error("API Auto-Discovery Failed:", err);
+            status.innerText = "Auto-scan failed. Using manual list.";
+            foundFiles = MANUAL_FILES;
         }
 
-        // Add strict manual checks just in case
-        potentialFiles.push("tb_2025-12-28.csv");
-        potentialFiles.push("tb_2025-12-8.csv");
-
-        // 2. Check all potential files in parallel (Fast)
-        const uniqueFiles = [...new Set(potentialFiles)]; // Remove duplicates
-        const foundFiles = [];
-
-        // We use Promise.all to check them all at once instead of waiting for each one
-        await Promise.all(uniqueFiles.map(async (file) => {
-            try {
-                const response = await fetch(file, { method: 'HEAD' });
-                if (response.ok) {
-                    foundFiles.push(file);
-                }
-            } catch (e) {
-                // Ignore missing files
-            }
-        }));
-
-        // 3. Update the dropdown
+        // --- POPULATE DROPDOWN ---
+        selector.innerHTML = "";
+        
         if (foundFiles.length > 0) {
-            foundFiles.sort().reverse(); // Newest dates first
-            selector.innerHTML = "";
-            foundFiles.forEach((f, i) => {
-                // Make the label pretty: "2025-12-28"
-                const label = f.replace('tb_','').replace('.csv','') + (i===0 ? " (Latest)" : "");
-                selector.add(new Option(label, f));
+            // Sort Descending (Newest dates first)
+            foundFiles.sort().reverse();
+            
+            foundFiles.forEach((file, index) => {
+                const label = file.replace('tb_', '').replace('.csv', '') + (index === 0 ? " (Latest)" : "");
+                selector.add(new Option(label, file));
             });
             
-            // Auto-load the newest one
+            // Load the first one
             loadCsvData(foundFiles[0]);
         } else {
-            status.innerText = "No CSV files found (Checked last 52 Sundays).";
+            status.innerText = "No CSV files found in repo.";
         }
     }
 
     function loadCsvData(filename) {
+        // Construct path: if the file is in a subfolder locally, we might need to prepend 'tb/' 
+        // BUT if index.html is in 'tb/' too, just filename works.
         const status = document.getElementById('status');
         status.innerText = "Loading " + filename + "...";
-        
+
         Papa.parse(filename, {
             download: true,
             header: true,
-            dynamicTyping: true,
             skipEmptyLines: true,
+            dynamicTyping: true,
             complete: function(results) {
                 if (results.data && results.data.length > 0) {
                     processAndRender(results.data, filename);
@@ -143,96 +157,80 @@
                     status.innerText = "Error: File is empty.";
                 }
             },
-            error: function(err) {
-                status.innerText = "Error parsing CSV.";
-                console.error(err);
+            error: function() {
+                // If direct load fails, try prepending 'tb/' (handling local folder structure)
+                if (!filename.includes('/')) {
+                    console.log("Direct load failed, trying tb/" + filename);
+                    loadCsvData('tb/' + filename); 
+                } else {
+                    status.innerText = "Could not load file.";
+                }
             }
         });
     }
 
+    // ... (Keep your processAndRender, renderMainChart, formatDetails functions exactly as they were) ...
+    // ... Copy them from the previous working version ...
+
+    // --- RE-INSERT THESE FUNCTIONS HERE ---
+    
     function processAndRender(data, filename) {
         document.getElementById('status').innerText = "Viewing: " + filename;
-        
-        // Filter valid rows
-        const cleanData = data.filter(row => row['Name'] || row['Player Name']);
-
-        // Update Chart
+        // Smart Key Detection
+        let nameKey = "Name";
+        const sample = data.find(d => d.Name || d['Player Name'] || d.player);
+        if (sample) {
+            if (sample['Player Name']) nameKey = 'Player Name';
+            else if (sample.player) nameKey = 'player';
+        }
+        const cleanData = data.filter(row => row[nameKey]);
         const chartData = [...cleanData].sort((a, b) => (b['Combat Waves'] || 0) - (a['Combat Waves'] || 0)).slice(0, 10);
-        renderMainChart(chartData);
+        renderMainChart(chartData, nameKey);
 
-        // Update Table
         if (dataTable) dataTable.destroy();
         const body = document.getElementById('tableBody');
         body.innerHTML = '';
 
         cleanData.forEach((row) => {
-            const name = row['Name'] || row['Player Name'] || "Unknown";
-            const points = row['Total Territory Points'] || row['Total Points'] || 0;
+            const name = row[nameKey] || "Unknown";
             const waves = row['Combat Waves'] || 0;
+            const points = row['Total Territory Points'] || row['Total Points'] || 0;
             const platoons = row['Platoon Units'] || 0;
             const avg = (waves / 6).toFixed(1);
-
             const tr = document.createElement('tr');
             tr.setAttribute('data-child-data', JSON.stringify(row));
-            tr.innerHTML = `
-                <td class="expand-btn">+</td>
-                <td class="fw-bold">${name}</td>
-                <td>${points.toLocaleString()}</td>
-                <td><span class="badge bg-success">${waves}</span></td>
-                <td>${avg}</td>
-                <td>${platoons}</td>
-            `;
+            tr.innerHTML = `<td class="expand-btn">+</td><td class="fw-bold">${name}</td><td>${points.toLocaleString()}</td><td><span class="badge bg-success">${waves}</span></td><td>${avg}</td><td>${platoons}</td>`;
             body.appendChild(tr);
         });
-
         dataTable = $('#statsTable').DataTable({ order: [[3, 'desc']], pageLength: 25 });
-
         $('#statsTable tbody').off('click').on('click', 'td.expand-btn', function() {
             const tr = $(this).closest('tr');
             const row = dataTable.row(tr);
-            if (row.child.isShown()) {
-                row.child.hide();
-                $(this).text('+');
-            } else {
-                const d = JSON.parse(tr.attr('data-child-data'));
-                row.child(formatDetails(d)).show();
-                $(this).text('-');
-            }
+            if(row.child.isShown()){ row.child.hide(); $(this).text('+'); }
+            else { row.child(formatDetails(JSON.parse(tr.attr('data-child-data')))).show(); $(this).text('-'); }
         });
     }
 
     function formatDetails(d) {
         let html = '<div class="p-3"><h6>Phase Breakdown:</h6><div class="d-flex flex-wrap">';
         for (let i = 1; i <= 6; i++) {
-            const w = d[`P${i} Waves`] || 0;
-            const gp = d[`P${i} Deployed GP`] || 0;
-            html += `<div class="phase-box">
-                <div class="fw-bold text-primary">Phase ${i}</div>
-                <div>Waves: ${w}</div>
-                <div class="small">GP: ${gp.toLocaleString()}</div>
-            </div>`;
+            const w = d[`P${i} Waves`] || d[`Phase ${i} Waves`] || 0;
+            const gp = d[`P${i} Deployed GP`] || d[`Phase ${i} Deployed GP`] || 0;
+            html += `<div class="phase-box"><div class="fw-bold text-primary">Phase ${i}</div><div>Waves: ${w}</div><div class="small">GP: ${gp.toLocaleString()}</div></div>`;
         }
         return html + '</div></div>';
     }
 
-    function renderMainChart(chartData) {
+    function renderMainChart(chartData, nameKey) {
         const ctx = document.getElementById('guildChart').getContext('2d');
         if (mainChart) mainChart.destroy();
         mainChart = new Chart(ctx, {
             type: 'bar',
-            data: {
-                labels: chartData.map(d => d.Name || d['Player Name']),
-                datasets: [{
-                    label: 'Waves',
-                    data: chartData.map(d => d['Combat Waves'] || 0),
-                    backgroundColor: '#1a2a6c'
-                }]
-            },
+            data: { labels: chartData.map(d => d[nameKey]), datasets: [{ label: 'Waves', data: chartData.map(d => d['Combat Waves']||0), backgroundColor: '#1a2a6c' }] },
             options: { responsive: true, maintainAspectRatio: false }
         });
     }
 
-    // Run the scan
     scanForFiles();
 </script>
 </body>
