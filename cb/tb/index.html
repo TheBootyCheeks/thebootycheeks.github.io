@@ -70,45 +70,56 @@
     let mainChart;
 
     // --- CONFIGURATION ---
-    const repoOwner = "thebootycheeks";
-    const repoName = "cb";
-    const folderPath = "tb"; // Where your CSVs live
+    const GITHUB_USER = "thebootycheeks";
+    const GITHUB_REPO = "cb";
+    const FOLDER_PATH = "tb"; // Make sure this matches your folder name exactly
 
     async function scanForFiles() {
         const selector = document.getElementById('dateSelector');
+        const status = document.getElementById('status');
         
         try {
-            // Ask GitHub for a list of all files in the 'tb' folder
-            const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}`);
+            // Updated API URL for your specific repository
+            const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${FOLDER_PATH}`;
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) {
+                const errData = await response.json();
+                status.innerText = `Error: ${response.status} - ${errData.message}`;
+                return;
+            }
+            
             const files = await response.json();
             
-            // Filter for files matching tb_YYYY-MM-DD.csv
+            // Filter: Must start with 'tb_', end with '.csv', and have a date in between
             const csvFiles = files
                 .filter(file => /^tb_\d{4}-\d{2}-\d{2}\.csv$/.test(file.name))
                 .map(file => file.name);
 
             if (csvFiles.length > 0) {
-                // Sort descending (Latest first)
+                // Sort descending (Latest date first)
                 csvFiles.sort().reverse();
 
-                csvFiles.forEach((file, index) => {
-                    let displayDate = file.replace('tb_','').replace('.csv','');
-                    let opt = new Option(displayDate + (index === 0 ? " (Latest)" : ""), file);
-                    selector.add(opt);
+                selector.innerHTML = ""; // Clear any placeholders
+                csvFiles.forEach((fileName, index) => {
+                    const datePart = fileName.replace('tb_', '').replace('.csv', '');
+                    const label = index === 0 ? `${datePart} (Latest)` : datePart;
+                    selector.add(new Option(label, fileName));
                 });
 
-                // Load the top (latest) one immediately
+                // Load the first (latest) file automatically
                 loadCsvData(csvFiles[0]);
             } else {
-                document.getElementById('status').innerText = "No TB CSV files found.";
+                status.innerText = "No files matching 'tb_YYYY-MM-DD.csv' found in /tb folder.";
             }
-        } catch (e) {
-            document.getElementById('status').innerText = "Error loading file list.";
-            console.error(e);
+        } catch (error) {
+            status.innerText = "Connection failed. Check your internet or GitHub status.";
+            console.error(error);
         }
     }
 
     function loadCsvData(filename) {
+        // Path construction: since index.html is in /tb/, we just use the filename
         Papa.parse(filename, {
             download: true,
             header: true,
@@ -120,93 +131,7 @@
         });
     }
 
-    function processAndRender(data, filename) {
-        document.getElementById('status').innerText = "Viewing: " + filename;
-        
-        const validData = data.filter(row => row['Name']);
-        const sortedForChart = [...validData].sort((a, b) => (b['Combat Waves'] || 0) - (a['Combat Waves'] || 0)).slice(0, 10);
-        renderMainChart(sortedForChart);
-
-        if (dataTable) dataTable.destroy();
-        const body = document.getElementById('tableBody');
-        body.innerHTML = '';
-
-        validData.forEach((row) => {
-            const tr = document.createElement('tr');
-            tr.setAttribute('data-child-data', JSON.stringify(row));
-            const avgWaves = ((row['Combat Waves'] || 0) / 6).toFixed(1);
-            
-            tr.innerHTML = `
-                <td class="expand-btn">+</td>
-                <td class="fw-bold">${row['Name']}</td>
-                <td>${(row['Total Territory Points'] || 0).toLocaleString()}</td>
-                <td><span class="badge bg-success" style="font-size: 0.9rem;">${row['Combat Waves'] || 0}</span></td>
-                <td>${avgWaves}</td>
-                <td>${row['Platoon Units'] || 0}</td>
-            `;
-            body.appendChild(tr);
-        });
-
-        dataTable = $('#statsTable').DataTable({
-            order: [[3, 'desc']], 
-            pageLength: 25
-        });
-
-        $('#statsTable tbody').off('click').on('click', 'td.expand-btn', function () {
-            const tr = $(this).closest('tr');
-            const row = dataTable.row(tr);
-            if (row.child.isShown()) {
-                row.child.hide();
-                $(this).text('+');
-            } else {
-                const fullData = JSON.parse(tr.attr('data-child-data'));
-                row.child(formatDetails(fullData)).show();
-                tr.next().addClass('details-row');
-                $(this).text('-');
-            }
-        });
-    }
-
-    function formatDetails(d) {
-        let html = '<div class="p-3"><h6>Phase Breakdown:</h6><div class="d-flex flex-wrap">';
-        for (let i = 1; i <= 6; i++) {
-            const waves = d[`P${i} Waves`];
-            if (waves !== undefined && waves !== null) {
-                html += `
-                    <div class="phase-box">
-                        <div class="fw-bold text-primary border-bottom mb-1">Phase ${i}</div>
-                        <div class="small">Waves: <strong>${waves}</strong></div>
-                        <div class="small">GP: ${(d[`P${i} Deployed GP`] || 0).toLocaleString()}</div>
-                        <div class="small">Specials: ${d[`P${i} Special Attempts`] || 0}</div>
-                    </div>`;
-            }
-        }
-        html += '</div></div>';
-        return html;
-    }
-
-    function renderMainChart(chartData) {
-        const ctx = document.getElementById('guildChart').getContext('2d');
-        if (mainChart) mainChart.destroy();
-        mainChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: chartData.map(d => d.Name),
-                datasets: [{
-                    label: 'Combat Waves',
-                    data: chartData.map(d => d['Combat Waves']),
-                    backgroundColor: '#1a2a6c',
-                    borderRadius: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } }
-            }
-        });
-    }
-
+    // ... (Keep the rest of your processAndRender, formatDetails, and renderMainChart exactly as they were)
     scanForFiles();
 </script>
 
