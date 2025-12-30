@@ -23,7 +23,7 @@
     <div class="header-card d-flex justify-content-between align-items-center flex-wrap">
         <div>
             <h1 class="fw-bold mb-1">Guild TB Dashboard</h1>
-            <p class="mb-0 opacity-75" id="status">Scanning for data...</p>
+            <p class="mb-0 opacity-75" id="status">Detecting TB files...</p>
         </div>
         <div class="bg-white p-3 rounded text-dark shadow-sm">
             <label class="small fw-bold d-block mb-1 text-muted text-uppercase">Select TB Date</label>
@@ -43,7 +43,7 @@
     </div>
 
     <div class="table-card">
-        <h5 class="fw-bold mb-3">Member Performance <small class="text-muted fw-normal">(Click + to see Phase 1-6 details)</small></h5>
+        <h5 class="fw-bold mb-3">Member Performance <small class="text-muted fw-normal">(Click + to see details)</small></h5>
         <table id="statsTable" class="table table-hover align-middle" style="width:100%">
             <thead>
                 <tr>
@@ -69,44 +69,42 @@
     let dataTable;
     let mainChart;
 
+    // --- CONFIGURATION ---
+    const repoOwner = "thebootycheeks";
+    const repoName = "cb";
+    const folderPath = "tb"; // Where your CSVs live
+
     async function scanForFiles() {
         const selector = document.getElementById('dateSelector');
-        const foundFiles = [];
         
-        // Start from "now" and look back 60 weeks to find any Sunday files
-        let checkDate = new Date(); 
-        checkDate.setDate(checkDate.getDate() + (7 - checkDate.getDay()) % 7);
+        try {
+            // Ask GitHub for a list of all files in the 'tb' folder
+            const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}`);
+            const files = await response.json();
+            
+            // Filter for files matching tb_YYYY-MM-DD.csv
+            const csvFiles = files
+                .filter(file => /^tb_\d{4}-\d{2}-\d{2}\.csv$/.test(file.name))
+                .map(file => file.name);
 
-        for (let i = 0; i < 60; i++) {
-            const dateStr = checkDate.toISOString().split('T')[0];
-            const fileName = `tb_${dateStr}.csv`;
-            try {
-                // Use a standard fetch to see if the file exists on your GitHub site
-                const resp = await fetch(fileName, { method: 'HEAD' });
-                if (resp.ok) foundFiles.push(fileName);
-            } catch (e) {}
-            checkDate.setDate(checkDate.getDate() - 7);
-        }
+            if (csvFiles.length > 0) {
+                // Sort descending (Latest first)
+                csvFiles.sort().reverse();
 
-        // Specifically check for your 2024-12-22 file if the loop missed it
-        const oldFile = "tb_2024-12-22.csv";
-        if (!foundFiles.includes(oldFile)) {
-            try {
-                const resp = await fetch(oldFile, { method: 'HEAD' });
-                if (resp.ok) foundFiles.push(oldFile);
-            } catch (e) {}
-        }
+                csvFiles.forEach((file, index) => {
+                    let displayDate = file.replace('tb_','').replace('.csv','');
+                    let opt = new Option(displayDate + (index === 0 ? " (Latest)" : ""), file);
+                    selector.add(opt);
+                });
 
-        if (foundFiles.length > 0) {
-            // Sort them so the newest date is at the top
-            foundFiles.sort().reverse().forEach((file, index) => {
-                let displayDate = file.replace('tb_','').replace('.csv','');
-                let opt = new Option(displayDate + (index === 0 ? " (Latest)" : ""), file);
-                selector.add(opt);
-            });
-            loadCsvData(foundFiles[0]);
-        } else {
-            document.getElementById('status').innerText = "No CSV files detected. Check filenames.";
+                // Load the top (latest) one immediately
+                loadCsvData(csvFiles[0]);
+            } else {
+                document.getElementById('status').innerText = "No TB CSV files found.";
+            }
+        } catch (e) {
+            document.getElementById('status').innerText = "Error loading file list.";
+            console.error(e);
         }
     }
 
@@ -125,15 +123,15 @@
     function processAndRender(data, filename) {
         document.getElementById('status').innerText = "Viewing: " + filename;
         
-        const sortedForChart = [...data].sort((a, b) => (b['Combat Waves'] || 0) - (a['Combat Waves'] || 0)).slice(0, 10);
+        const validData = data.filter(row => row['Name']);
+        const sortedForChart = [...validData].sort((a, b) => (b['Combat Waves'] || 0) - (a['Combat Waves'] || 0)).slice(0, 10);
         renderMainChart(sortedForChart);
 
         if (dataTable) dataTable.destroy();
         const body = document.getElementById('tableBody');
         body.innerHTML = '';
 
-        data.forEach((row) => {
-            if(!row['Name']) return;
+        validData.forEach((row) => {
             const tr = document.createElement('tr');
             tr.setAttribute('data-child-data', JSON.stringify(row));
             const avgWaves = ((row['Combat Waves'] || 0) / 6).toFixed(1);
@@ -170,7 +168,7 @@
     }
 
     function formatDetails(d) {
-        let html = '<div class="p-3"><h6>Phase-by-Phase Breakdown:</h6><div class="d-flex flex-wrap">';
+        let html = '<div class="p-3"><h6>Phase Breakdown:</h6><div class="d-flex flex-wrap">';
         for (let i = 1; i <= 6; i++) {
             const waves = d[`P${i} Waves`];
             if (waves !== undefined && waves !== null) {
@@ -204,8 +202,7 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true } }
+                plugins: { legend: { display: false } }
             }
         });
     }
