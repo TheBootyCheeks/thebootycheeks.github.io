@@ -3,44 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TW 2026 Counter Guide</title>
+    <title>TW 2026 Counter-Matrix</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white p-4 md:p-8 font-sans">
     <div class="max-w-4xl mx-auto">
         <header class="text-center mb-10 border-b border-gray-700 pb-6">
-            <h1 class="text-4xl font-extrabold text-yellow-500 mb-2 tracking-tight">TW DEFENSE COUNTERS</h1>
-            <p class="text-gray-400">Validated for February 2026 Meta - Territory War Focus</p>
+            <h1 class="text-4xl font-extrabold text-yellow-500 mb-2 tracking-tight uppercase">Territory War Counters</h1>
+            <p class="text-gray-400 font-medium">February 2026 Meta — Territory War Specific</p>
         </header>
 
         <div id="content-area" class="space-y-10">
-            </div>
+            <div class="text-center py-20 text-gray-500">Loading Intelligence Data...</div>
+        </div>
     </div>
 
     <script>
         async function loadCounters() {
-            const res = await fetch('./counters.json');
-            const database = await res.json();
-            const container = document.getElementById('content-area');
+            try {
+                // Fetch the JSON file from the root directory
+                const res = await fetch('counters.json');
+                
+                if (!res.ok) throw new Error("File 'counters.json' not found.");
+                
+                const database = await res.json();
+                const container = document.getElementById('content-area');
+                container.innerHTML = ''; 
 
-            // Render GLs first, then Non-GLs
-            container.appendChild(createSection("Galactic Legend Targets", database.SECTION_GL));
-            container.appendChild(createSection("Top 20 Non-GL Defense Walls", database.SECTION_NON_GL));
+                // Process Sections
+                if(database.SECTION_GL) container.appendChild(createSection("Galactic Legends", database.SECTION_GL));
+                if(database.SECTION_NON_GL) container.appendChild(createSection("Top Non-GL Walls", database.SECTION_NON_GL));
+                
+            } catch (error) {
+                document.getElementById('content-area').innerHTML = `
+                    <div class="bg-red-900/40 border-2 border-red-600 p-8 rounded-xl text-center">
+                        <h2 class="text-2xl font-bold text-red-500 mb-2">CRITICAL DATA ERROR</h2>
+                        <p class="text-gray-300 mb-4 font-mono text-sm">${error.message}</p>
+                        <div class="text-left bg-black/30 p-4 rounded text-xs text-gray-400 space-y-2">
+                            <p>• Ensure <strong>counters.json</strong> is in the same folder as index.html.</p>
+                            <p>• Check for missing commas or brackets in your JSON file.</p>
+                            <p>• GitHub Pages may take 1-2 minutes to update after a push.</p>
+                        </div>
+                    </div>`;
+            }
         }
 
         function createSection(title, data) {
-            const section = document.createElement('div');
-            let html = `<h2 class="text-3xl font-bold text-blue-400 mb-6 uppercase tracking-widest">${title}</h2>`;
+            const wrapper = document.createElement('div');
+            let html = `<h2 class="text-2xl font-black text-blue-500 mb-6 border-l-8 border-blue-600 pl-4 uppercase tracking-tighter">${title}</h2>`;
             html += `<div class="grid gap-6">`;
 
             for (const key in data) {
                 const entry = data[key];
                 html += `
-                    <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-700">
-                        <div class="bg-gray-700 px-6 py-3 border-b border-gray-600 font-bold text-xl uppercase">
+                    <div class="bg-gray-800 rounded-xl border border-gray-700 shadow-2xl overflow-hidden">
+                        <div class="bg-gray-750 px-6 py-4 border-b border-gray-700 font-bold text-xl text-yellow-500">
                             ${entry.name}
                         </div>
-                        <div class="p-6 space-y-4">
+                        <div class="p-4 space-y-4">
                 `;
 
                 entry.counters.forEach(c => {
@@ -48,22 +68,20 @@
                     const riskColor = c.risk.includes("Low") ? "text-green-400" : (c.risk.includes("Medium") ? "text-yellow-400" : "text-red-500");
                     
                     html += `
-                        <div class="${isWarning ? 'bg-red-950/50 border-2 border-red-600' : 'bg-gray-900'} p-4 rounded-lg">
+                        <div class="${isWarning ? 'bg-red-950/40 border-2 border-red-600' : 'bg-gray-900'} p-4 rounded-lg shadow-inner">
                             <div class="flex justify-between items-center mb-1">
-                                <span class="text-lg font-bold ${isWarning ? 'text-red-500' : 'text-white'}">${c.team}</span>
-                                <span class="text-xs font-black uppercase px-2 py-1 bg-black/40 rounded ${riskColor}">${c.risk} RISK</span>
+                                <span class="font-bold text-lg ${isWarning ? 'text-red-500' : 'text-white'}">${c.team}</span>
+                                <span class="text-[10px] font-black px-2 py-1 bg-gray-800 rounded border border-gray-600 tracking-tighter ${riskColor}">${c.risk.toUpperCase()} RISK</span>
                             </div>
-                            <p class="text-sm text-gray-400 leading-relaxed">${c.note}</p>
+                            <p class="text-sm text-gray-400 leading-relaxed italic">${c.note}</p>
                         </div>
                     `;
                 });
-
                 html += `</div></div>`;
             }
-
             html += `</div>`;
-            section.innerHTML = html;
-            return section;
+            wrapper.innerHTML = html;
+            return wrapper;
         }
 
         loadCounters();
