@@ -4,282 +4,201 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SWGOH Territory Counters</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #121212;
-            --card-bg: #1e1e1e;
-            --primary: #00d4ff;
-            --secondary: #bb86fc;
-            --text: #e0e0e0;
-            --soft: #ffa726;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #38bdf8;
+            --accent: #818cf8;
+            --text: #f1f5f9;
+            --soft: #fbbf24;
+            --hard: #4ade80;
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            padding: 15px;
         }
 
-        h1 { color: var(--primary); text-transform: uppercase; letter-spacing: 2px; }
+        header { text-align: center; margin-bottom: 20px; }
+        h1 { color: var(--primary); margin: 0; font-size: 1.5rem; text-transform: uppercase; }
 
         .controls {
             position: sticky;
             top: 0;
             background: var(--bg);
-            padding: 15px;
+            padding: 10px 0;
             z-index: 100;
-            width: 100%;
-            max-width: 800px;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
         #searchBar {
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            background: #252525;
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            background: #0f172a;
             color: white;
-            font-size: 16px;
+            box-sizing: border-box;
         }
 
-        .container {
-            width: 100%;
-            max-width: 800px;
-            margin-top: 20px;
+        /* Grid Layout */
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 15px;
         }
 
         .defense-card {
             background: var(--card-bg);
-            border-radius: 10px;
-            margin-bottom: 20px;
-            overflow: hidden;
-            border-left: 5px solid var(--primary);
-            transition: transform 0.2s;
+            border-radius: 8px;
+            border-top: 4px solid var(--accent);
+            padding: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
-        .defense-header {
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
+        .defense-title {
             font-weight: bold;
-            font-size: 1.2rem;
-            cursor: pointer;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            color: var(--primary);
             display: flex;
             justify-content: space-between;
         }
 
-        .counter-list {
-            padding: 15px;
-            display: block;
-        }
-
-        .counter-item {
-            padding: 8px 0;
-            border-bottom: 1px solid #333;
+        .counter-row {
             display: flex;
-            align-items: center;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 4px 0;
+            font-size: 0.95rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .counter-item:last-child { border-bottom: none; }
-
-        .soft-counter {
+        .counter-name { flex: 1; }
+        
+        .soft-tag {
+            background: #78350f;
             color: var(--soft);
-            font-size: 0.85rem;
-            font-style: italic;
-            margin-left: 10px;
-        }
-
-        .hard-counter {
-            color: #4caf50;
-            margin-right: 8px;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            white-space: nowrap;
         }
 
         .note {
-            font-size: 0.8rem;
-            color: #aaa;
-            margin-top: 4px;
             display: block;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-style: italic;
         }
 
-        @media (max-width: 600px) {
-            .controls { width: 90%; }
+        @media (max-width: 400px) {
+            .counter-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <h1>Guild Counters</h1>
+<header>
+    <h1>Guild Territory Counters</h1>
+</header>
 
-    <div class="controls">
-        <input type="text" id="searchBar" placeholder="Search defensive team (e.g. Leia)..." onkeyup="filterTeams()">
+<div class="controls">
+    <input type="text" id="searchBar" placeholder="Search team or counter..." onkeyup="filter()">
+</div>
+
+<div class="counter-grid" id="grid">
     </div>
 
-    <div class="container" id="counterContainer">
-        </div>
-
 <script>
-    const data = [
-        { team: "Jedi Master Kenobi", counters: [
-            { name: "JMK Mirror", soft: false },
-            { name: "Reva", soft: false },
-            { name: "Leia", soft: false },
-            { name: "JML w. JKR", soft: false, note: "Mark CAT" },
-            { name: "Jabba", soft: true },
-            { name: "SEE, Armorer, Wat, Daka, Zombie", soft: true, note: "Sub Sith Empire Trooper" },
-            { name: "Dark Side Mauldalorians", soft: true }
-        ]},
-        { team: "Jabba the Hutt", counters: [
-            { name: "JMK", soft: false },
-            { name: "Bane", soft: false },
-            { name: "LV", soft: false, note: "First Special on Krrs to apply buff immunity" },
-            { name: "Reva", soft: false },
-            { name: "oDTMG", soft: false },
-            { name: "JML w JKC/JKR", soft: true, note: "Mark Leia" },
-            { name: "Aphra with DCs", soft: false, note: "Needs B2 or IPD to remove buffs" }
-        ]},
-        { team: "Jedi Master Luke", counters: [
-            { name: "SEE w. Wat or Garbage Sith", soft: false },
-            { name: "JMK", soft: false },
-            { name: "Leia", soft: false },
-            { name: "JML Mirror", soft: false },
-            { name: "Reva", soft: false },
-            { name: "LV", soft: false },
-            { name: "Malgus", soft: true },
-            { name: "Imp Troopers", soft: true, note: "Save mass assist till JML loses taunt" }
-        ]},
-        { team: "Leia Organa", counters: [
-            { name: "Leia Mirror", soft: false },
-            { name: "Bane", soft: false },
-            { name: "JMK", soft: false },
-            { name: "JML with JKC/JKR", soft: true }
-        ]},
-        { team: "Lord Vader", counters: [
-            { name: "JMK", soft: false },
-            { name: "Bane", soft: false },
-            { name: "JML", soft: false },
-            { name: "Leia", soft: false },
-            { name: "Bo Katan", soft: false },
-            { name: "Gungans", soft: false },
-            { name: "Reva", soft: false },
-            { name: "SLKR", soft: true },
-            { name: "Fennec, Bossk, Greef, BAM, Mando", soft: true }
-        ]},
-        { team: "Rey", counters: [
-            { name: "JML", soft: false },
-            { name: "JMK", soft: false },
-            { name: "SEE", soft: false },
-            { name: "LV", soft: false },
-            { name: "Rey Mirror", soft: false },
-            { name: "SLKR", soft: false },
-            { name: "Cere, Malicos, KRU, oCal, oAhsoka", soft: true },
-            { name: "JKR, JKL, bastilla, Old Ben, Hoda", soft: true }
-        ]},
-        { team: "Third Sister (Reva)", counters: [
-            { name: "Malgus", soft: false },
-            { name: "Bane", soft: false },
-            { name: "JMK with padme", soft: false },
-            { name: "Phoenix w. CRex", soft: false },
-            { name: "Raddus", soft: true },
-            { name: "CLS", soft: true, note: "All in on GI" }
-        ]},
-        { team: "oDroideka", counters: [
-            { name: "JKR", soft: false },
-            { name: "GAS", soft: false },
-            { name: "NS w. Merrin", soft: false },
-            { name: "Raddus", soft: true },
-            { name: "Sith Empire", soft: false }
-        ]},
-        { team: "Starkiller w. oJuhani", counters: [
-            { name: "oAhsoka", soft: false },
-            { name: "SEE", soft: false },
-            { name: "Reva", soft: false },
-            { name: "UFU w Malicos", soft: false },
-            { name: "oPhasma w. Hux/Sith Trooper/FOST", soft: false }
-        ]},
-        { team: "Starkiller", counters: [
-            { name: "CLS", soft: false },
-            { name: "Tuskens", soft: true }
-        ]},
-        { team: "oPoggle", counters: [
-            { name: "Imp Troopers", soft: false },
-            { name: "Raddus", soft: false },
-            { name: "Palp w MJ", soft: false },
-            { name: "oAhsoka", soft: false },
-            { name: "Sith Trio, Nest, Talon", soft: true }
-        ]},
-        { team: "Kelleran Beq", counters: [
-            { name: "oPhasma", soft: false },
-            { name: "Traya w. Talon", soft: true },
-            { name: "SEE", soft: false }
-        ]},
-        { team: "Dark Trooper Moff Gideon", counters: [
-            { name: "Raddus", soft: true },
-            { name: "Bo Katan", soft: false }
-        ]},
-        { team: "Queen Amidala", counters: [
-            { name: "Bane w/ Sith Assassin", soft: false },
-            { name: "JMK w/ Padme", soft: false },
-            { name: "GAS", soft: false },
-            { name: "JML w/ JCK", soft: false },
-            { name: "EP, SK, MJ", soft: false },
-            { name: "Inquisitors (Reva L)", soft: false }
-        ]},
-        { team: "Gungans", counters: [
-            { name: "JML", soft: false },
-            { name: "Bo", soft: false },
-            { name: "Phoenix", soft: false },
-            { name: "Shaak Clones", soft: false },
-            { name: "Cere UwU w/ CK + Fulcrum omi", soft: false }
-        ]}
-    ];
+const data = [
+    { team: "Jedi Master Kenobi", counters: [
+        { n: "JMK Mirror", s: 0 }, { n: "Reva", s: 0 }, { n: "Leia", s: 0 },
+        { n: "JML w. JKR", s: 0, note: "Mark CAT" },
+        { n: "Jabba", s: 1 }, { n: "SEE+Armorer/Wat/Daka/Zombie", s: 1 }, { n: "DS Mauldalorians", s: 1 }
+    ]},
+    { team: "Jabba the Hutt", counters: [
+        { n: "JMK / Bane / Reva / oDTMG", s: 0 },
+        { n: "LV", s: 0, note: "Buff immunity on Krrs first" },
+        { n: "JML w JKC/JKR", s: 1, note: "Mark Leia" },
+        { n: "Aphra (w/ DCs)", s: 0, note: "Needs B2/IPD for buffs" }
+    ]},
+    { team: "Jedi Master Luke", counters: [
+        { n: "SEE (Wat/Garbage Sith)", s: 0 }, { n: "JMK / Leia / LV / Reva", s: 0 },
+        { n: "Malgus", s: 1 }, { n: "Imp Troopers", s: 1, note: "Mass assist after JML taunt ends" }
+    ]},
+    { team: "Leia Organa", counters: [
+        { n: "Leia Mirror / Bane / JMK", s: 0 },
+        { n: "JML with JKC/JKR", s: 1 }
+    ]},
+    { team: "Lord Vader", counters: [
+        { n: "JMK / Bane / JML / Leia", s: 0 }, { n: "Bo Katan / Gungans / Reva", s: 0 },
+        { n: "SLKR", s: 1 }, { n: "Fennec BH", s: 1, note: "Bossk, Greef, BAM, Mando" }
+    ]},
+    { team: "Rey", counters: [
+        { n: "JML / JMK / SEE / LV / SLKR", s: 0 },
+        { n: "Cere/Malicos/KRU/oCal", s: 1 }, { n: "JKR/JKL/Bast/Ben/Hoda", s: 1 }
+    ]},
+    { team: "Third Sister (Reva)", counters: [
+        { n: "Malgus / Bane / JMK+Padme", s: 0 }, { n: "Phoenix w. CRex", s: 0 },
+        { n: "Raddus", s: 1 }, { n: "CLS", s: 1, note: "All in on Grand Inquisitor" }
+    ]},
+    { team: "Queen Amidala", counters: [
+        { n: "Bane w/ Sith Assassin", s: 0 }, { n: "JMK w/ Padme", s: 0 }, { n: "GAS / JML w/ JCK", s: 0 },
+        { n: "EP / SK / MJ", s: 0 }, { n: "Reva Inquisitors", s: 0 }
+    ]},
+    { team: "Gungans", counters: [
+        { n: "JML / Bo Katan / Phoenix", s: 0 }, { n: "Shaak Clones", s: 0 },
+        { n: "Cere w/ CK + Fulcrum", s: 0 }
+    ]},
+    { team: "oDroideka", counters: [
+        { n: "JKR / GAS / NS+Merrin", s: 0 }, { n: "Sith Empire", s: 0 }, { n: "Raddus", s: 1 }
+    ]},
+    { team: "Starkiller (oJuhani)", counters: [
+        { n: "oAhsoka / SEE / Reva", s: 0 }, { n: "UFU w Malicos", s: 0 }, { n: "oPhasma FO", s: 0 }
+    ]},
+    { team: "oPoggle", counters: [
+        { n: "Imp Troopers / Raddus", s: 0 }, { n: "Palp+MJ / oAhsoka", s: 0 }, { n: "Sith Trio+Nest", s: 1 }
+    ]}
+];
 
-    function render() {
-        const container = document.getElementById('counterContainer');
-        container.innerHTML = data.map(item => `
-            <div class="defense-card">
-                <div class="defense-header" onclick="toggle(this)">
-                    ${item.team} <span>+</span>
+function render() {
+    const grid = document.getElementById('grid');
+    grid.innerHTML = data.map(item => `
+        <div class="defense-card">
+            <div class="defense-title">${item.team}</div>
+            ${item.counters.map(c => `
+                <div class="counter-row">
+                    <div class="counter-name">
+                        ${c.n}
+                        ${c.note ? `<span class="note">${c.note}</span>` : ''}
+                    </div>
+                    ${c.s ? '<span class="soft-tag">SOFT</span>' : ''}
                 </div>
-                <div class="counter-list">
-                    ${item.counters.map(c => `
-                        <div class="counter-item">
-                            <div>
-                                <span class="hard-counter">⚔</span>
-                                <strong>${c.name}</strong>
-                                ${c.soft ? '<span class="soft-counter">(Soft Counter)</span>' : ''}
-                                ${c.note ? `<span class="note">${c.note}</span>` : ''}
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `).join('');
-    }
+            `).join('')}
+        </div>
+    `).join('');
+}
 
-    function toggle(el) {
-        const list = el.nextElementSibling;
-        list.style.display = list.style.display === 'none' ? 'block' : 'none';
-        el.querySelector('span').innerText = list.style.display === 'none' ? '+' : '-';
-    }
+function filter() {
+    let val = document.getElementById('searchBar').value.toLowerCase();
+    let cards = document.getElementsByClassName('defense-card');
+    Array.from(cards).forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(val) ? "block" : "none";
+    });
+}
 
-    function filterTeams() {
-        let input = document.getElementById('searchBar').value.toLowerCase();
-        let cards = document.getElementsByClassName('defense-card');
-        for (let i = 0; i < cards.length; i++) {
-            let title = cards[i].innerText.toLowerCase();
-            cards[i].style.display = title.includes(input) ? "block" : "none";
-        }
-    }
-
-    render();
+render();
 </script>
+
 </body>
 </html>
