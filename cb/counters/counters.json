@@ -1,105 +1,70 @@
 {
   "SECTION_GL": {
     "Lord_Vader_Clones": {
-      "name": "Lord Vader (with Dark Side Clones)",
-      "tw_counters": [
-        { "team": "JMK + CAT", "risk": "Low", "note": "Priority: Kill Death Trooper Terentatek first to break the protection recovery engine." },
-        { "team": "Leia Organa", "risk": "Medium", "note": "Use Drogan to nuke Captain Enoch immediately to stop 'Decay' stacks." },
-        { "team": "BKM + Grogu", "risk": "High", "note": "Whistling Birds help bypass the heavy critical avoidance of the Clones." }
+      "name": "Lord Vader (Enoch/Night Trooper/DTT)",
+      "counters": [
+        { "team": "JMK + CAT", "risk": "Low", "note": "KILL ORDER: DTT first. Break the protection engine immediately." },
+        { "team": "Leia Organa", "risk": "Medium", "note": "Focus Enoch to stop 'Decay' stacks from ruining your offense." },
+        { "team": "Bo-Katan (Mand'alor)", "risk": "High", "note": "Requires True Damage to bypass the Clones' high crit avoidance." }
       ]
     },
     "Queen_Amidala": {
       "name": "Queen Amidala (oMQG/oPOW)",
-      "tw_counters": [
-        { "team": "GAS + 501st (oRex)", "risk": "Medium", "note": "Standard non-GL counter. Rex's TM gain is essential to outpace the handmaidens." },
-        { "team": "JMK + CAT", "risk": "Low", "note": "Insta-kill MQG to remove the massive offensive threat." },
-        { "team": "BANE WARNING", "risk": "EXTREME", "note": "TRAP: No GAC Omi. You will likely be stunned and timed out." }
+      "counters": [
+        { "team": "GAS + 501st (oRex)", "risk": "Medium", "note": "Best non-GL bet. Keep Rex alive to feed TM to GAS." },
+        { "team": "JMK + CAT", "risk": "Low", "note": "Insta-kill MQG. Do not let his damage ramp." },
+        { "team": "BANE WARNING", "risk": "EXTREME", "note": "TRAP: No GAC Omi here. You will get stun-locked and time out." }
       ]
     },
     "Pirate_King_Hondo": {
       "name": "GL Pirate King Hondo (Pirates)",
-      "tw_counters": [
-        { "team": "SLKR + Dark Rey", "risk": "Medium", "note": "Need Dark Rey for the damage ramp to outpace Hondo's revives." },
-        { "team": "Cere + Malicos + SK", "risk": "High", "note": "UFU stat-stacking can brute force Hondo if you focus Silvo first." }
-      ]
-    },
-    "Leia_Organa": {
-      "name": "Leia Organa (Standard)",
-      "tw_counters": [
-        { "team": "JML + JK Cal", "risk": "Medium", "note": "Cal's 'Impatience' is the key to locking down Drogan." },
-        { "team": "SLKR + Armorer", "risk": "High", "note": "Beskar stacks on SLKR are mandatory to survive the Rebel Ambush." }
+      "counters": [
+        { "team": "Leia Organa", "risk": "Medium", "note": "Nuke Silvano first. Leia's Ult must be used to clear the revives." },
+        { "team": "SLKR + Dark Rey", "risk": "High", "note": "Dark Rey provides the anti-revive tech needed for the pirate crew." }
       ]
     },
     "Jabba_Hutt": {
-      "name": "Jabba the Hutt",
-      "tw_counters": [
-        { "team": "JMMW (Mace Omi)", "risk": "Low", "note": "Mace's TW Omi makes Jedi tanky enough to ignore the Thermal Detonators." },
-        { "team": "BKM + Mandalorians", "risk": "Medium", "note": "Whistling Birds ignore the massive defense of Krrsantan." }
-      ]
-    },
-    "GL_Ahsoka_Tano": {
-      "name": "GL Ahsoka Tano (Ezra Exile)",
-      "tw_counters": [
-        { "team": "Leia Organa", "risk": "Medium", "note": "Nuke Sabine first. Do NOT nuke Ezra first in TW due to her Omicron." },
-        { "team": "Queen Amidala", "risk": "High", "note": "Only works if Ezra is not present to dispel the Decoy." }
-      ]
-    },
-    "Rey": {
-      "name": "GL Rey (oBen Solo)",
-      "tw_counters": [
-        { "team": "SK (oJuhani)", "risk": "Medium", "note": "Juhani's TW Omi makes this much safer than the GAC version." },
-        { "team": "SLKR + Dark Rey", "risk": "Low", "note": "Dark Rey provides the anti-unaligned force user tech needed." }
+      "name": "Jabba the Hutt (oEmbo)",
+      "counters": [
+        { "team": "JMMW (Mace Omi)", "risk": "Low", "note": "Resilient Meditation ignores the Thermals. Very safe." },
+        { "team": "BKM + Grogu", "risk": "Medium", "note": "Whistling Birds bypass Krrsantan's massive defense." }
       ]
     }
   },
   "SECTION_NON_GL": {
     "Gungans": {
       "name": "Gungans (oBoss Nass)",
-      "tw_counters": [
-        { "team": "GAS + 501st", "risk": "Medium", "note": "Target the Shield Generator first. Use AoEs to chip it while Taunted." },
-        { "team": "Great Mothers", "risk": "Low", "note": "They ignore Protection, making the Gungan health pool look tiny." }
-      ]
-    },
-    "Great_Mothers": {
-      "name": "Great Mothers (oMerrin/oMorgan)",
-      "tw_counters": [
-        { "team": "JMK + CAT", "risk": "Low", "note": "Cleanse 'Spirit' debuffs immediately to avoid the instant-kill thresholds." },
-        { "team": "Imperial Troopers", "risk": "Extreme", "note": "High speed requirement. If they get a turn, you lose." }
+      "counters": [
+        { "team": "Great Mothers", "risk": "Low", "note": "Doom Phalanx first. Their protection-ignoring damage melts Gungans." },
+        { "team": "GAS + 501st", "risk": "Medium", "note": "Chip the generator while GAS is sitting. Save big hits for when it's exposed." }
       ]
     },
     "Starkiller_Juhani": {
       "name": "Starkiller (oJuhani)",
-      "tw_counters": [
-        { "team": "GAS + 501st", "risk": "Low", "note": "Increasing Juhani's cooldowns prevents her from keeping the team immortal." },
-        { "team": "Wampa WARNING", "risk": "EXTREME", "note": "TRAP: Wampa will fail here without the GAC solo buffs." }
+      "counters": [
+        { "team": "GAS + 501st", "risk": "Low", "note": "Reset Juhani's cooldowns. If she can't use her special, the team dies." },
+        { "team": "WAMPA WARNING", "risk": "EXTREME", "note": "TRAP: Wampa has no solo Omi here. She will be slaughtered." }
+      ]
+    },
+    "Great_Mothers": {
+      "name": "Great Mothers (oMerrin/oMorgan)",
+      "counters": [
+        { "team": "JMK + CAT", "risk": "Low", "note": "Insta-kill Spirit. Use cleanses to stay above 'Doom' thresholds." },
+        { "team": "SLKR", "risk": "Medium", "note": "Swipe through the Nightsister revives. High relic check." }
       ]
     },
     "Poggle_Geos": {
       "name": "Geonosians (oPoggle)",
-      "tw_counters": [
-        { "team": "Darth Traya", "risk": "Low", "note": "Even without GAC Omi, Traya's lead punishes Geo assists perfectly." },
-        { "team": "Bad Batch", "risk": "Medium", "note": "Echo's daze shuts down the entire swarm mechanic." }
+      "counters": [
+        { "team": "Darth Traya", "risk": "Low", "note": "Even without Omi, the lead kills them. Use Savage to soak damage." },
+        { "team": "Bad Batch", "risk": "Low", "note": "Echo's daze is the ultimate hard-stop for this team." }
       ]
     },
-    "Inquisitors_Reva": {
-      "name": "Reva Inquisitors",
-      "tw_counters": [
-        { "team": "Lord Vader", "risk": "Low", "note": "LV is the safest way to absorb the initial Seven Sisters onslaught." },
-        { "team": "CL_Luke (oChewpio)", "risk": "High", "note": "Extreme speed check. You must stun Reva before she takes a turn." }
-      ]
-    },
-    "Kelleran_Beq_Jedi": {
-      "name": "Kelleran Beq (oBeq)",
-      "tw_counters": [
-        { "team": "Grievous + STAP", "risk": "Medium", "note": "Target Beq first. STAP's true damage ignores the Jedi protection recovery." },
-        { "team": "Traya + Savage", "risk": "High", "note": "Savage needs to be R7+ to survive the initial Jedi burst." }
-      ]
-    },
-    "Captain_Rex_Phoenix": {
-      "name": "Phoenix (oRex/oSabine)",
-      "tw_counters": [
-        { "team": "Imperial Troopers (Veers)", "risk": "Medium", "note": "Must outspeed Rex. If Rex goes first, your Troopers will never take a turn." },
-        { "team": "Sith Empire", "risk": "Low", "note": "Malak solos the smaller Phoenix builds; Fear controls the TM gain." }
+    "Kelleran_Beq": {
+      "name": "Kelleran Beq (oBeq/oMace)",
+      "counters": [
+        { "team": "Grievous + STAP", "risk": "Medium", "note": "STAP's True Damage ignores the massive protection recovery." },
+        { "team": "BKM", "risk": "Low", "note": "Mandalorians outpace the Jedi defensive buffs easily." }
       ]
     }
   }
