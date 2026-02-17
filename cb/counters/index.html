@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWGOH Mode-Correct Counters</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold mb-4 text-yellow-500 text-center">SWGOH 2026 Counters</h1>
+        
+        <div class="flex justify-center gap-4 mb-8">
+            <button onclick="setMode('gac')" id="btn-gac" class="px-6 py-2 rounded bg-blue-600 font-bold hover:bg-blue-500">Grand Arena</button>
+            <button onclick="setMode('tw')" id="btn-tw" class="px-6 py-2 rounded bg-gray-700 font-bold hover:bg-red-600">Territory War</button>
+        </div>
+
+        <div id="counter-list" class="grid gap-6">
+            </div>
+    </div>
+
+    <script>
+        let currentMode = 'gac';
+        let database = {};
+
+        async function init() {
+            const res = await fetch('./counters.json');
+            database = await res.json();
+            render();
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('btn-gac').className = mode === 'gac' ? 'px-6 py-2 rounded bg-blue-600 font-bold' : 'px-6 py-2 rounded bg-gray-700 font-bold';
+            document.getElementById('btn-tw').className = mode === 'tw' ? 'px-6 py-2 rounded bg-red-600 font-bold' : 'px-6 py-2 rounded bg-gray-700 font-bold';
+            render();
+        }
+
+        function render() {
+            const container = document.getElementById('counter-list');
+            container.innerHTML = '';
+
+            for (const key in database) {
+                const entry = database[key];
+                const counters = currentMode === 'gac' ? entry.gac_counters : entry.tw_counters;
+
+                let html = `
+                    <div class="bg-gray-800 p-6 rounded-lg border-l-4 border-yellow-500">
+                        <h2 class="text-2xl font-bold mb-3">${entry.name}</h2>
+                        <div class="space-y-3">
+                `;
+
+                counters.forEach(c => {
+                    const isWarning = c.team.includes("WARNING");
+                    html += `
+                        <div class="${isWarning ? 'bg-red-900/40 border border-red-500' : 'bg-gray-700'} p-3 rounded">
+                            <div class="flex justify-between font-bold">
+                                <span>${c.team}</span>
+                                <span class="${c.risk === 'Low' || c.risk === 'Very Low' ? 'text-green-400' : 'text-red-400'}">${c.risk} Risk</span>
+                            </div>
+                            <p class="text-sm text-gray-300 mt-1 italic">${c.note}</p>
+                        </div>
+                    `;
+                });
+
+                html += `</div></div>`;
+                container.innerHTML += html;
+            }
+        }
+        init();
+    </script>
+</body>
+</html>
