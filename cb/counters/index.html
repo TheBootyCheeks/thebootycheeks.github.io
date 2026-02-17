@@ -3,77 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TW 2026 Counter-Matrix</title>
+    <title>TW 2026 Strategy</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .risk-badge { font-size: 0.65rem; letter-spacing: 0.05em; }
+        .team-card { break-inside: avoid; }
+    </style>
 </head>
-<body class="bg-gray-900 text-white p-4 md:p-8 font-sans">
-    <div class="max-w-4xl mx-auto">
-        <header class="text-center mb-10 border-b border-gray-700 pb-6">
-            <h1 class="text-4xl font-extrabold text-yellow-500 mb-2 tracking-tight uppercase">Territory War Counters</h1>
-            <p class="text-gray-400 font-medium">February 2026 Meta — Territory War Specific</p>
+<body class="bg-slate-950 text-slate-200 p-3 md:p-6 font-sans">
+    <div class="max-w-6xl mx-auto">
+        <header class="flex justify-between items-end mb-6 border-b border-slate-800 pb-4">
+            <div>
+                <h1 class="text-2xl font-black text-yellow-500 leading-none uppercase">TW Intelligence</h1>
+                <p class="text-xs text-slate-500 mt-1 uppercase tracking-widest">Feb 2026 Meta • Live Feed</p>
+            </div>
+            <div class="text-right text-[10px] text-slate-600 uppercase">
+                Optimized for Desktop & Mobile
+            </div>
         </header>
 
-        <div id="content-area" class="space-y-10">
-            <div class="text-center py-20 text-gray-500">Loading Intelligence Data...</div>
+        <div id="content-area" class="space-y-8">
+            <div class="text-center py-10 text-slate-700 animate-pulse uppercase font-bold">Accessing Encrypted Data...</div>
         </div>
     </div>
 
     <script>
         async function loadCounters() {
             try {
-                // Fetch the JSON file from the root directory
                 const res = await fetch('counters.json');
-                
                 if (!res.ok) throw new Error("File 'counters.json' not found.");
-                
                 const database = await res.json();
                 const container = document.getElementById('content-area');
                 container.innerHTML = ''; 
 
-                // Process Sections
                 if(database.SECTION_GL) container.appendChild(createSection("Galactic Legends", database.SECTION_GL));
-                if(database.SECTION_NON_GL) container.appendChild(createSection("Top Non-GL Walls", database.SECTION_NON_GL));
+                if(database.SECTION_NON_GL) container.appendChild(createSection("Non-GL Defense", database.SECTION_NON_GL));
                 
             } catch (error) {
-                document.getElementById('content-area').innerHTML = `
-                    <div class="bg-red-900/40 border-2 border-red-600 p-8 rounded-xl text-center">
-                        <h2 class="text-2xl font-bold text-red-500 mb-2">CRITICAL DATA ERROR</h2>
-                        <p class="text-gray-300 mb-4 font-mono text-sm">${error.message}</p>
-                        <div class="text-left bg-black/30 p-4 rounded text-xs text-gray-400 space-y-2">
-                            <p>• Ensure <strong>counters.json</strong> is in the same folder as index.html.</p>
-                            <p>• Check for missing commas or brackets in your JSON file.</p>
-                            <p>• GitHub Pages may take 1-2 minutes to update after a push.</p>
-                        </div>
-                    </div>`;
+                container.innerHTML = `<div class="text-red-500 text-center p-10 border border-red-900 rounded bg-red-950/20">${error.message}</div>`;
             }
         }
 
         function createSection(title, data) {
             const wrapper = document.createElement('div');
-            let html = `<h2 class="text-2xl font-black text-blue-500 mb-6 border-l-8 border-blue-600 pl-4 uppercase tracking-tighter">${title}</h2>`;
-            html += `<div class="grid gap-6">`;
+            // Using a 2-column grid on medium screens and up
+            let html = `<h2 class="text-xs font-black text-blue-500 mb-3 border-b border-blue-900/50 pb-1 uppercase tracking-tighter">${title}</h2>`;
+            html += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
 
             for (const key in data) {
                 const entry = data[key];
                 html += `
-                    <div class="bg-gray-800 rounded-xl border border-gray-700 shadow-2xl overflow-hidden">
-                        <div class="bg-gray-750 px-6 py-4 border-b border-gray-700 font-bold text-xl text-yellow-500">
+                    <div class="bg-slate-900 rounded border border-slate-800 shadow-sm team-card">
+                        <div class="bg-slate-800/50 px-3 py-1.5 border-b border-slate-800 font-bold text-sm text-yellow-600">
                             ${entry.name}
                         </div>
-                        <div class="p-4 space-y-4">
+                        <div class="p-2 space-y-2">
                 `;
 
                 entry.counters.forEach(c => {
                     const isWarning = c.team.includes("WARNING");
-                    const riskColor = c.risk.includes("Low") ? "text-green-400" : (c.risk.includes("Medium") ? "text-yellow-400" : "text-red-500");
+                    const riskColor = c.risk.includes("Low") ? "text-green-500" : (c.risk.includes("Medium") ? "text-yellow-500" : "text-red-600");
                     
                     html += `
-                        <div class="${isWarning ? 'bg-red-950/40 border-2 border-red-600' : 'bg-gray-900'} p-4 rounded-lg shadow-inner">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="font-bold text-lg ${isWarning ? 'text-red-500' : 'text-white'}">${c.team}</span>
-                                <span class="text-[10px] font-black px-2 py-1 bg-gray-800 rounded border border-gray-600 tracking-tighter ${riskColor}">${c.risk.toUpperCase()} RISK</span>
+                        <div class="${isWarning ? 'bg-red-950/30 border border-red-900' : 'bg-slate-950'} p-2 rounded-sm border border-slate-800/50">
+                            <div class="flex justify-between items-start">
+                                <span class="font-bold text-xs ${isWarning ? 'text-red-500' : 'text-slate-200'}">${c.team}</span>
+                                <span class="risk-badge font-black uppercase px-1.5 py-0.5 bg-black/40 rounded border border-slate-800 ${riskColor}">${c.risk}</span>
                             </div>
-                            <p class="text-sm text-gray-400 leading-relaxed italic">${c.note}</p>
+                            <p class="text-[11px] text-slate-500 leading-tight mt-1">${c.note}</p>
                         </div>
                     `;
                 });
