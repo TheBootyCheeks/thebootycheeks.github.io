@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top 20 TW Defense Counters</title>
+    <title>Top 20 TW Defense Counters - 2026 Meta</title>
     <style>
         :root {
             --bg: #0f172a;
             --card: #1e293b;
             --primary: #38bdf8;
+            --gl-gold: #fde047;
             --hard: #ef4444;
             --eff: #10b981;
             --omi: #a855f7;
@@ -19,6 +20,19 @@
         .header { text-align: center; margin-bottom: 25px; }
         h1 { color: var(--primary); font-size: 1.8rem; margin: 0; }
         
+        .section-header { 
+            width: 100%; 
+            padding: 10px; 
+            margin: 30px 0 15px 0; 
+            border-bottom: 2px solid var(--primary); 
+            color: var(--primary); 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            font-weight: bold; 
+            grid-column: 1 / -1;
+        }
+        .gl-section-header { border-color: var(--gl-gold); color: var(--gl-gold); }
+
         #search {
             width: 100%; max-width: 600px; display: block; margin: 0 auto 25px auto;
             padding: 12px; border-radius: 8px; border: 1px solid #334155;
@@ -27,9 +41,11 @@
 
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 15px; }
         
-        .card { background: var(--card); border-radius: 10px; padding: 15px; border-top: 4px solid var(--primary); transition: 0.2s; }
+        .card { background: var(--card); border-radius: 10px; padding: 15px; border-top: 4px solid var(--primary); transition: 0.2s; position: relative; }
+        .gl-card { border-top: 4px solid var(--gl-gold); border-right: 1px solid rgba(253, 224, 71, 0.2); border-bottom: 1px solid rgba(253, 224, 71, 0.2); }
         .card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); }
         .card h2 { margin: 0 0 10px 0; font-size: 1.1rem; border-bottom: 1px solid #334155; padding-bottom: 5px; color: var(--primary); }
+        .gl-card h2 { color: var(--gl-gold); }
 
         .counter-row { margin-bottom: 10px; padding: 8px; border-radius: 6px; font-size: 0.9rem; }
         .hard { background: rgba(239, 68, 68, 0.1); border-left: 3px solid var(--hard); }
@@ -42,6 +58,7 @@
         .omi .type-label { color: var(--omi); }
         
         .note { font-size: 0.75rem; color: #94a3b8; display: block; margin-top: 2px; }
+        .gl-badge { position: absolute; top: 5px; right: 10px; font-size: 0.6rem; background: var(--gl-gold); color: black; padding: 2px 5px; border-radius: 3px; font-weight: bold; }
 
         @media (max-width: 400px) { .grid { grid-template-columns: 1fr; } }
     </style>
@@ -52,11 +69,135 @@
     <h1>TW Elite 20 Counter-Matrix</h1>
 </div>
 
-<input type="text" id="search" placeholder="Search team (e.g. 'Gungans', 'Amidala')..." onkeyup="filter()">
+<input type="text" id="search" placeholder="Search team or counter..." onkeyup="filter()">
 
 <div class="grid" id="mainGrid">
+    
+    <div class="section-header gl-section-header">Galactic Legends</div>
+
+    <div class="card gl-card">
+        <span class="gl-badge">GL</span>
+        <h2>Pirate King Hondo (The Ohnaka Gang)</h2>
+        <div class="counter-row hard">
+            <span class="type-label">Hard Counter</span> GL Leia Organa
+            <span class="note">Leia's high health avoids the Jedi/Sith penalties Hondo inflicts. Target Vane first.</span>
+        </div>
+        <div class="counter-row eff">
+            <span class="type-label">Efficiency Counter</span> Queen Amidala (MQJ/POW)
+            <span class="note">Burst down Brutus to stop the taunt loop; stay away from Jedi leaders.</span>
+        </div>
+        <div class="counter-row omi">
+            <span class="type-label">Omicron Counter</span> oCere Junda + oMalicos
+            <span class="note">UFU team is Neutral; avoids Hondo's specific anti-Force-user penalties.</span>
+        </div>
+    </div>
+
+    <div class="card gl-card">
+        <span class="gl-badge">GL</span>
+        <h2>GL Ahsoka Tano (GLAT)</h2>
+        <div class="counter-row hard">
+            <span class="type-label">Hard Counter</span> GL Ahsoka (Mirror)
+            <span class="note">Focus on Mastery drain; speed and Datacrons are the deciding factor.</span>
+        </div>
+        <div class="counter-row eff">
+            <span class="type-label">Efficiency Counter</span> GL JML + Jedi Cal
+            <span class="note">Cal's 'Sudden Whirlwind' is necessary to break GLAT's protection.</span>
+        </div>
+        <div class="counter-row omi">
+            <span class="type-label">Omicron Counter</span> oGreat Mothers
+            <span class="note">Nighttroopers' Doom ignores her bulk and stops revives.</span>
+        </div>
+    </div>
+
+    <div class="card gl-card">
+        <span class="gl-badge">GL</span>
+        <h2>GL Leia Organa (AdRad/Drogan)</h2>
+        <div class="counter-row hard">
+            <span class="type-label">Hard Counter</span> GL Jabba
+            <span class="note">Thermals are the most consistent way to handle Drogan and R2.</span>
+        </div>
+        <div class="counter-row eff">
+            <span class="type-label">Efficiency Counter</span> JML + JCK
+            <span class="note">Jedi Cal's instakill can remove Drogan early.</span>
+        </div>
+        <div class="counter-row omi">
+            <span class="type-label">Omicron Counter</span> Bane + oSith Assassin
+            <span class="note">Assassin TM boost allows Bane to move before the ambush.</span>
+        </div>
+    </div>
+
+    <div class="card gl-card">
+        <span class="gl-badge">GL</span>
+        <h2>GL Jabba (Boushh/Krrsantan)</h2>
+        <div class="counter-row hard">
+            <span class="type-label">Hard Counter</span> GL JMK / GL SLKR
+            <span class="note">Massive damage burst required to kill Krrsantan twice.</span>
+        </div>
+        <div class="counter-row eff">
+            <span class="type-label">Efficiency Counter</span> Aphra (with Droids)
+            <span class="note">Siphon and turn meter manipulation shuts down Jabba.</span>
+        </div>
+        <div class="counter-row omi">
+            <span class="type-label">Omicron Counter</span> oDTMG
+            <span class="note">Dark Trooper Gideon provides the raw damage needed to break the tank.</span>
+        </div>
+    </div>
+
+    <div class="card gl-card">
+        <span class="gl-badge">GL</span>
+        <h2>GL Lord Vader (Maul)</h2>
+        <div class="counter-row hard">
+            <span class="type-label">Hard Counter</span> GL JMK (with CAT)
+            <span class="note">Force Leap Maul immediately to stop the 5-stack frenzy.</span>
+        </div>
+        <div class="counter-row eff">
+            <span class="type-label">Efficiency Counter</span> Fennec Shand BH
+            <span class="note">Mando Disintegrate on Maul is mandatory. High risk.</span>
+        </div>
+        <div class="counter-row omi">
+            <span class="type-label">Omicron Counter</span> oBo-Katan (Mandos)
+            <span class="note">TW Omicron allows Bo-Katan to shred LV's stacks.</span>
+        </div>
+    </div>
+
+    <div class="card gl-card">
+        <span class="gl-badge">GL</span>
+        <h2>GL JML (JKR/Bastila)</h2>
+        <div class="counter-row hard">
+            <span class="type-label">Hard Counter</span> GL SEE / GL Leia
+            <span class="note">SEE is the ultimate JML killer due to deception.</span>
+        </div>
+        <div class="counter-row eff">
+            <span class="type-label">Efficiency Counter</span> Darth Revan (Sith Empire)
+            <span class="note">Fear and Deathmark can bypass JML's taunt.</span>
+        </div>
+        <div class="counter-row omi">
+            <span class="type-label">Omicron Counter</span> oSith Trio (Traya)
+            <span class="note">Traya Isolate on JML prevents him from sharing Master's Training.</span>
+        </div>
+    </div>
+
+    <div class="card gl-card">
+        <span class="gl-badge">GL</span>
+        <h2>GL Rey (oBen Solo)</h2>
+        <div class="counter-row hard">
+            <span class="type-label">Hard Counter</span> GL SEE / GL JMK
+            <span class="note">SEE with Wat is the safest way to bypass 'Lifeblood'.</span>
+        </div>
+        <div class="counter-row eff">
+            <span class="type-label">Efficiency Counter</span> SK (Palp/Mara)
+            <span class="note">Starkiller can shock Ben Solo to prevent the revive.</span>
+        </div>
+        <div class="counter-row omi">
+            <span class="type-label">Omicron Counter</span> oMalicos
+            <span class="note">Can one-shot Rey if she is below 50% health.</span>
+        </div>
+    </div>
+
+    <div class="section-header">Elite Omicron Teams</div>
+
     <div class="card">
-        <h2>1. Gungans (Boss Nass / Phalanx)</h2>
+        <h2>Gungans (Boss Nass / Phalanx)</h2>
         <div class="counter-row hard">
             <span class="type-label">Hard Counter</span> GL Leia / GL Ahsoka
             <span class="note">High volume of hits to strip shield generator stacks.</span>
@@ -66,29 +207,29 @@
             <span class="note">Focus ONLY the shield generator until stacks are at 0.</span>
         </div>
         <div class="counter-row omi">
-            <span class="type-label">Omicron Counter</span> oGreat Mothers (Nighttroopers)
-            <span class="note">Their Doom ignores protection, bypassing the shield mechanic.</span>
+            <span class="type-label">Omicron Counter</span> oGreat Mothers
+            <span class="note">Doom ignores protection, bypassing the shield mechanic.</span>
         </div>
     </div>
 
     <div class="card">
-        <h2>2. Jedi (oKelleran Beq / oMace)</h2>
+        <h2>Jedi (oKelleran Beq / oMace)</h2>
         <div class="counter-row hard">
             <span class="type-label">Hard Counter</span> GL SLKR / GL JMK
-            <span class="note">Need massive damage to break through 100% protection recovery.</span>
+            <span class="note">Massive damage to break 100% protection recovery.</span>
         </div>
         <div class="counter-row eff">
             <span class="type-label">Efficiency Counter</span> Traya + oSavage
-            <span class="note">Isolate Beq immediately. Keeps Mace from taunting.</span>
+            <span class="note">Isolate Beq immediately to stop out-of-turn recovery.</span>
         </div>
         <div class="counter-row omi">
             <span class="type-label">Omicron Counter</span> oMalicos (UFU)
-            <span class="note">Malicos’s burst damage can snipe Beq before 'Second Wind'.</span>
+            <span class="note">Burst damage can snipe Beq before 'Second Wind'.</span>
         </div>
     </div>
 
     <div class="card">
-        <h2>3. Starkiller (oJuhani / oMara)</h2>
+        <h2>Starkiller (oJuhani / oMara)</h2>
         <div class="counter-row hard">
             <span class="type-label">Hard Counter</span> GL JML / GL Leia
             <span class="note">Must absorb Mara's opening Turn Meter burst.</span>
@@ -98,13 +239,13 @@
             <span class="note">Echo must be faster than Mara Jade to Daze.</span>
         </div>
         <div class="counter-row omi">
-            <span class="type-label">Omicron Counter</span> oTuskens (Chief/Warrior)
-            <span class="note">Tuskens gain momentum from every SK/Juhani counter-attack.</span>
+            <span class="type-label">Omicron Counter</span> oTuskens
+            <span class="note">Tuskens gain momentum from every counter-attack.</span>
         </div>
     </div>
 
     <div class="card">
-        <h2>4. Phoenix (oCaptain Rex / oHera)</h2>
+        <h2>Phoenix (oCaptain Rex / oHera)</h2>
         <div class="counter-row hard">
             <span class="type-label">Hard Counter</span> GL SEE / GL SLKR
             <span class="note">Prevents Rex from building the Turn Meter train.</span>
@@ -120,10 +261,10 @@
     </div>
 
     <div class="card">
-        <h2>5. Queen Amidala (MQJ / POW)</h2>
+        <h2>Queen Amidala (MQJ / POW)</h2>
         <div class="counter-row hard">
             <span class="type-label">Hard Counter</span> GL Ahsoka / GL JML
-            <span class="note">Reliable bulk to survive the opening handmaiden swarm.</span>
+            <span class="note">Reliable bulk to survive the opening swarm.</span>
         </div>
         <div class="counter-row eff">
             <span class="type-label">Efficiency Counter</span> GAS (501st)
@@ -131,12 +272,12 @@
         </div>
         <div class="counter-row omi">
             <span class="type-label">Omicron Counter</span> Bane + oSith Assassin
-            <span class="note">In TW, Assassin provides the TM boost needed for Bane to move.</span>
+            <span class="note">Assassin TM boost is mandatory in TW to beat her speed.</span>
         </div>
     </div>
 
     <div class="card">
-        <h2>6. Sep Droids (oDroideka)</h2>
+        <h2>Sep Droids (oDroideka)</h2>
         <div class="counter-row hard">
             <span class="type-label">Hard Counter</span> GL JMK (Mark DDK)
             <span class="note">CAT Force Leap ignores DDK's Damage Immunity.</span>
@@ -152,23 +293,23 @@
     </div>
 
     <div class="card">
-        <h2>7. Geos (oPoggle / oSpy)</h2>
+        <h2>Geos (oPoggle / oSpy)</h2>
         <div class="counter-row hard">
             <span class="type-label">Hard Counter</span> Darth Vader (High Relic)
             <span class="note">Merciless Massacre must kill Poggle or Spy early.</span>
         </div>
         <div class="counter-row eff">
             <span class="type-label">Efficiency Counter</span> Bad Batch
-            <span class="note">Mass Daze stops the Hive TM loop. High success rate.</span>
+            <span class="note">Mass Daze stops the Hive TM loop.</span>
         </div>
         <div class="counter-row omi">
             <span class="type-label">Omicron Counter</span> oTraya / oSavage
-            <span class="note">Geos kill themselves by assisting against Traya.</span>
+            <span class="note">Geos kill themselves assisting against Traya's unique.</span>
         </div>
     </div>
 
     <div class="card">
-        <h2>8. Imp Remnant (oDTMG)</h2>
+        <h2>Imp Remnant (oDTMG)</h2>
         <div class="counter-row hard">
             <span class="type-label">Hard Counter</span> GL Jabba
             <span class="note">Thermals ignore the high armor of Remnant troopers.</span>
@@ -179,201 +320,90 @@
         </div>
         <div class="counter-row omi">
             <span class="type-label">Omicron Counter</span> oMalgus (Sith Empire)
-            <span class="note">Malgus can Fear the swarm to prevent mass assists.</span>
+            <span class="note">Fear helps control the Trooper swarm.</span>
         </div>
     </div>
 
     <div class="card">
-        <h2>9. UFU (oMalicos)</h2>
+        <h2>UFU (oMalicos)</h2>
         <div class="counter-row hard">
             <span class="type-label">Hard Counter</span> GL JML / GL Rey
-            <span class="note">Needs protection to survive Malicos’s initial 100k+ hit.</span>
+            <span class="note">Needs protection to survive Malicos’s initial 100k hit.</span>
         </div>
         <div class="counter-row eff">
-            <span class="type-label">Efficiency Counter</span> Imperial Troopers (Fast Piett)
-            <span class="note">Kill Malicos before he takes his second turn.</span>
+            <span class="type-label">Efficiency Counter</span> Imperial Troopers
+            <span class="note">Must kill Malicos before he applies Fear.</span>
         </div>
         <div class="counter-row omi">
             <span class="type-label">Omicron Counter</span> oKelleran Beq
-            <span class="note">Second Wind saves the target of Malicos's Special 2.</span>
+            <span class="note">Second Wind saves the target of Malicos's burst.</span>
         </div>
     </div>
 
     <div class="card">
-        <h2>10. Nightsisters (oGreat Mothers)</h2>
-        <div class="counter-row hard">
-            <span class="type-label">Hard Counter</span> GL Ahsoka / GL JMK
-            <span class="note">Blessing/Mastery helps bypass the 'Doom' mechanic.</span>
-        </div>
-        <div class="counter-row eff">
-            <span class="type-label">Efficiency Counter</span> Jabba the Hutt
-            <span class="note">Jabba is immune to many of the Mothers' debuffs.</span>
-        </div>
-        <div class="counter-row omi">
-            <span class="type-label">Omicron Counter</span> oDTMG
-            <span class="note">Remnant bulk can survive until an opening appears.</span>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>11. GL Leia Organa (AdRad/Drogan)</h2>
-        <div class="counter-row hard">
-            <span class="type-label">Hard Counter</span> GL Leia (Mirror) / GL Jabba
-            <span class="note">Jabba is the most consistent non-mirror win.</span>
-        </div>
-        <div class="counter-row eff">
-            <span class="type-label">Efficiency Counter</span> JML + JCK
-            <span class="note">Jedi Cal's instakill can remove Drogan early.</span>
-        </div>
-        <div class="counter-row omi">
-            <span class="type-label">Omicron Counter</span> Bane + oSith Assassin
-            <span class="note">Can work if Bane is Relic 9 and Assassin outspeeds Drogan.</span>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>12. GL Lord Vader (Maul)</h2>
-        <div class="counter-row hard">
-            <span class="type-label">Hard Counter</span> GL JMK (with CAT)
-            <span class="note">Force Leap Maul immediately to stop the 5-stack frenzy.</span>
-        </div>
-        <div class="counter-row eff">
-            <span class="type-label">Efficiency Counter</span> Fennec Shand (Bounty Hunters)
-            <span class="note">Mando Disintegrate on Maul is mandatory. High risk.</span>
-        </div>
-        <div class="counter-row omi">
-            <span class="type-label">Omicron Counter</span> oBo-Katan (Mandos)
-            <span class="note">TW Omicron allows Bo-Katan to shred LV's stacks.</span>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>13. GL JML (JKR/Bastila)</h2>
-        <div class="counter-row hard">
-            <span class="type-label">Hard Counter</span> GL SEE / GL Leia
-            <span class="note">SEE is the ultimate JML killer due to deception.</span>
-        </div>
-        <div class="counter-row eff">
-            <span class="type-label">Efficiency Counter</span> Darth Revan (Sith Empire)
-            <span class="note">Fear and Deathmark can bypass JML's taunt.</span>
-        </div>
-        <div class="counter-row omi">
-            <span class="type-label">Omicron Counter</span> oSith Trio (Traya)
-            <span class="note">Traya Isolate on JML prevents him from sharing Master's Training.</span>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>14. GL Jabba (Boushh/Krrsantan)</h2>
-        <div class="counter-row hard">
-            <span class="type-label">Hard Counter</span> GL JMK / GL SLKR
-            <span class="note">High damage burst required to kill Krrsantan twice.</span>
-        </div>
-        <div class="counter-row eff">
-            <span class="type-label">Efficiency Counter</span> Aphra (with Droids)
-            <span class="note">Siphon and turn meter manipulation shuts down Jabba.</span>
-        </div>
-        <div class="counter-row omi">
-            <span class="type-label">Omicron Counter</span> oDTMG
-            <span class="note">Dark Trooper Gideon provides the punch needed to break Jabba.</span>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>15. Reva (oGrand Inquisitor)</h2>
+        <h2>Reva (oGrand Inquisitor)</h2>
         <div class="counter-row hard">
             <span class="type-label">Hard Counter</span> GL JMK / GL JML
-            <span class="note">Standard Jedi GLs control the Purge stacks best.</span>
+            <span class="note">Standard Jedi GLs control Purge stacks best.</span>
         </div>
         <div class="counter-row eff">
             <span class="type-label">Efficiency Counter</span> CLS (Rebels)
-            <span class="note">All-in on Grand Inquisitor first. Very high mod requirement.</span>
+            <span class="note">Focus GI first. Requires very high speed mods.</span>
         </div>
         <div class="counter-row omi">
             <span class="type-label">Omicron Counter</span> oCaptain Rex (Phoenix)
-            <span class="note">Rex allows Phoenix to out-speed and daze the Inquisitors.</span>
+            <span class="note">Rex speed allows Phoenix to out-cycle Inquisitors.</span>
         </div>
     </div>
 
     <div class="card">
-        <h2>16. GL Rey (oBen Solo)</h2>
-        <div class="counter-row hard">
-            <span class="type-label">Hard Counter</span> GL SEE / GL JMK
-            <span class="note">SEE with Wat is the safest way to bypass the 'Lifeblood' tanking.</span>
-        </div>
-        <div class="counter-row eff">
-            <span class="type-label">Efficiency Counter</span> SK (Palp/Mara)
-            <span class="note">Starkiller can shock Ben Solo to prevent the revive.</span>
-        </div>
-        <div class="counter-row omi">
-            <span class="type-label">Omicron Counter</span> oMalicos
-            <span class="note">Can one-shot Rey if she is below 50% health.</span>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>17. oRaddus (oJyn/oCassian)</h2>
+        <h2>oRaddus (oJyn/oCassian)</h2>
         <div class="counter-row hard">
             <span class="type-label">Hard Counter</span> GL SEE / GL Jabba
-            <span class="note">Must kill them before the 'Hope' ultimate charges up.</span>
+            <span class="note">Kill them before 'Hope' charges up.</span>
         </div>
         <div class="counter-row eff">
             <span class="type-label">Efficiency Counter</span> Imperial Troopers
-            <span class="note">Classic TM train; focus Raddus or Jyn first.</span>
+            <span class="note">Focus Raddus or Jyn first to stop the revives.</span>
         </div>
         <div class="counter-row omi">
             <span class="type-label">Omicron Counter</span> oMara Jade (Palp)
-            <span class="note">Stagger and Tenacity down stops the Rogue One assists.</span>
+            <span class="note">Stagger and Tenacity down stops the assist train.</span>
         </div>
     </div>
 
     <div class="card">
-        <h2>18. oMalgus (Sith Empire)</h2>
-        <div class="counter-row hard">
-            <span class="type-label">Hard Counter</span> GL JML / GL SLKR
-            <span class="note">High tenacity/Mastery is needed to resist the 'Fear' spam.</span>
-        </div>
-        <div class="counter-row eff">
-            <span class="type-label">Efficiency Counter</span> Imperial Troopers
-            <span class="note">Can work if Piett is 380+ speed. Focus Malgus.</span>
-        </div>
-        <div class="counter-row omi">
-            <span class="type-label">Omicron Counter</span> oCaptain Rex (Phoenix)
-            <span class="note">Rex’s speed boost can allow Phoenix to out-cycle Malgus.</span>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>19. oTuskens (Chief/Raider)</h2>
+        <h2>oTuskens (Chief/Raider)</h2>
         <div class="counter-row hard">
             <span class="type-label">Hard Counter</span> GL SLKR / GL SEE
-            <span class="note">Standard AoE and anti-revive mechanics handle Tuskens easily.</span>
+            <span class="note">Standard AoE and anti-revive handles them easily.</span>
         </div>
         <div class="counter-row eff">
             <span class="type-label">Efficiency Counter</span> Darth Vader (Solo)
-            <span class="note">Dots and Culling Blade handle the high health pools.</span>
+            <span class="note">Dots and Culling Blade handle the health pools.</span>
         </div>
         <div class="counter-row omi">
             <span class="type-label">Omicron Counter</span> oPoggle (Geos)
-            <span class="note">Hive tactics can out-generate the Tusken momentum.</span>
+            <span class="note">Hive tactics can out-generate Tusken momentum.</span>
         </div>
     </div>
 
     <div class="card">
-        <h2>20. Bad Batch (Hunter/Echo)</h2>
+        <h2>oMalgus (Sith Empire)</h2>
         <div class="counter-row hard">
-            <span class="type-label">Hard Counter</span> GL JML / GL SEE
-            <span class="note">Requires high tenacity or pre-taunts to stop the daze.</span>
+            <span class="type-label">Hard Counter</span> GL JML / GL SLKR
+            <span class="note">High tenacity is needed to resist 'Fear' spam.</span>
         </div>
         <div class="counter-row eff">
             <span class="type-label">Efficiency Counter</span> Imperial Troopers
-            <span class="note">The winner is whoever’s Echo or Piett moves first.</span>
+            <span class="note">Requires 380+ speed on Piett. Focus Malgus.</span>
         </div>
         <div class="counter-row omi">
-            <span class="type-label">Omicron Counter</span> oMara Jade
-            <span class="note">Mara's 100% TM ensures she moves first in TW.</span>
+            <span class="type-label">Omicron Counter</span> oCaptain Rex
+            <span class="note">Speed boost allows Phoenix to out-cycle Fear.</span>
         </div>
     </div>
+
 </div>
 
 <script>
