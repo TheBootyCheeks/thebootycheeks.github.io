@@ -3,71 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SWGOH Mode-Correct Counters</title>
+    <title>TW 2026 Counter Guide</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-white p-8">
+<body class="bg-gray-900 text-white p-4 md:p-8 font-sans">
     <div class="max-w-4xl mx-auto">
-        <h1 class="text-4xl font-bold mb-4 text-yellow-500 text-center">SWGOH 2026 Counters</h1>
-        
-        <div class="flex justify-center gap-4 mb-8">
-            <button onclick="setMode('gac')" id="btn-gac" class="px-6 py-2 rounded bg-blue-600 font-bold hover:bg-blue-500">Grand Arena</button>
-            <button onclick="setMode('tw')" id="btn-tw" class="px-6 py-2 rounded bg-gray-700 font-bold hover:bg-red-600">Territory War</button>
-        </div>
+        <header class="text-center mb-10 border-b border-gray-700 pb-6">
+            <h1 class="text-4xl font-extrabold text-yellow-500 mb-2 tracking-tight">TW DEFENSE COUNTERS</h1>
+            <p class="text-gray-400">Validated for February 2026 Meta - Territory War Focus</p>
+        </header>
 
-        <div id="counter-list" class="grid gap-6">
+        <div id="content-area" class="space-y-10">
             </div>
     </div>
 
     <script>
-        let currentMode = 'gac';
-        let database = {};
-
-        async function init() {
+        async function loadCounters() {
             const res = await fetch('./counters.json');
-            database = await res.json();
-            render();
+            const database = await res.json();
+            const container = document.getElementById('content-area');
+
+            // Render GLs first, then Non-GLs
+            container.appendChild(createSection("Galactic Legend Targets", database.SECTION_GL));
+            container.appendChild(createSection("Top 20 Non-GL Defense Walls", database.SECTION_NON_GL));
         }
 
-        function setMode(mode) {
-            currentMode = mode;
-            document.getElementById('btn-gac').className = mode === 'gac' ? 'px-6 py-2 rounded bg-blue-600 font-bold' : 'px-6 py-2 rounded bg-gray-700 font-bold';
-            document.getElementById('btn-tw').className = mode === 'tw' ? 'px-6 py-2 rounded bg-red-600 font-bold' : 'px-6 py-2 rounded bg-gray-700 font-bold';
-            render();
-        }
+        function createSection(title, data) {
+            const section = document.createElement('div');
+            let html = `<h2 class="text-3xl font-bold text-blue-400 mb-6 uppercase tracking-widest">${title}</h2>`;
+            html += `<div class="grid gap-6">`;
 
-        function render() {
-            const container = document.getElementById('counter-list');
-            container.innerHTML = '';
-
-            for (const key in database) {
-                const entry = database[key];
-                const counters = currentMode === 'gac' ? entry.gac_counters : entry.tw_counters;
-
-                let html = `
-                    <div class="bg-gray-800 p-6 rounded-lg border-l-4 border-yellow-500">
-                        <h2 class="text-2xl font-bold mb-3">${entry.name}</h2>
-                        <div class="space-y-3">
+            for (const key in data) {
+                const entry = data[key];
+                html += `
+                    <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-700">
+                        <div class="bg-gray-700 px-6 py-3 border-b border-gray-600 font-bold text-xl uppercase">
+                            ${entry.name}
+                        </div>
+                        <div class="p-6 space-y-4">
                 `;
 
-                counters.forEach(c => {
+                entry.counters.forEach(c => {
                     const isWarning = c.team.includes("WARNING");
+                    const riskColor = c.risk.includes("Low") ? "text-green-400" : (c.risk.includes("Medium") ? "text-yellow-400" : "text-red-500");
+                    
                     html += `
-                        <div class="${isWarning ? 'bg-red-900/40 border border-red-500' : 'bg-gray-700'} p-3 rounded">
-                            <div class="flex justify-between font-bold">
-                                <span>${c.team}</span>
-                                <span class="${c.risk === 'Low' || c.risk === 'Very Low' ? 'text-green-400' : 'text-red-400'}">${c.risk} Risk</span>
+                        <div class="${isWarning ? 'bg-red-950/50 border-2 border-red-600' : 'bg-gray-900'} p-4 rounded-lg">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-lg font-bold ${isWarning ? 'text-red-500' : 'text-white'}">${c.team}</span>
+                                <span class="text-xs font-black uppercase px-2 py-1 bg-black/40 rounded ${riskColor}">${c.risk} RISK</span>
                             </div>
-                            <p class="text-sm text-gray-300 mt-1 italic">${c.note}</p>
+                            <p class="text-sm text-gray-400 leading-relaxed">${c.note}</p>
                         </div>
                     `;
                 });
 
                 html += `</div></div>`;
-                container.innerHTML += html;
             }
+
+            html += `</div>`;
+            section.innerHTML = html;
+            return section;
         }
-        init();
+
+        loadCounters();
     </script>
 </body>
 </html>
