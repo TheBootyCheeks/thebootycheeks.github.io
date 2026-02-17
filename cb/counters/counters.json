@@ -1,10 +1,11 @@
 {
   "SECTION_GL": {
-    "Lord_Vader": {
-      "name": "Lord Vader (Enoch/Night Trooper/DTT)",
+    "Lord_Vader_Appo": {
+      "name": "Lord Vader (oAppo / DS Clones)",
       "counters": [
-        { "team": "JMK + CAT", "risk": "Low", "note": "KILL ORDER: Death Trooper Terentatek (DTT) first. Must break the protection engine." },
-        { "team": "Leia Organa", "risk": "Medium", "note": "Focus Enoch to stop 'Decay' stacks. Avoid Drogan special into Protection Up." }
+        { "team": "JMK + CAT", "risk": "Low", "note": "Use CAT to delete Appo immediately. If Appo stays up, his TW Omi will ramp LV's Ultimate too fast." },
+        { "team": "Leia Organa", "risk": "Medium", "note": "Requires high relics. Drogan must focus Appo to break the protection recovery loop." },
+        { "team": "BKM + Mandos", "risk": "High", "note": "Whistling Birds help bypass the massive critical avoidance granted by the Clone synergy." }
       ]
     },
     "Queen_Amidala": {
