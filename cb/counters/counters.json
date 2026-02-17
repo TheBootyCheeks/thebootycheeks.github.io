@@ -1,0 +1,23 @@
+{
+  "Queen_Amidala": {
+    "name": "Queen Amidala (oMQG/oPOW)",
+    "gac_counters": [
+      { "team": "Darth Bane + 1", "risk": "Low", "note": "Standard high-stat brute force." }
+    ],
+    "tw_counters": [
+      { "team": "GAS + 501st (oRex)", "risk": "Medium", "note": "Use Rex to outspeed and GAS to reset cooldowns." },
+      { "team": "JMK + CAT", "risk": "Very Low", "note": "Instant defeat the Queen or MQG immediately." },
+      { "team": "Bane WARNING", "risk": "EXTREME", "note": "BANE TRAP: No Omicrons here. You will get stun-locked." }
+    ]
+  },
+  "Lord_Vader": {
+    "name": "Lord Vader",
+    "gac_counters": [
+      { "team": "Fennec Shand BH", "risk": "Medium", "note": "Classic Maul-version counter." }
+    ],
+    "tw_counters": [
+      { "team": "JMK + CAT", "risk": "Low", "note": "Focus Enoch first to stop the protection engine." },
+      { "team": "Leia Organa", "risk": "Medium", "note": "Avoid using Drogan's special into Enoch's protection up." }
+    ]
+  }
+}
