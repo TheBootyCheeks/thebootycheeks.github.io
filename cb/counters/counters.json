@@ -1,33 +1,32 @@
 {
   "SECTION_GL": {
-    "Lord_Vader_Clones": {
+    "Lord_Vader": {
       "name": "Lord Vader (Enoch/Night Trooper/DTT)",
       "counters": [
-        { "team": "JMK + CAT", "risk": "Low", "note": "KILL ORDER: DTT first. Break the protection engine immediately." },
-        { "team": "Leia Organa", "risk": "Medium", "note": "Focus Enoch to stop 'Decay' stacks from ruining your offense." },
-        { "team": "Bo-Katan (Mand'alor)", "risk": "High", "note": "Requires True Damage to bypass the Clones' high crit avoidance." }
+        { "team": "JMK + CAT", "risk": "Low", "note": "KILL ORDER: Death Trooper Terentatek (DTT) first. Must break the protection engine." },
+        { "team": "Leia Organa", "risk": "Medium", "note": "Focus Enoch to stop 'Decay' stacks. Avoid Drogan special into Protection Up." }
       ]
     },
     "Queen_Amidala": {
       "name": "Queen Amidala (oMQG/oPOW)",
       "counters": [
-        { "team": "GAS + 501st (oRex)", "risk": "Medium", "note": "Best non-GL bet. Keep Rex alive to feed TM to GAS." },
-        { "team": "JMK + CAT", "risk": "Low", "note": "Insta-kill MQG. Do not let his damage ramp." },
-        { "team": "BANE WARNING", "risk": "EXTREME", "note": "TRAP: No GAC Omi here. You will get stun-locked and time out." }
+        { "team": "GAS + 501st (oRex)", "risk": "Medium", "note": "Rex's TM gain is essential. Use GAS to reset MQG cooldowns." },
+        { "team": "JMK + CAT", "risk": "Low", "note": "Insta-kill Master Qui-Gon immediately." },
+        { "team": "BANE WARNING", "risk": "EXTREME", "note": "TRAP: Bane has no GAC Omi here. You will get stun-locked and time out." }
       ]
     },
-    "Pirate_King_Hondo": {
-      "name": "GL Pirate King Hondo (Pirates)",
+    "GL_Ahsoka": {
+      "name": "GL Ahsoka Tano (Ezra Exile)",
       "counters": [
-        { "team": "Leia Organa", "risk": "Medium", "note": "Nuke Silvano first. Leia's Ult must be used to clear the revives." },
-        { "team": "SLKR + Dark Rey", "risk": "High", "note": "Dark Rey provides the anti-revive tech needed for the pirate crew." }
+        { "team": "Leia Organa", "risk": "Medium", "note": "Target Sabine first. Do not target Ezra Exile while her Omi is active." },
+        { "team": "GL Ahsoka (Mirror)", "risk": "Low", "note": "Mod for higher mastery/speed than opponent." }
       ]
     },
     "Jabba_Hutt": {
       "name": "Jabba the Hutt (oEmbo)",
       "counters": [
-        { "team": "JMMW (Mace Omi)", "risk": "Low", "note": "Resilient Meditation ignores the Thermals. Very safe." },
-        { "team": "BKM + Grogu", "risk": "Medium", "note": "Whistling Birds bypass Krrsantan's massive defense." }
+        { "team": "JMMW (Mace Omi)", "risk": "Low", "note": "Resilient Meditation prevents the Thermal Detonator death-loop." },
+        { "team": "BKM + Grogu", "risk": "Medium", "note": "Whistling Birds bypass Krrsantan's massive defense/taunt." }
       ]
     }
   },
@@ -35,36 +34,43 @@
     "Gungans": {
       "name": "Gungans (oBoss Nass)",
       "counters": [
-        { "team": "Great Mothers", "risk": "Low", "note": "Doom Phalanx first. Their protection-ignoring damage melts Gungans." },
-        { "team": "GAS + 501st", "risk": "Medium", "note": "Chip the generator while GAS is sitting. Save big hits for when it's exposed." }
+        { "team": "Great Mothers", "risk": "Low", "note": "Nighttrooper damage ignores Protection. Doom Phalanx immediately." },
+        { "team": "GAS + 501st", "risk": "Medium", "note": "Kill Shield Generator first. Use AoEs while Phalanx is taunting." }
       ]
     },
-    "Starkiller_Juhani": {
+    "Starkiller": {
       "name": "Starkiller (oJuhani)",
       "counters": [
-        { "team": "GAS + 501st", "risk": "Low", "note": "Reset Juhani's cooldowns. If she can't use her special, the team dies." },
-        { "team": "WAMPA WARNING", "risk": "EXTREME", "note": "TRAP: Wampa has no solo Omi here. She will be slaughtered." }
+        { "team": "GAS + 501st", "risk": "Low", "note": "Reset Juhani's cooldowns. Without her special, the team is mortal." },
+        { "team": "WAMPA WARNING", "risk": "EXTREME", "note": "TRAP: Wampa lacks GAC buffs. This is a guaranteed fail." }
       ]
     },
     "Great_Mothers": {
       "name": "Great Mothers (oMerrin/oMorgan)",
       "counters": [
         { "team": "JMK + CAT", "risk": "Low", "note": "Insta-kill Spirit. Use cleanses to stay above 'Doom' thresholds." },
-        { "team": "SLKR", "risk": "Medium", "note": "Swipe through the Nightsister revives. High relic check." }
+        { "team": "SLKR", "risk": "Medium", "note": "Swipe through revives. High relic check required." }
       ]
     },
-    "Poggle_Geos": {
-      "name": "Geonosians (oPoggle)",
+    "Inquisitors": {
+      "name": "Reva Inquisitors (oGI)",
       "counters": [
-        { "team": "Darth Traya", "risk": "Low", "note": "Even without Omi, the lead kills them. Use Savage to soak damage." },
-        { "team": "Bad Batch", "risk": "Low", "note": "Echo's daze is the ultimate hard-stop for this team." }
+        { "team": "Lord Vader", "risk": "Low", "note": "Safest way to absorb the initial Seven Sisters onslaught." },
+        { "team": "oCaptain Rex (Phoenix)", "risk": "Medium", "note": "Rex speed allows Phoenix to out-cycle and daze." }
       ]
     },
-    "Kelleran_Beq": {
+    "Beq_Jedi": {
       "name": "Kelleran Beq (oBeq/oMace)",
       "counters": [
-        { "team": "Grievous + STAP", "risk": "Medium", "note": "STAP's True Damage ignores the massive protection recovery." },
-        { "team": "BKM", "risk": "Low", "note": "Mandalorians outpace the Jedi defensive buffs easily." }
+        { "team": "Grievous + STAP", "risk": "Medium", "note": "STAP True Damage ignores the massive Protection recovery." },
+        { "team": "Traya + Savage", "risk": "High", "note": "Savage needs R7+ to survive the initial burst." }
+      ]
+    },
+    "Phoenix": {
+      "name": "Phoenix (oRex/oSabine)",
+      "counters": [
+        { "team": "Imperial Troopers", "risk": "Medium", "note": "Must outspeed Rex. Focus Rex immediately." },
+        { "team": "Sith Empire (Malak)", "risk": "Low", "note": "Fear controls the TM gain; Malak can solo smaller builds." }
       ]
     }
   }
